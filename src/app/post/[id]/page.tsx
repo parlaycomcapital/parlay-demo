@@ -82,11 +82,11 @@ export default function PostPage() {
             <div className="flex items-center space-x-4">
               <img
                 src={post.author.avatar}
-                alt={post.author.name}
+                alt={post.author.username}
                 className="w-12 h-12 rounded-full"
               />
               <div>
-                <h2 className="text-white font-semibold">{post.author.name}</h2>
+                <h2 className="text-white font-semibold">{post.author.username}</h2>
                 <p className="text-gray-400 text-sm">{post.sport} • {new Date(post.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
@@ -188,11 +188,11 @@ export default function PostPage() {
             <div className="flex items-center space-x-4">
               <img
                 src={post.author.avatar}
-                alt={post.author.name}
+                alt={post.author.username}
                 className="w-16 h-16 rounded-full"
               />
               <div>
-                <h3 className="text-white font-semibold text-lg">{post.author.name}</h3>
+                <h3 className="text-white font-semibold text-lg">{post.author.username}</h3>
                 <p className="text-gray-400">{post.author.bio}</p>
                 <div className="flex items-center space-x-4 text-sm text-gray-400 mt-2">
                   <span>{post.author.followers.toLocaleString()} followers</span>

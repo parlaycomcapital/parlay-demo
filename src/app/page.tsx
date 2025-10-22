@@ -108,11 +108,11 @@ export default function Home() {
                   <div className="flex items-center mb-3">
                     <img
                       src={post.author.avatar}
-                      alt={post.author.name}
+                      alt={post.author.username}
                       className="w-8 h-8 rounded-full mr-3"
                     />
                     <div>
-                      <p className="text-sm text-gray-300">{post.author.name}</p>
+                      <p className="text-sm text-gray-300">{post.author.username}</p>
                       <p className="text-xs text-gray-400">{post.sport}</p>
                     </div>
                   </div>

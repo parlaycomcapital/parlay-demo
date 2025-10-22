@@ -208,7 +208,7 @@ export default function AdminDashboard() {
                   />
                   <div>
                     <h3 className="text-white font-medium line-clamp-1">{post.title}</h3>
-                    <p className="text-gray-400 text-sm">by {post.author.name}</p>
+                    <p className="text-gray-400 text-sm">by {post.author.username}</p>
                     <div className="flex items-center space-x-4 text-sm text-gray-400">
                       <span>👀 {post.views}</span>
                       <span>❤️ {post.likes}</span>
