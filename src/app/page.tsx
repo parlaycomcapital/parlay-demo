@@ -2,6 +2,7 @@ import Link from "next/link";
 import { mockPosts } from "@/data/mockData";
 
 export default function Home() {
+  // Featured posts for homepage
   const featuredPosts = mockPosts.slice(0, 3);
 
   return (
