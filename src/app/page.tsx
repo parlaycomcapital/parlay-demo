@@ -17,13 +17,9 @@ export default function Home() {
           <div className="text-center">
             {/* Parlay Logo */}
             <div className="mb-8">
-              <Image
-                src="/logo.png"
-                alt="Parlay Logo"
-                width={120}
-                height={120}
-                className="mx-auto mb-4"
-              />
+              <div className="h-24 w-24 bg-gradient-ember rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-white font-bold text-4xl">🔥</span>
+              </div>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">

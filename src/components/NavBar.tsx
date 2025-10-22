@@ -25,13 +25,9 @@ const NavBar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <Image
-              src="/logo.png"
-              alt="Parlay Logo"
-              width={40}
-              height={40}
-              className="h-10 w-auto"
-            />
+            <div className="h-10 w-10 bg-gradient-ember rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">🔥</span>
+            </div>
             <span className="text-white font-heading font-bold text-xl">Parlay</span>
           </Link>
 

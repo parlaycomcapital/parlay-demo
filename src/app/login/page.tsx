@@ -62,13 +62,9 @@ export default function Login() {
           <div className="text-center mb-8">
             {/* Parlay Logo */}
             <div className="mb-6">
-              <Image
-                src="/logo.png"
-                alt="Parlay Logo"
-                width={80}
-                height={80}
-                className="mx-auto"
-              />
+              <div className="h-20 w-20 bg-gradient-ember rounded-xl flex items-center justify-center mx-auto shadow-lg">
+                <span className="text-white font-bold text-3xl">🔥</span>
+              </div>
             </div>
             
             <h1 className="text-3xl font-heading font-semibold text-white mb-2">
