@@ -1,3 +1,5 @@
+'use client';
+
 export default function TestLogo() {
   return (
     <div className="min-h-screen bg-navy text-white p-8">
