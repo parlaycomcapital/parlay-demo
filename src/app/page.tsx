@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { mockPosts } from "@/data/mockData";
 import ParlayLogo from "@/components/ParlayLogo";
