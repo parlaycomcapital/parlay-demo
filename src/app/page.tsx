@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { mockPosts } from "@/data/mockData";
 
 export default function Home() {
@@ -9,44 +10,81 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        {/* Hero Background */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/assets/brand/hero-banner.png"
+            alt="Parlay Hero Background"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-navy/60"></div>
+        </div>
+        
+        {/* Pattern Overlay */}
+        <div className="absolute inset-0 z-10 opacity-5">
+          <Image
+            src="/assets/brand/pattern.png"
+            alt="Parlay Pattern"
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            {/* Parlay Logo */}
+            <div className="mb-8">
+              <Image
+                src="/assets/brand/logo.png"
+                alt="Parlay Logo"
+                width={120}
+                height={120}
+                className="mx-auto mb-4"
+              />
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">
               <span className="text-white">Smart Sports.</span>
               <br />
               <span className="text-gradient-ember">Smarter Minds.</span>
             </h1>
-            <div className="text-sm text-orange-400 mb-4">
+            
+            <div className="text-sm text-amber mb-4">
               🚀 Interactive Demo - Login to explore all features!
             </div>
+            
             <div className="mb-6">
               <Link
                 href="/feed"
-                className="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors mr-4"
+                className="inline-block bg-slate text-white px-6 py-3 rounded-xl font-body font-semibold hover:bg-slate/80 transition-colors mr-4"
               >
                 Browse Feed (No Login Required)
               </Link>
               <Link
                 href="/login"
-                className="inline-block bg-gradient-ember text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                className="inline-block bg-gradient-ember text-white px-6 py-3 rounded-xl font-body font-semibold hover:opacity-90 transition-opacity"
               >
                 Login for Full Access
               </Link>
             </div>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            
+            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto font-body">
               Connect with expert sports analysts, share insights, and discover the smartest predictions in sports. 
               Join the community where knowledge meets passion.
             </p>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/feed"
-                className="bg-gradient-ember text-white px-8 py-3 rounded-2xl font-semibold hover:opacity-90 transition-opacity shadow-lg"
+                className="bg-gradient-ember text-white px-8 py-4 rounded-xl font-heading font-semibold hover:opacity-90 transition-opacity shadow-lg"
               >
                 Explore Analyses
               </Link>
               <Link
                 href="/create"
-                className="border-2 border-white text-white px-8 py-3 rounded-2xl font-semibold hover:bg-white hover:text-[#0B132B] transition-colors"
+                className="border-2 border-white text-white px-8 py-4 rounded-xl font-heading font-semibold hover:bg-white hover:text-navy transition-colors"
               >
                 Join Now
               </Link>
@@ -56,36 +94,36 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-900/50">
+      <section className="py-20 bg-slate/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Parlay?</h2>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Why Choose Parlay?</h2>
+            <p className="text-white/80 text-lg max-w-2xl mx-auto font-body">
               The only platform where sports analysis meets social networking
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 rounded-2xl bg-gray-800/50 hover:bg-gray-800/70 transition-colors">
+            <div className="text-center p-6 rounded-2xl bg-slate/50 hover:bg-slate/70 transition-all duration-300 hover:scale-105 hover:shadow-ember/20">
               <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-semibold mb-3">Expert Analysis</h3>
-              <p className="text-gray-300">
+              <h3 className="text-xl font-heading font-semibold mb-3">Expert Analysis</h3>
+              <p className="text-white/80 font-body">
                 Get insights from professional sports analysts with years of experience and proven track records.
               </p>
             </div>
             
-            <div className="text-center p-6 rounded-2xl bg-gray-800/50 hover:bg-gray-800/70 transition-colors">
+            <div className="text-center p-6 rounded-2xl bg-slate/50 hover:bg-slate/70 transition-all duration-300 hover:scale-105 hover:shadow-ember/20">
               <div className="text-4xl mb-4">💬</div>
-              <h3 className="text-xl font-semibold mb-3">Community Driven</h3>
-              <p className="text-gray-300">
+              <h3 className="text-xl font-heading font-semibold mb-3">Community Driven</h3>
+              <p className="text-white/80 font-body">
                 Join discussions, share your own insights, and connect with fellow sports enthusiasts.
               </p>
             </div>
             
-            <div className="text-center p-6 rounded-2xl bg-gray-800/50 hover:bg-gray-800/70 transition-colors">
+            <div className="text-center p-6 rounded-2xl bg-slate/50 hover:bg-slate/70 transition-all duration-300 hover:scale-105 hover:shadow-ember/20">
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold mb-3">Data-Driven</h3>
-              <p className="text-gray-300">
+              <h3 className="text-xl font-heading font-semibold mb-3">Data-Driven</h3>
+              <p className="text-white/80 font-body">
                 Access comprehensive statistics, trends, and data-backed predictions for informed decisions.
               </p>
             </div>

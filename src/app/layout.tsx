@@ -11,8 +11,20 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Parlay.sk - Smart Sports. Smarter Minds.",
-  description: "Connect with expert sports analysts and share your insights. The social platform for sports analysis.",
+  title: "Parlay — Smart Sports. Smarter Minds.",
+  description: "Join the Parlay community where insight meets adrenaline.",
+  openGraph: {
+    title: "Parlay — Smart Sports. Smarter Minds.",
+    description: "Join the Parlay community where insight meets adrenaline.",
+    images: ["/assets/brand/hero-banner.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Parlay — Smart Sports. Smarter Minds.",
+    description: "Join the Parlay community where insight meets adrenaline.",
+    images: ["/assets/brand/hero-banner.png"],
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +39,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased bg-[#0B132B] text-white`} suppressHydrationWarning={true}>
+      <body className={`${inter.variable} font-body antialiased bg-navy text-white`} suppressHydrationWarning={true}>
         <NavBar />
         <main className="min-h-screen">
           {children}

@@ -1,39 +1,57 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
   --background: #0B132B;
   --foreground: #FFFFFF;
-  --accent-start: #FF6B35;
+  --accent-start: #E63E30;
   --accent-end: #F5A623;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --color-navy: #0B132B;
+  --color-ember: #E63E30;
+  --color-amber: #F5A623;
+  --color-white: #FFFFFF;
+  --color-slate: #1E293B;
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 /* Custom gradient utilities */
 .bg-gradient-ember {
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  background: linear-gradient(135deg, var(--color-ember), var(--color-amber));
 }
 
 .text-gradient-ember {
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  background: linear-gradient(135deg, var(--color-ember), var(--color-amber));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .border-gradient-ember {
-  border-image: linear-gradient(135deg, var(--accent-start), var(--accent-end)) 1;
+  border-image: linear-gradient(135deg, var(--color-ember), var(--color-amber)) 1;
 }
+
+/* Brand-specific utilities */
+.bg-navy { background-color: var(--color-navy); }
+.bg-ember { background-color: var(--color-ember); }
+.bg-amber { background-color: var(--color-amber); }
+.bg-slate { background-color: var(--color-slate); }
+.text-navy { color: var(--color-navy); }
+.text-ember { color: var(--color-ember); }
+.text-amber { color: var(--color-amber); }
+.text-slate { color: var(--color-slate); }
+
+.font-heading { font-family: var(--font-heading); }
+.font-body { font-family: var(--font-body); }
 
 /* Line clamp utilities */
 .line-clamp-1 {
