@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import ParlayLogo from './ParlayLogo';
 
 const Footer = () => {
   return (
@@ -9,9 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="h-8 w-8 bg-gradient-ember rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">🔥</span>
-              </div>
+              <ParlayLogo size={32} />
               <span className="text-white font-heading font-bold text-xl">Parlay</span>
             </div>
             <p className="text-white/70 mb-4 max-w-md font-body">
@@ -92,9 +90,7 @@ const Footer = () => {
         <div className="border-t border-slate mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2">
-              <div className="h-5 w-5 bg-gradient-ember rounded flex items-center justify-center">
-                <span className="text-white font-bold text-xs">🔥</span>
-              </div>
+              <ParlayLogo size={20} />
               <p className="text-white/60 text-sm font-body">
                 © 2025 Parlay. All rights reserved.
               </p>

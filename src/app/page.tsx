@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { mockPosts } from "@/data/mockData";
+import ParlayLogo from "@/components/ParlayLogo";
 
 export default function Home() {
   // Featured posts for homepage
@@ -17,9 +17,7 @@ export default function Home() {
           <div className="text-center">
             {/* Parlay Logo */}
             <div className="mb-8">
-              <div className="h-24 w-24 bg-gradient-ember rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <span className="text-white font-bold text-4xl">🔥</span>
-              </div>
+              <ParlayLogo size={120} priority className="mx-auto mb-4" />
             </div>
             
             <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">

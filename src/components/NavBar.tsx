@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useUser } from '@/hooks/useUser';
+import ParlayLogo from './ParlayLogo';
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -25,9 +25,7 @@ const NavBar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="h-10 w-10 bg-gradient-ember rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">🔥</span>
-            </div>
+            <ParlayLogo size={40} />
             <span className="text-white font-heading font-bold text-xl">Parlay</span>
           </Link>
 
