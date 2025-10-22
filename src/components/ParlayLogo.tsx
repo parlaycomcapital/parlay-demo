@@ -1,3 +1,5 @@
+'use client';
+
 interface ParlayLogoProps {
   size?: number;
   className?: string;
