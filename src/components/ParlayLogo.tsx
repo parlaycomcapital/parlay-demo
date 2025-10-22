@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface ParlayLogoProps {
   size?: number;
@@ -13,29 +12,13 @@ export default function ParlayLogo({
   priority = false 
 }: ParlayLogoProps) {
   const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Check if image loads successfully
-  useEffect(() => {
-    const img = new Image();
-    img.onload = () => setImageLoaded(true);
-    img.onerror = () => setImageError(true);
-    img.src = '/logo.png';
-  }, []);
+  // Simple fallback approach - try to load the image, fallback if it fails
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
-  // Show loading state
-  if (!imageLoaded && !imageError) {
-    return (
-      <div 
-        className={`bg-slate/30 rounded-lg flex items-center justify-center animate-pulse ${className}`}
-        style={{ width: size, height: size }}
-      >
-        <span className="text-slate-400 text-xs">Loading...</span>
-      </div>
-    );
-  }
-
-  // Fallback to gradient flame icon if image fails to load
+  // If image fails to load, show gradient flame fallback
   if (imageError) {
     return (
       <div 
@@ -49,6 +32,7 @@ export default function ParlayLogo({
     );
   }
 
+  // Try to load the actual logo
   return (
     <div className={className}>
       <img
@@ -56,9 +40,13 @@ export default function ParlayLogo({
         alt="Parlay Logo"
         width={size}
         height={size}
-        className="select-none"
-        onError={() => setImageError(true)}
-        onLoad={() => setImageLoaded(true)}
+        className="select-none object-contain"
+        onError={handleImageError}
+        style={{ 
+          width: size, 
+          height: size,
+          objectFit: 'contain' 
+        }}
       />
     </div>
   );
