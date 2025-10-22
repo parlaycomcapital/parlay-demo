@@ -3,17 +3,19 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useUser } from '@/hooks/useUser';
 
 const NavBar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout, isLoggedIn } = useUser();
 
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/feed', label: 'Feed' },
-    { href: '/create', label: 'Create' },
-    { href: '/profile/1', label: 'Profile' },
-    { href: '/admin', label: 'Admin' }
+    ...(isLoggedIn && user?.role === 'analyst' ? [{ href: '/create', label: 'Create' }] : []),
+    ...(isLoggedIn ? [{ href: `/profile/${user?.id}`, label: 'Profile' }] : []),
+    ...(isLoggedIn && user?.role === 'admin' ? [{ href: '/admin', label: 'Admin' }] : []),
   ];
 
   return (
@@ -41,6 +43,37 @@ const NavBar = () => {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Auth Section */}
+            <div className="flex items-center space-x-4">
+              {isLoggedIn ? (
+                <>
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={user?.avatar}
+                      alt={user?.username}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-gray-300 text-sm">
+                      {user?.username} ({user?.role})
+                    </span>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="bg-gradient-ember text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -74,6 +107,41 @@ const NavBar = () => {
                   {item.label}
                 </Link>
               ))}
+              
+              {/* Mobile Auth Section */}
+              <div className="border-t border-gray-700 pt-4 mt-4">
+                {isLoggedIn ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2 px-3 py-2">
+                      <img
+                        src={user?.avatar}
+                        alt={user?.username}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <span className="text-gray-300 text-sm">
+                        {user?.username} ({user?.role})
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="block bg-gradient-ember text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity text-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         )}
