@@ -4,6 +4,7 @@ export function middleware(request: NextRequest) {
   // Check if password protection is enabled
   const isPasswordProtected = process.env.PASSWORD_PROTECTION === 'true';
   
+  // For demo purposes, disable password protection if not explicitly set
   if (!isPasswordProtected) {
     return NextResponse.next();
   }

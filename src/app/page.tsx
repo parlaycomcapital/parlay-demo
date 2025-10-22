@@ -19,6 +19,20 @@ export default function Home() {
             <div className="text-sm text-orange-400 mb-4">
               🚀 Interactive Demo - Login to explore all features!
             </div>
+            <div className="mb-6">
+              <Link
+                href="/feed"
+                className="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors mr-4"
+              >
+                Browse Feed (No Login Required)
+              </Link>
+              <Link
+                href="/login"
+                className="inline-block bg-gradient-ember text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+              >
+                Login for Full Access
+              </Link>
+            </div>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Connect with expert sports analysts, share insights, and discover the smartest predictions in sports. 
               Join the community where knowledge meets passion.
