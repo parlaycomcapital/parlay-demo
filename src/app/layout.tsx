@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { initializeDemoData } from "@/lib/localStorage";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,6 +20,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Initialize demo data on app start
+  if (typeof window !== 'undefined') {
+    initializeDemoData();
+  }
+
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased bg-[#0B132B] text-white`} suppressHydrationWarning={true}>
