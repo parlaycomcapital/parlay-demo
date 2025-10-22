@@ -52,26 +52,24 @@ export default function Login() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-navy flex items-center justify-center px-4">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-radial"></div>
-      
-      <div className="relative z-10 max-w-md w-full">
-        <div className="glass rounded-2xl p-8 hover-lift transition-all duration-300">
-          <div className="text-center mb-8">
-            {/* Parlay Logo */}
-            <div className="mb-6">
-              <ParlayLogo size={80} priority className="mx-auto" />
-            </div>
-            
-            <h1 className="text-3xl font-heading font-semibold text-white mb-2">
-              Welcome to Parlay
-            </h1>
-            <p className="text-slate-300 font-body mb-8">
-              Smart Sports. Smarter Minds.
-            </p>
-          </div>
+              return (
+                <div className="min-h-screen bg-navy flex items-center justify-center px-4">
+                  {/* Background Gradient */}
+                  <div className="absolute inset-0 bg-gradient-radial"></div>
+                  
+                  <div className="relative z-10 max-w-md w-full">
+                    <div className="glass rounded-2xl p-8 hover-lift transition-all duration-300">
+                      <div className="text-center mb-8">
+                        {/* Parlay Logo */}
+                        <ParlayLogo size={80} className="mb-6" />
+                        
+                        <h1 className="text-3xl font-heading font-semibold text-white mb-2">
+                          Welcome to Parlay
+                        </h1>
+                        <p className="text-slate-300 font-body mb-8">
+                          Smart Sports. Smarter Minds.
+                        </p>
+                      </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="role" className="block text-sm font-medium text-white mb-2 font-body">

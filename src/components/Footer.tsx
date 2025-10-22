@@ -89,19 +89,19 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-slate mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <ParlayLogo size={20} />
-              <p className="text-white/60 text-sm font-body">
-                © 2025 Parlay. All rights reserved.
-              </p>
-            </div>
-            <p className="text-white/60 text-sm mt-2 md:mt-0 font-body">
-              Built with ❤️ for sports enthusiasts
-            </p>
-          </div>
-        </div>
+                    <div className="border-t border-slate mt-8 pt-8">
+                      <div className="flex flex-col md:flex-row justify-between items-center">
+                        <div className="flex items-center gap-3 mb-3 md:mb-0">
+                          <ParlayLogo size={36} />
+                          <span className="font-medium text-white">Parlay © 2025</span>
+                        </div>
+                        <div className="flex gap-6">
+                          <Link href="/terms" className="hover:text-amber-400">Terms</Link>
+                          <Link href="/privacy" className="hover:text-amber-400">Privacy</Link>
+                          <Link href="/contact" className="hover:text-amber-400">Contact</Link>
+                        </div>
+                      </div>
+                    </div>
       </div>
     </footer>
   );

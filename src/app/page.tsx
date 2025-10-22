@@ -11,48 +11,33 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-screen flex items-center">
-        {/* CSS Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-radial from-amber/20 via-ember/10 to-navy"></div>
-        
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
-          <div className="text-center">
-            {/* Parlay Logo */}
-            <div className="mb-8">
-              <ParlayLogo size={120} priority className="mx-auto mb-4" />
-            </div>
+                  <section className="flex flex-col items-center justify-center text-center min-h-[90vh] bg-gradient-to-b from-navy via-slate to-navy px-4">
+                    {/* Parlay Logo */}
+                    <ParlayLogo size={80} className="mb-6 md:size-[120px] drop-shadow-[0_0_20px_rgba(230,62,48,0.3)]" />
+                    
+                    <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-4">
+                      Analytics Meets Adrenaline
+                    </h1>
             
-            <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-white">Analytics Meets</span>
-              <br />
-              <span className="text-gradient-ember">Adrenaline.</span>
-            </h1>
-            
-            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto font-body">
-              Join the Parlay community — where insights ignite results.
-            </p>
-            
-            <div className="text-sm text-amber mb-4">
-              🚀 Interactive Demo - Login to explore all features!
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/feed"
-                className="bg-gradient-ember text-white px-8 py-4 rounded-xl font-heading font-semibold hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-ember/25"
-              >
-                Browse Feed
-              </Link>
-              <Link
-                href="/login"
-                className="bg-gradient-ember text-white px-8 py-4 rounded-xl font-heading font-semibold hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-ember/25"
-              >
-                Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+                    <p className="text-lg text-slate-300 max-w-xl mb-8">
+                      Join the Parlay community — where insights ignite results.
+                    </p>
+                    
+                    <div className="flex gap-4">
+                      <Link
+                        href="/feed"
+                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-ember to-amber text-white font-medium hover:opacity-90 transition"
+                      >
+                        Browse Feed
+                      </Link>
+                      <Link
+                        href="/login"
+                        className="px-6 py-3 rounded-xl border border-amber/50 text-amber hover:bg-amber/10 transition"
+                      >
+                        Login
+                      </Link>
+                    </div>
+                  </section>
 
       {/* Features Section */}
       <section className="py-20 bg-slate/30">

@@ -20,14 +20,14 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="bg-navy border-b border-slate">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <ParlayLogo size={40} />
-            <span className="text-white font-heading font-bold text-xl">Parlay</span>
-          </Link>
+                <nav className="bg-navy border-b border-slate">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-16">
+                      {/* Logo */}
+                      <Link href="/" className="flex items-center gap-3">
+                        <ParlayLogo size={48} className="mt-[1px] md:size-[48px] size-[36px]" />
+                        <span className="text-xl font-semibold tracking-tight text-white">Parlay</span>
+                      </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
