@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
 
 interface ParlayLogoProps {
   size?: number;
@@ -12,11 +14,28 @@ export default function ParlayLogo({
   priority = false 
 }: ParlayLogoProps) {
   const [imageError, setImageError] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Simple fallback approach - try to load the image, fallback if it fails
   const handleImageError = () => {
     setImageError(true);
   };
+
+  // Show loading state during SSR
+  if (!mounted) {
+    return (
+      <div 
+        className={`bg-slate/30 rounded-lg flex items-center justify-center animate-pulse ${className}`}
+        style={{ width: size, height: size }}
+      >
+        <span className="text-slate-400 text-xs">Loading...</span>
+      </div>
+    );
+  }
 
   // If image fails to load, show gradient flame fallback
   if (imageError) {
