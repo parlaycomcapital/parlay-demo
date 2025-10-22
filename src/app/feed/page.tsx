@@ -91,7 +91,7 @@ export default function Feed() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B132B]">
+    <div className="min-h-screen bg-navy">
       {/* Toast Notifications */}
       {toasts.map((toast) => (
         <div key={toast.id} className="fixed top-4 right-4 z-50">
@@ -111,7 +111,7 @@ export default function Feed() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
             Sports Analysis Feed
           </h1>
           <p className="text-gray-300 text-lg">

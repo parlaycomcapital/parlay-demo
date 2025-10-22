@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <Image
-                src="/assets/brand/logo.png"
+                src="/logo.png"
                 alt="Parlay Logo"
                 width={32}
                 height={32}
@@ -97,7 +97,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2">
               <Image
-                src="/assets/brand/logo.png"
+                src="/logo.png"
                 alt="Parlay Logo"
                 width={20}
                 height={20}

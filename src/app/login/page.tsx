@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useUser } from '@/hooks/useUser';
 import { User } from '@/lib/localStorage';
 
@@ -52,28 +53,41 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B132B] flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <Link href="/" className="flex items-center justify-center space-x-2 mb-4">
-            <div className="text-4xl">🔥</div>
-            <span className="text-white font-bold text-3xl">Parlay</span>
-          </Link>
-          <h1 className="text-2xl font-bold text-white mb-2">Sign In</h1>
-          <p className="text-gray-300">Choose your role and enter your username</p>
-        </div>
-
-        <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700">
+    <div className="min-h-screen bg-navy flex items-center justify-center px-4">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-radial"></div>
+      
+      <div className="relative z-10 max-w-md w-full">
+        <div className="glass rounded-2xl p-8 hover-lift transition-all duration-300">
+          <div className="text-center mb-8">
+            {/* Parlay Logo */}
+            <div className="mb-6">
+              <Image
+                src="/logo.png"
+                alt="Parlay Logo"
+                width={80}
+                height={80}
+                className="mx-auto"
+              />
+            </div>
+            
+            <h1 className="text-3xl font-heading font-semibold text-white mb-2">
+              Welcome to Parlay
+            </h1>
+            <p className="text-slate-300 font-body mb-8">
+              Smart Sports. Smarter Minds.
+            </p>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="role" className="block text-sm font-medium text-white mb-2 font-body">
                 Choose Your Role
               </label>
               <select
                 id="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value as 'fan' | 'analyst' | 'admin')}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-amber focus:ring-amber font-body"
               >
                 <option value="fan">Fan - Browse and purchase analyses</option>
                 <option value="analyst">Analyst - Create and share insights</option>
@@ -82,7 +96,7 @@ export default function Login() {
             </div>
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="username" className="block text-sm font-medium text-white mb-2 font-body">
                 Username
               </label>
               <input
@@ -90,32 +104,32 @@ export default function Login() {
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-amber focus:ring-amber font-body"
                 placeholder="Enter your username"
                 required
               />
             </div>
 
             {error && (
-              <div className="text-red-400 text-sm text-center">{error}</div>
+              <div className="text-red-400 text-sm text-center font-body">{error}</div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-ember text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-ember text-white py-4 px-6 rounded-xl font-heading font-semibold hover:opacity-90 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover-glow"
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? 'Signing In...' : 'Enter Parlay'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
-              This is a demo - no real authentication required
+            <p className="text-xs text-slate-400 font-body">
+              By continuing, you agree to our Terms and Privacy Policy.
             </p>
             <Link 
               href="/" 
-              className="text-orange-400 hover:text-orange-300 text-sm mt-2 inline-block"
+              className="text-amber hover:text-amber/80 text-sm mt-2 inline-block font-body"
             >
               ← Back to Home
             </Link>

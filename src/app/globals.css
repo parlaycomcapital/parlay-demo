@@ -53,6 +53,27 @@ body {
 .font-heading { font-family: var(--font-heading); }
 .font-body { font-family: var(--font-body); }
 
+/* CSS Gradient Backgrounds */
+.bg-gradient-radial {
+  background: radial-gradient(circle at top right, #F5A62322 0%, #E63E3011 40%, #0B132B 100%);
+}
+
+/* Glassmorphic Effects */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced Hover Effects */
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(230, 62, 48, 0.3);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
 /* Line clamp utilities */
 .line-clamp-1 {
   overflow: hidden;

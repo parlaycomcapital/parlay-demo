@@ -9,35 +9,16 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Hero Background */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/assets/brand/hero-banner.png"
-            alt="Parlay Hero Background"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-navy/60"></div>
-        </div>
+      <section className="relative overflow-hidden min-h-screen flex items-center">
+        {/* CSS Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-radial from-amber/20 via-ember/10 to-navy"></div>
         
-        {/* Pattern Overlay */}
-        <div className="absolute inset-0 z-10 opacity-5">
-          <Image
-            src="/assets/brand/pattern.png"
-            alt="Parlay Pattern"
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
           <div className="text-center">
             {/* Parlay Logo */}
             <div className="mb-8">
               <Image
-                src="/assets/brand/logo.png"
+                src="/logo.png"
                 alt="Parlay Logo"
                 width={120}
                 height={120}
@@ -46,47 +27,31 @@ export default function Home() {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-white">Smart Sports.</span>
+              <span className="text-white">Analytics Meets</span>
               <br />
-              <span className="text-gradient-ember">Smarter Minds.</span>
+              <span className="text-gradient-ember">Adrenaline.</span>
             </h1>
+            
+            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto font-body">
+              Join the Parlay community — where insights ignite results.
+            </p>
             
             <div className="text-sm text-amber mb-4">
               🚀 Interactive Demo - Login to explore all features!
             </div>
             
-            <div className="mb-6">
-              <Link
-                href="/feed"
-                className="inline-block bg-slate text-white px-6 py-3 rounded-xl font-body font-semibold hover:bg-slate/80 transition-colors mr-4"
-              >
-                Browse Feed (No Login Required)
-              </Link>
-              <Link
-                href="/login"
-                className="inline-block bg-gradient-ember text-white px-6 py-3 rounded-xl font-body font-semibold hover:opacity-90 transition-opacity"
-              >
-                Login for Full Access
-              </Link>
-            </div>
-            
-            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto font-body">
-              Connect with expert sports analysts, share insights, and discover the smartest predictions in sports. 
-              Join the community where knowledge meets passion.
-            </p>
-            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/feed"
-                className="bg-gradient-ember text-white px-8 py-4 rounded-xl font-heading font-semibold hover:opacity-90 transition-opacity shadow-lg"
+                className="bg-gradient-ember text-white px-8 py-4 rounded-xl font-heading font-semibold hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-ember/25"
               >
-                Explore Analyses
+                Browse Feed
               </Link>
               <Link
-                href="/create"
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-heading font-semibold hover:bg-white hover:text-navy transition-colors"
+                href="/login"
+                className="bg-gradient-ember text-white px-8 py-4 rounded-xl font-heading font-semibold hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-ember/25"
               >
-                Join Now
+                Login
               </Link>
             </div>
           </div>

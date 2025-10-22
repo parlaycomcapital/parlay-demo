@@ -26,7 +26,7 @@ const NavBar = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
             <Image
-              src="/assets/brand/logo.png"
+              src="/logo.png"
               alt="Parlay Logo"
               width={40}
               height={40}
