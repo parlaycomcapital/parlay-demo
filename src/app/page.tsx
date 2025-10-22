@@ -16,6 +16,9 @@ export default function Home() {
               <br />
               <span className="text-gradient-ember">Smarter Minds.</span>
             </h1>
+            <div className="text-sm text-orange-400 mb-4">
+              🚀 Interactive Demo - Login to explore all features!
+            </div>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Connect with expert sports analysts, share insights, and discover the smartest predictions in sports. 
               Join the community where knowledge meets passion.
