@@ -53,20 +53,22 @@ export default function Login() {
   };
 
               return (
-                <div className="min-h-screen bg-navy flex items-center justify-center px-4">
-                  {/* Background Gradient */}
-                  <div className="absolute inset-0 bg-gradient-radial"></div>
+                <div className="min-h-screen bg-gradient-to-br from-navy via-slate to-navy flex items-center justify-center px-4 relative overflow-hidden">
+                  {/* Animated Background Elements */}
+                  <div className="absolute inset-0 bg-gradient-radial from-amber/10 via-ember/5 to-transparent"></div>
+                  <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-amber/5 rounded-full blur-3xl animate-pulse"></div>
+                  <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-ember/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
                   
                   <div className="relative z-10 max-w-md w-full">
-                    <div className="glass rounded-2xl p-8 hover-lift transition-all duration-300">
-                      <div className="text-center mb-8">
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-2xl hover:shadow-ember/10 transition-all duration-500">
+                      <div className="text-center mb-10">
                         {/* Parlay Logo */}
-                        <ParlayLogo size={80} className="mb-6" />
+                        <ParlayLogo size={90} variant="hero" className="mb-8" />
                         
-                        <h1 className="text-3xl font-heading font-semibold text-white mb-2">
+                        <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">
                           Welcome to Parlay
                         </h1>
-                        <p className="text-slate-300 font-body mb-8">
+                        <p className="text-slate-300 text-lg mb-10 font-medium">
                           Smart Sports. Smarter Minds.
                         </p>
                       </div>
@@ -106,13 +108,20 @@ export default function Login() {
               <div className="text-red-400 text-sm text-center font-body">{error}</div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-ember text-white py-4 px-6 rounded-xl font-heading font-semibold hover:opacity-90 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover-glow"
-            >
-              {loading ? 'Signing In...' : 'Enter Parlay'}
-            </button>
+                        <button
+                          type="submit"
+                          disabled={loading}
+                          className="w-full bg-gradient-ember text-white py-4 px-6 rounded-xl font-bold text-lg hover:scale-105 hover:shadow-2xl hover:shadow-ember/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+                        >
+                          {loading ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                              Signing In...
+                            </span>
+                          ) : (
+                            'Enter Parlay'
+                          )}
+                        </button>
           </form>
 
           <div className="mt-6 text-center">

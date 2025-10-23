@@ -89,16 +89,25 @@ const Footer = () => {
           </div>
         </div>
 
-                    <div className="border-t border-slate mt-8 pt-8">
-                      <div className="flex flex-col md:flex-row justify-between items-center">
-                        <div className="flex items-center gap-3 mb-3 md:mb-0">
-                          <ParlayLogo size={36} />
-                          <span className="font-medium text-white">Parlay © 2025</span>
+                    <div className="border-t border-slate/30 mt-12 pt-8">
+                      <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="flex items-center gap-4">
+                          <ParlayLogo size={40} variant="footer" />
+                          <div className="flex flex-col">
+                            <span className="font-bold text-white text-lg">Parlay</span>
+                            <span className="text-slate-400 text-sm">© 2025 All rights reserved</span>
+                          </div>
                         </div>
-                        <div className="flex gap-6">
-                          <Link href="/terms" className="hover:text-amber-400">Terms</Link>
-                          <Link href="/privacy" className="hover:text-amber-400">Privacy</Link>
-                          <Link href="/contact" className="hover:text-amber-400">Contact</Link>
+                        <div className="flex gap-8">
+                          <Link href="/terms" className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium">
+                            Terms
+                          </Link>
+                          <Link href="/privacy" className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium">
+                            Privacy
+                          </Link>
+                          <Link href="/contact" className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium">
+                            Contact
+                          </Link>
                         </div>
                       </div>
                     </div>

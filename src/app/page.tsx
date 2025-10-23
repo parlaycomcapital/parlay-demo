@@ -11,31 +11,44 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-                  <section className="flex flex-col items-center justify-center text-center min-h-[90vh] bg-gradient-to-b from-navy via-slate to-navy px-4">
-                    {/* Parlay Logo */}
-                    <ParlayLogo size={80} className="mb-6 md:size-[120px] drop-shadow-[0_0_20px_rgba(230,62,48,0.3)]" />
+                  <section className="relative flex flex-col items-center justify-center text-center min-h-screen bg-gradient-to-br from-navy via-slate to-navy px-4 overflow-hidden">
+                    {/* Animated Background */}
+                    <div className="absolute inset-0 bg-gradient-radial from-amber/20 via-ember/10 to-transparent"></div>
+                    <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-amber/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-ember/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
                     
-                    <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-4">
-                      Analytics Meets Adrenaline
-                    </h1>
-            
-                    <p className="text-lg text-slate-300 max-w-xl mb-8">
-                      Join the Parlay community — where insights ignite results.
-                    </p>
-                    
-                    <div className="flex gap-4">
-                      <Link
-                        href="/feed"
-                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-ember to-amber text-white font-medium hover:opacity-90 transition"
-                      >
-                        Browse Feed
-                      </Link>
-                      <Link
-                        href="/login"
-                        className="px-6 py-3 rounded-xl border border-amber/50 text-amber hover:bg-amber/10 transition"
-                      >
-                        Login
-                      </Link>
+                    <div className="relative z-10 max-w-4xl mx-auto">
+                      {/* Parlay Logo */}
+                      <ParlayLogo size={100} variant="hero" className="mb-8 md:size-[140px]" />
+                      
+                      <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-6 tracking-tight">
+                        <span className="block">Analytics</span>
+                        <span className="block bg-gradient-to-r from-ember to-amber bg-clip-text text-transparent">
+                          Meets Adrenaline
+                        </span>
+                      </h1>
+              
+                      <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mb-12 font-medium leading-relaxed">
+                        Join the Parlay community — where insights ignite results.
+                      </p>
+                      
+                      <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                        <Link
+                          href="/feed"
+                          className="group px-8 py-4 rounded-2xl bg-gradient-ember text-white font-bold text-lg hover:scale-105 hover:shadow-2xl hover:shadow-ember/25 transition-all duration-300"
+                        >
+                          <span className="flex items-center justify-center gap-2">
+                            Browse Feed
+                            <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
+                          </span>
+                        </Link>
+                        <Link
+                          href="/login"
+                          className="px-8 py-4 rounded-2xl border-2 border-amber/50 text-amber font-bold text-lg hover:bg-amber/10 hover:border-amber hover:scale-105 transition-all duration-300"
+                        >
+                          Login
+                        </Link>
+                      </div>
                     </div>
                   </section>
 

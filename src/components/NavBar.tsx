@@ -20,25 +20,27 @@ const NavBar = () => {
   ];
 
   return (
-                <nav className="bg-navy border-b border-slate">
-                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
+                <nav className="bg-navy/95 backdrop-blur-md border-b border-slate/20 sticky top-0 z-50">
+                  <div className="max-w-7xl mx-auto px-6 py-4">
+                    <div className="flex justify-between items-center">
                       {/* Logo */}
-                      <Link href="/" className="flex items-center gap-3">
-                        <ParlayLogo size={48} className="mt-[1px] md:size-[48px] size-[36px]" />
-                        <span className="text-xl font-semibold tracking-tight text-white">Parlay</span>
+                      <Link href="/" className="flex items-center gap-4 group">
+                        <ParlayLogo size={48} variant="navbar" className="md:size-[48px] size-[40px]" />
+                        <span className="text-xl font-bold tracking-tight text-white group-hover:text-amber transition-colors duration-200">
+                          Parlay
+                        </span>
                       </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-2 rounded-md text-sm font-body font-medium transition-colors ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                   pathname === item.href
-                    ? 'bg-gradient-ember text-white'
-                    : 'text-slate hover:text-white hover:bg-slate/20'
+                    ? 'bg-gradient-ember text-white shadow-lg shadow-ember/25'
+                    : 'text-slate-300 hover:text-white hover:bg-slate/30 hover:scale-105'
                 }`}
               >
                 {item.label}
