@@ -3,18 +3,21 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { useUser } from '@/hooks/useUser';
+import { useSession, signOut } from 'next-auth/react';
 import ParlayLogo from './ParlayLogo';
 
 const NavBar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout, isLoggedIn } = useUser();
+  const { data: session } = useSession();
+  
+  const user = session?.user;
+  const isLoggedIn = !!session?.user;
 
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/feed', label: 'Feed' },
-    ...(isLoggedIn && user?.role === 'analyst' ? [{ href: '/create', label: 'Create' }] : []),
+    ...(isLoggedIn && (user?.role === 'analyst' || user?.role === 'admin') ? [{ href: '/dashboard', label: 'Dashboard' }] : []),
     ...(isLoggedIn ? [{ href: `/profile/${user?.id}`, label: 'Profile' }] : []),
     ...(isLoggedIn && user?.role === 'admin' ? [{ href: '/admin', label: 'Admin' }] : []),
   ];
@@ -53,16 +56,16 @@ const NavBar = () => {
                 <>
                   <div className="flex items-center space-x-2">
                     <img
-                      src={user?.avatar}
-                      alt={user?.username}
+                      src={user?.image || `https://ui-avatars.com/api/?name=${user?.name}&background=FF6B35&color=fff`}
+                      alt={user?.name}
                       className="w-8 h-8 rounded-full"
                     />
                     <span className="text-gray-300 text-sm">
-                      {user?.username} ({user?.role})
+                      {user?.name} ({user?.role})
                     </span>
                   </div>
                   <button
-                    onClick={logout}
+                    onClick={() => signOut()}
                     className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     Logout

@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useUser } from '@/hooks/useUser';
-import { usePosts } from '@/hooks/usePosts';
-import { usePurchases } from '@/hooks/usePurchases';
-import { Post } from '@/lib/localStorage';
+import { useSession } from 'next-auth/react';
+import { supabase } from '@/lib/supabaseClient';
+import { Post } from '@/lib/supabaseClient';
 import { FeedSkeleton } from '@/components/SkeletonLoader';
 import { RoleBadge } from '@/components/RoleBadge';
 import { useToast } from '@/components/Toast';
@@ -16,25 +15,60 @@ export default function Feed() {
   const [sportFilter, setSportFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'popular'>('newest');
   const [searchQuery, setSearchQuery] = useState('');
-  const { user, isLoggedIn } = useUser();
-  const { posts, loading: postsLoading } = usePosts();
-  const { isPostPurchased, buyPost } = usePurchases();
+  const { data: session } = useSession();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [purchases, setPurchases] = useState<any[]>([]);
   const { toasts, showToast, removeToast } = useToast();
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+
+  // Fetch posts from Supabase
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('posts')
+          .select(`
+            *,
+            author:users(name, email, role, avatar_url)
+          `)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setPosts(data || []);
+      } catch (err) {
+        console.error('Failed to fetch posts:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  // Fetch user purchases
+  useEffect(() => {
+    if (session?.user?.id) {
+      const fetchPurchases = async () => {
+        const { data } = await supabase
+          .from('purchases')
+          .select('post_id')
+          .eq('user_id', session.user.id);
+        setPurchases(data || []);
+      };
+      fetchPurchases();
+    }
+  }, [session?.user?.id]);
 
   useEffect(() => {
     let filtered = posts;
 
     // Filter by price type
-    switch (filter) {
-      case 'free':
-        filtered = posts.filter(post => !post.isPremium);
-        break;
-      case 'premium':
-        filtered = posts.filter(post => post.isPremium);
-        break;
-      default:
-        filtered = posts;
+    if (filter === 'free') {
+      filtered = filtered.filter(post => !post.is_premium);
+    } else if (filter === 'premium') {
+      filtered = filtered.filter(post => post.is_premium);
     }
 
     // Filter by sport
@@ -42,50 +76,70 @@ export default function Feed() {
       filtered = filtered.filter(post => post.sport.toLowerCase() === sportFilter.toLowerCase());
     }
 
-    // Search filter
-    if (searchQuery.trim()) {
-      filtered = filtered.filter(post => 
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(post =>
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.preview.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.author.username.toLowerCase().includes(searchQuery.toLowerCase())
+        post.author?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Sort
+    // Sort posts
     filtered.sort((a, b) => {
-      if (sortBy === 'popular') {
-        return (b.likes + b.views + b.comments) - (a.likes + a.views + a.comments);
-      } else {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sortBy === 'newest') {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      } else { // popular - using price as proxy for popularity
+        return b.price - a.price;
       }
     });
 
     setFilteredPosts(filtered);
   }, [posts, filter, sportFilter, sortBy, searchQuery]);
 
-  const handlePurchase = (postId: string) => {
-    if (user) {
-      buyPost(postId, user.id);
+  const handlePurchase = async (postId: string) => {
+    if (!session?.user?.id) {
+      showToast('Please log in to purchase posts', 'error');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('purchases')
+        .insert({
+          user_id: session.user.id,
+          post_id: postId,
+        });
+
+      if (error) throw error;
+      
       showToast('Purchase successful! Content unlocked.', 'success');
+      
+      // Refresh purchases
+      const { data } = await supabase
+        .from('purchases')
+        .select('post_id')
+        .eq('user_id', session.user.id);
+      setPurchases(data || []);
+    } catch (err) {
+      showToast('Failed to purchase post', 'error');
     }
   };
 
-  const canViewPost = (post: Post): boolean => {
-    if (!post.isPremium) return true;
-    if (!isLoggedIn) return false;
-    return isPostPurchased(post.id, user?.id || '');
+  const isPostPurchased = (postId: string): boolean => {
+    return purchases.some(purchase => purchase.post_id === postId);
   };
 
-  if (postsLoading) {
+  const canViewPost = (post: Post): boolean => {
+    if (!post.is_premium) return true;
+    if (!session?.user?.id) return false;
+    return isPostPurchased(post.id);
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-[#0B132B]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <div className="h-8 bg-gray-700 rounded w-64 mb-4 animate-pulse"></div>
-            <div className="h-6 bg-gray-700 rounded w-96 animate-pulse"></div>
-          </div>
-          <FeedSkeleton />
-        </div>
+      <div className="min-h-screen bg-navy flex items-center justify-center">
+        <FeedSkeleton />
       </div>
     );
   }
@@ -119,204 +173,122 @@ export default function Feed() {
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-6">
-          {/* Search Bar */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search analyses, authors, or content..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 pl-12 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-              🔍
-            </div>
-          </div>
+        {/* Filters and Search */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+          <input
+            type="text"
+            placeholder="Search posts, authors..."
+            className="w-full sm:w-1/3 px-4 py-2 rounded-xl bg-slate/50 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber focus:border-transparent font-body"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="flex space-x-4">
+            {/* Filter by Price */}
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as 'all' | 'free' | 'premium')}
+              className="px-4 py-2 rounded-xl bg-slate/50 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-amber focus:border-transparent font-body"
+            >
+              <option value="all">All</option>
+              <option value="free">Free</option>
+              <option value="premium">Premium</option>
+            </select>
 
-          {/* Filter Controls */}
-          <div className="flex flex-wrap gap-4">
-            {/* Price Filters */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  filter === 'all'
-                    ? 'bg-gradient-ember text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                All ({posts.length})
-              </button>
-              <button
-                onClick={() => setFilter('free')}
-                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  filter === 'free'
-                    ? 'bg-gradient-ember text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                Free ({posts.filter(p => !p.isPremium).length})
-              </button>
-              <button
-                onClick={() => setFilter('premium')}
-                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  filter === 'premium'
-                    ? 'bg-gradient-ember text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                Premium ({posts.filter(p => p.isPremium).length})
-              </button>
-            </div>
-
-            {/* Sport Filter */}
+            {/* Filter by Sport */}
             <select
               value={sportFilter}
               onChange={(e) => setSportFilter(e.target.value)}
-              className="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="px-4 py-2 rounded-xl bg-slate/50 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-amber focus:border-transparent font-body"
             >
               <option value="all">All Sports</option>
               <option value="football">Football</option>
               <option value="basketball">Basketball</option>
               <option value="tennis">Tennis</option>
-              <option value="hockey">Hockey</option>
-              <option value="baseball">Baseball</option>
-              <option value="soccer">Soccer</option>
+              <option value="esports">Esports</option>
             </select>
 
-            {/* Sort Filter */}
+            {/* Sort By */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'newest' | 'popular')}
-              className="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="px-4 py-2 rounded-xl bg-slate/50 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-amber focus:border-transparent font-body"
             >
-              <option value="newest">Newest First</option>
-              <option value="popular">Most Popular</option>
+              <option value="newest">Newest</option>
+              <option value="popular">Popular</option>
             </select>
           </div>
         </div>
 
         {/* Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post) => {
-            const canView = canViewPost(post);
-            const isOwnPost = user?.id === post.authorId;
-
-            return (
-              <div key={post.id} className="bg-gray-800/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 hover:shadow-xl hover:scale-105 transition-all duration-300 relative group">
-                <div className="relative h-48">
-                  <Image
-                    src={post.imageUrl}
-                    alt={`${post.sport} analysis by ${post.author.username}`}
-                    fill
-                    className="object-cover"
-                  />
-                  {post.isPremium ? (
-                    <div className="absolute top-4 right-4 bg-gradient-ember text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      🔥 Premium
-                    </div>
-                  ) : (
-                    <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      ✓ Free
-                    </div>
-                  )}
-                  {!canView && !isOwnPost && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="text-4xl mb-2">🔒</div>
-                        <p className="text-sm">Premium Content</p>
-                      </div>
-                    </div>
-                  )}
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Link
-                      href={`/post/${post.id}`}
-                      className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          {filteredPosts.map((post) => (
+            <div
+              key={post.id}
+              className="relative bg-slate/50 rounded-2xl shadow-lg overflow-hidden group hover:scale-[1.02] hover:shadow-xl hover:shadow-ember/20 transition-all duration-300"
+            >
+              {!canViewPost(post) && (
+                <div className="absolute inset-0 bg-navy/80 flex items-center justify-center z-10 rounded-2xl">
+                  <div className="text-center">
+                    <p className="text-white text-lg font-semibold mb-2">Premium Content</p>
+                    <button
+                      onClick={() => handlePurchase(post.id)}
+                      className="bg-gradient-ember text-white px-5 py-2 rounded-xl font-semibold hover:opacity-90 transition-opacity"
                     >
-                      View Details
-                    </Link>
+                      Purchase to Unlock
+                    </button>
                   </div>
                 </div>
-
-                <div className="p-6">
-                  <div className="flex items-center mb-3">
-                    <img
-                      src={post.author.avatar}
-                      alt={post.author.username}
-                      className="w-8 h-8 rounded-full mr-3"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <p className="text-sm text-gray-300">{post.author.username}</p>
-                        <RoleBadge role={post.author.role} size="sm" />
-                      </div>
-                      <p className="text-xs text-gray-400">{post.sport}</p>
-                    </div>
-                  </div>
-
-                  <h3 className="text-lg font-semibold mb-2 line-clamp-2">{post.title}</h3>
-                  
-                  {canView ? (
-                    <p className="text-gray-300 text-sm mb-4 line-clamp-3">{post.preview}</p>
-                  ) : (
-                    <p className="text-gray-500 text-sm mb-4 line-clamp-3">
-                      Premium content - purchase to view full analysis
-                    </p>
-                  )}
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-gray-400">
-                      <span>👀 {post.views}</span>
-                      <span>❤️ {post.likes}</span>
-                      <span>💬 {post.comments}</span>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
-                      {isOwnPost && (
-                        <button className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors w-full sm:w-auto">
-                          Edit
-                        </button>
-                      )}
-                      
-                      {canView ? (
-                        <Link
-                          href={`/post/${post.id}`}
-                          className="bg-gradient-ember text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity text-center w-full sm:w-auto"
-                        >
-                          Read
-                        </Link>
-                      ) : post.isPremium && isLoggedIn ? (
-                        <button
-                          onClick={() => handlePurchase(post.id)}
-                          className="bg-gradient-ember text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto"
-                        >
-                          ${post.price}
-                        </button>
-                      ) : (
-                        <Link
-                          href="/login"
-                          className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-500 transition-colors text-center w-full sm:w-auto"
-                        >
-                          Login to Buy
-                        </Link>
-                      )}
-                    </div>
+              )}
+              <Link href={`/post/${post.id}`} className="block">
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src={post.image_url || '/placeholder-sports.jpg'}
+                    alt={post.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/70 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-4 w-full flex justify-between items-end">
+                    <h2 className="text-xl font-heading font-bold text-white line-clamp-2">
+                      {post.title}
+                    </h2>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${post.is_premium ? 'bg-amber text-navy' : 'bg-green-500 text-white'}`}>
+                      {post.is_premium ? '🔥 Premium' : '✓ Free'}
+                    </span>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+                <div className="p-4">
+                  <p className="text-white/80 text-sm mb-3 line-clamp-3 font-body">
+                    {post.content}
+                  </p>
+                  <div className="flex items-center justify-between text-sm text-gray-400">
+                    <div className="flex items-center space-x-2">
+                      <img
+                        src={post.author?.avatar_url || `https://ui-avatars.com/api/?name=${post.author?.name}&background=FF6B35&color=fff`}
+                        alt={post.author?.name}
+                        className="w-6 h-6 rounded-full"
+                      />
+                      <Link href={`/profile/${post.author_id}`} className="text-amber hover:underline font-body">
+                        {post.author?.name}
+                      </Link>
+                      <RoleBadge role={post.author?.role || 'fan'} />
+                    </div>
+                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </Link>
+              <Link href={`/post/${post.id}`} className="absolute inset-0 flex items-center justify-center bg-navy/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 rounded-2xl">
+                <button className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-heading font-semibold hover:opacity-90 transition-opacity">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          ))}
         </div>
 
         {filteredPosts.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-400 text-lg">No posts found</div>
-            <p className="text-gray-500 text-sm mt-2">
-              {filter === 'premium' ? 'No premium posts available' : 'No posts match your filter'}
-            </p>
+            <p className="text-white/60 text-lg">No posts found matching your criteria.</p>
           </div>
         )}
       </div>

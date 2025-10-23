@@ -15,42 +15,38 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        // Fetch user role from Supabase
-        const { data: userData } = await supabase
+    async session({ session, token }) {
+      if (token?.sub) {
+        session.user.id = token.sub
+        const { data } = await supabase
           .from('users')
           .select('role')
-          .eq('id', user.id)
+          .eq('id', token.sub)
           .single()
-        
-        session.user.id = user.id
-        session.user.role = userData?.role || 'fan'
+        session.user.role = data?.role || 'fan'
       }
       return session
     },
-    async signIn({ user, account, profile }) {
-      if (account?.provider === 'google') {
-        // Create or update user in our users table
-        const { data: existingUser } = await supabase
+  },
+  events: {
+    async signIn({ user }) {
+      const { data: existing } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', user.email)
+        .single()
+      
+      if (!existing) {
+        await supabase
           .from('users')
-          .select('*')
-          .eq('email', user.email)
-          .single()
-
-        if (!existingUser) {
-          await supabase
-            .from('users')
-            .insert({
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              role: 'fan', // Default role
-              avatar_url: user.image,
-            })
-        }
+          .insert([{
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: 'fan',
+            avatar_url: user.image,
+          }])
       }
-      return true
     },
   },
   pages: {
