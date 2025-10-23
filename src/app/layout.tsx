@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
-import { initializeDemoData } from "@/lib/localStorage";
+import { SessionProvider } from "@/components/SessionProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,19 +32,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Initialize demo data on app start
-  if (typeof window !== 'undefined') {
-    initializeDemoData();
-  }
-
   return (
     <html lang="en">
       <body className={`${inter.variable} font-body antialiased bg-navy text-white`} suppressHydrationWarning={true}>
-        <NavBar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <SessionProvider>
+          <NavBar />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );
