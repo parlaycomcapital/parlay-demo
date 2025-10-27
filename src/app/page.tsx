@@ -1,8 +1,8 @@
 'use client';
 
-import Link from "next/link";
-import { mockPosts } from "@/data/mockData";
-import ParlayLogo from "@/components/ParlayLogo";
+import Link from 'next/link';
+import { mockPosts } from '@/data/mockData';
+import Logo from '@/components/ui/Logo';
 
 export default function Home() {
   // Featured posts for homepage
@@ -11,46 +11,48 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-                  <section className="relative flex flex-col items-center justify-center text-center min-h-screen bg-gradient-to-br from-navy via-slate to-navy px-4 overflow-hidden">
-                    {/* Animated Background */}
-                    <div className="absolute inset-0 bg-gradient-radial from-amber/20 via-ember/10 to-transparent"></div>
-                    <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-amber/10 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-ember/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                    
-                    <div className="relative z-10 max-w-4xl mx-auto">
-                      {/* Parlay Logo */}
-                      <ParlayLogo size={100} variant="hero" className="mb-8 md:size-[140px]" />
-                      
-                      <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-6 tracking-tight">
-                        <span className="block">Analytics</span>
-                        <span className="block bg-gradient-to-r from-ember to-amber bg-clip-text text-transparent">
-                          Meets Adrenaline
-                        </span>
-                      </h1>
-              
-                      <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mb-12 font-medium leading-relaxed">
-                        Join the Parlay community — where insights ignite results.
-                      </p>
-                      
-                      <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <Link
-                          href="/feed"
-                          className="group px-8 py-4 rounded-2xl bg-gradient-ember text-white font-bold text-lg hover:scale-105 hover:shadow-2xl hover:shadow-ember/25 transition-all duration-300"
-                        >
-                          <span className="flex items-center justify-center gap-2">
-                            Browse Feed
-                            <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
-                          </span>
-                        </Link>
-                        <Link
-                          href="/login"
-                          className="px-8 py-4 rounded-2xl border-2 border-amber/50 text-amber font-bold text-lg hover:bg-amber/10 hover:border-amber hover:scale-105 transition-all duration-300"
-                        >
-                          Login
-                        </Link>
-                      </div>
-                    </div>
-                  </section>
+      <section className="relative flex flex-col items-center justify-center text-center min-h-screen bg-gradient-to-br from-navy via-slate to-navy px-4 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-radial from-amber/20 via-ember/10 to-transparent"></div>
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-amber/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-ember/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+        <div className="relative z-10 max-w-4xl mx-auto">
+          {/* Parlay Logo */}
+          <Logo variant="transparent" size={100} className="mb-8 md:size-[140px]" />
+
+          <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-6 tracking-tight">
+            <span className="block">Analytics</span>
+            <span className="block bg-gradient-to-r from-ember to-amber bg-clip-text text-transparent">
+              Meets Adrenaline
+            </span>
+          </h1>
+
+          <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mb-12 font-medium leading-relaxed">
+            Join the Parlay community — where insights ignite results.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Link
+              href="/feed"
+              className="group px-8 py-4 rounded-2xl bg-gradient-ember text-white font-bold text-lg hover:scale-105 hover:shadow-2xl hover:shadow-ember/25 transition-all duration-300"
+            >
+              <span className="flex items-center justify-center gap-2">
+                Browse Feed
+                <span className="group-hover:translate-x-1 transition-transform duration-200">
+                  →
+                </span>
+              </span>
+            </Link>
+            <Link
+              href="/login"
+              className="px-8 py-4 rounded-2xl border-2 border-amber/50 text-amber font-bold text-lg hover:bg-amber/10 hover:border-amber hover:scale-105 transition-all duration-300"
+            >
+              Login
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="py-20 bg-slate/30">
@@ -61,29 +63,32 @@ export default function Home() {
               The only platform where sports analysis meets social networking
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 rounded-2xl bg-slate/50 hover:bg-slate/70 transition-all duration-300 hover:scale-105 hover:shadow-ember/20">
               <div className="text-4xl mb-4">🎯</div>
               <h3 className="text-xl font-heading font-semibold mb-3">Expert Analysis</h3>
               <p className="text-white/80 font-body">
-                Get insights from professional sports analysts with years of experience and proven track records.
+                Get insights from professional sports analysts with years of experience and proven
+                track records.
               </p>
             </div>
-            
+
             <div className="text-center p-6 rounded-2xl bg-slate/50 hover:bg-slate/70 transition-all duration-300 hover:scale-105 hover:shadow-ember/20">
               <div className="text-4xl mb-4">💬</div>
               <h3 className="text-xl font-heading font-semibold mb-3">Community Driven</h3>
               <p className="text-white/80 font-body">
-                Join discussions, share your own insights, and connect with fellow sports enthusiasts.
+                Join discussions, share your own insights, and connect with fellow sports
+                enthusiasts.
               </p>
             </div>
-            
+
             <div className="text-center p-6 rounded-2xl bg-slate/50 hover:bg-slate/70 transition-all duration-300 hover:scale-105 hover:shadow-ember/20">
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-xl font-heading font-semibold mb-3">Data-Driven</h3>
               <p className="text-white/80 font-body">
-                Access comprehensive statistics, trends, and data-backed predictions for informed decisions.
+                Access comprehensive statistics, trends, and data-backed predictions for informed
+                decisions.
               </p>
             </div>
           </div>
@@ -99,10 +104,13 @@ export default function Home() {
               Discover the latest insights from our top analysts
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredPosts.map((post) => (
-              <div key={post.id} className="bg-gray-800/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-colors">
+              <div
+                key={post.id}
+                className="bg-gray-800/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-colors"
+              >
                 <div className="relative h-48">
                   <img
                     src={post.imageUrl}
@@ -146,7 +154,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          
+
           <div className="text-center mt-12">
             <Link
               href="/feed"

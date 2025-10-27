@@ -19,10 +19,12 @@ export function useSupabasePosts() {
       setLoading(true);
       const { data, error } = await supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           *,
           author:users(name, email, role, avatar_url)
-        `)
+        `
+        )
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -50,14 +52,16 @@ export function useSupabasePosts() {
         ...postData,
         author_id: session.user.id,
       })
-      .select(`
+      .select(
+        `
         *,
         author:users(name, email, role, avatar_url)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
-    setPosts(prev => [data, ...prev]);
+    setPosts((prev) => [data, ...prev]);
     return data;
   };
 
@@ -68,27 +72,26 @@ export function useSupabasePosts() {
       .from('posts')
       .update(updates)
       .eq('id', id)
-      .select(`
+      .select(
+        `
         *,
         author:users(name, email, role, avatar_url)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
-    setPosts(prev => prev.map(post => post.id === id ? data : post));
+    setPosts((prev) => prev.map((post) => (post.id === id ? data : post)));
     return data;
   };
 
   const deletePost = async (id: string) => {
     if (!session?.user?.id) throw new Error('Not authenticated');
 
-    const { error } = await supabase
-      .from('posts')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('posts').delete().eq('id', id);
 
     if (error) throw error;
-    setPosts(prev => prev.filter(post => post.id !== id));
+    setPosts((prev) => prev.filter((post) => post.id !== id));
   };
 
   return {

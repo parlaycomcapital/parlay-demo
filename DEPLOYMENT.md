@@ -5,25 +5,29 @@
 ### Option 1: Deploy via Vercel CLI (Fastest)
 
 1. **Install Vercel CLI:**
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Login to Vercel:**
+
    ```bash
    vercel login
    ```
 
 3. **Deploy your project:**
+
    ```bash
    vercel
    ```
 
 4. **Set environment variables:**
+
    ```bash
    vercel env add PASSWORD_PROTECTION
    # Enter: true
-   
+
    vercel env add PREVIEW_PASSWORD
    # Enter: parlay2024 (or your custom password)
    ```
@@ -49,6 +53,7 @@
 ## 🔐 Password Protection
 
 The site is protected with a preview password system:
+
 - **Default password:** `parlay2024`
 - **Customize:** Change `PREVIEW_PASSWORD` environment variable
 - **Disable:** Set `PASSWORD_PROTECTION` to `false`
@@ -56,17 +61,20 @@ The site is protected with a preview password system:
 ## 🌐 Alternative Deployment Options
 
 ### Netlify
+
 1. Go to [netlify.com](https://netlify.com)
 2. Drag and drop your project folder
 3. Set build command: `npm run build`
 4. Set publish directory: `.next`
 
 ### Railway
+
 1. Go to [railway.app](https://railway.app)
 2. Connect your GitHub repo
 3. Railway auto-detects Next.js and deploys
 
 ### DigitalOcean App Platform
+
 1. Go to [cloud.digitalocean.com](https://cloud.digitalocean.com)
 2. Create new app
 3. Connect your repository
@@ -88,6 +96,7 @@ The site is protected with a preview password system:
 ## 🔄 Updates
 
 To update your deployed site:
+
 - **Vercel CLI:** Run `vercel --prod`
 - **GitHub connected:** Just push to your repository
 - **Manual:** Re-upload your project folder

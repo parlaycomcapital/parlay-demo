@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import ParlayLogo from '@/components/ParlayLogo';
+import Logo from '@/components/ui/Logo';
 
 export default function NotFound() {
   return (
@@ -9,17 +9,15 @@ export default function NotFound() {
       <div className="text-center">
         {/* Parlay Logo */}
         <div className="mb-8">
-          <ParlayLogo size={120} className="mx-auto" />
+          <Logo variant="transparent" size={120} className="mx-auto" />
         </div>
-        
+
         <h1 className="text-6xl font-heading font-bold text-white mb-4">404</h1>
-        <h2 className="text-2xl font-heading font-semibold text-white mb-4">
-          Page Not Found
-        </h2>
+        <h2 className="text-2xl font-heading font-semibold text-white mb-4">Page Not Found</h2>
         <p className="text-white/70 mb-8 font-body max-w-md mx-auto">
-          The page you're looking for doesn't exist or has been moved.
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        
+
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"

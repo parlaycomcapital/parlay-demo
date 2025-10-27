@@ -65,9 +65,7 @@ export default function PreviewLogin() {
               />
             </div>
 
-            {error && (
-              <div className="text-red-400 text-sm text-center">{error}</div>
-            )}
+            {error && <div className="text-red-400 text-sm text-center">{error}</div>}
 
             <button
               type="submit"
@@ -79,9 +77,7 @@ export default function PreviewLogin() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
-              This is a preview version of Parlay.sk
-            </p>
+            <p className="text-gray-400 text-sm">This is a preview version of Parlay.sk</p>
           </div>
         </div>
       </div>

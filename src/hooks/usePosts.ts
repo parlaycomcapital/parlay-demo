@@ -1,72 +1,47 @@
 'use client';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
-import { useState, useEffect } from 'react';
-import { getPosts, addPost, updatePost, deletePost, Post } from '@/lib/localStorage';
+type Post = {
+  id: string;
+  title: string;
+  content: string;
+  sport: string;
+  price?: number;
+  created_at: string;
+  user_id?: string;
+};
 
-export const usePosts = () => {
-  const [posts, setPostsState] = useState<Post[]>([]);
+export function usePosts() {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const allPosts = getPosts();
-    setPostsState(allPosts);
-    setLoading(false);
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('id, title, content, sport, price, created_at, user_id')
+        .order('created_at', { ascending: false });
+      if (error) setError(error.message);
+      else setPosts(data || []);
+      setLoading(false);
+    };
+
+    fetchPosts();
+
+    // Realtime listener
+    const channel = supabase
+      .channel('posts')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => {
+        fetchPosts();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  const createPost = (post: Omit<Post, 'id' | 'createdAt' | 'likes' | 'comments' | 'views'>) => {
-    const newPost: Post = {
-      ...post,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      likes: 0,
-      comments: 0,
-      views: 0,
-    };
-    
-    addPost(newPost);
-    setPostsState(prev => [newPost, ...prev]);
-    return newPost;
-  };
-
-  const editPost = (postId: string, updates: Partial<Post>) => {
-    updatePost(postId, updates);
-    setPostsState(prev => 
-      prev.map(post => 
-        post.id === postId ? { ...post, ...updates } : post
-      )
-    );
-  };
-
-  const removePost = (postId: string) => {
-    deletePost(postId);
-    setPostsState(prev => prev.filter(post => post.id !== postId));
-  };
-
-  const getPostById = (id: string): Post | undefined => {
-    return posts.find(post => post.id === id);
-  };
-
-  const getPostsByAuthor = (authorId: string): Post[] => {
-    return posts.filter(post => post.authorId === authorId);
-  };
-
-  const getFreePosts = (): Post[] => {
-    return posts.filter(post => !post.isPremium);
-  };
-
-  const getPremiumPosts = (): Post[] => {
-    return posts.filter(post => post.isPremium);
-  };
-
-  return {
-    posts,
-    loading,
-    createPost,
-    editPost,
-    removePost,
-    getPostById,
-    getPostsByAuthor,
-    getFreePosts,
-    getPremiumPosts,
-  };
-};
+  return { posts, loading, error };
+}

@@ -39,8 +39,11 @@ export default function CreatePost() {
     }
 
     try {
-      const teamsArray = teams.split(',').map(t => t.trim()).filter(t => t);
-      
+      const teamsArray = teams
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t);
+
       const newPost = createPost({
         title: title.trim(),
         content: content.trim(),
@@ -51,7 +54,9 @@ export default function CreatePost() {
         teams: teamsArray,
         price: isPremium ? price : 0,
         isPremium,
-        imageUrl: imageUrl.trim() || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=400&fit=crop',
+        imageUrl:
+          imageUrl.trim() ||
+          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=400&fit=crop',
       });
 
       router.push('/feed');
@@ -84,12 +89,8 @@ export default function CreatePost() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Create New Analysis
-          </h1>
-          <p className="text-gray-300 text-lg">
-            Share your sports insights with the community
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">Create New Analysis</h1>
+          <p className="text-gray-300 text-lg">Share your sports insights with the community</p>
         </div>
 
         {/* Form */}
@@ -215,9 +216,7 @@ export default function CreatePost() {
               />
             </div>
 
-            {error && (
-              <div className="text-red-400 text-sm text-center">{error}</div>
-            )}
+            {error && <div className="text-red-400 text-sm text-center">{error}</div>}
 
             <div className="flex space-x-4">
               <button
@@ -227,7 +226,7 @@ export default function CreatePost() {
               >
                 {loading ? 'Creating...' : 'Create Analysis'}
               </button>
-              
+
               <Link
                 href="/feed"
                 className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg font-semibold hover:bg-gray-700 transition-colors"

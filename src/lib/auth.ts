@@ -1,7 +1,7 @@
-import { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import { SupabaseAdapter } from '@auth/supabase-adapter'
-import { supabase } from './supabaseClient'
+import { NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import { SupabaseAdapter } from '@auth/supabase-adapter';
+import { supabase } from './supabaseClient';
 
 export const authOptions: NextAuthOptions = {
   adapter: SupabaseAdapter({
@@ -17,15 +17,11 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token?.sub) {
-        session.user.id = token.sub
-        const { data } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', token.sub)
-          .single()
-        session.user.role = data?.role || 'fan'
+        session.user.id = token.sub;
+        const { data } = await supabase.from('users').select('role').eq('id', token.sub).single();
+        session.user.role = data?.role || 'fan';
       }
-      return session
+      return session;
     },
   },
   events: {
@@ -34,18 +30,18 @@ export const authOptions: NextAuthOptions = {
         .from('users')
         .select('id')
         .eq('email', user.email)
-        .single()
-      
+        .single();
+
       if (!existing) {
-        await supabase
-          .from('users')
-          .insert([{
+        await supabase.from('users').insert([
+          {
             id: user.id,
             email: user.email,
             name: user.name,
             role: 'fan',
             avatar_url: user.image,
-          }])
+          },
+        ]);
       }
     },
   },
@@ -55,4 +51,4 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'database',
   },
-}
+};

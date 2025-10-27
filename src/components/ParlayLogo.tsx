@@ -6,10 +6,10 @@ interface ParlayLogoProps {
   variant?: 'default' | 'hero' | 'navbar' | 'footer';
 }
 
-export default function ParlayLogo({ 
-  size = 56, 
+export default function ParlayLogo({
+  size = 56,
   className = '',
-  variant = 'default'
+  variant = 'default',
 }: ParlayLogoProps) {
   const getVariantStyles = () => {
     switch (variant) {
@@ -35,7 +35,7 @@ export default function ParlayLogo({
         style={{
           display: 'block',
           margin: '0 auto',
-          filter: variant === 'hero' ? 'brightness(1.1) contrast(1.05)' : 'none'
+          filter: variant === 'hero' ? 'brightness(1.1) contrast(1.05)' : 'none',
         }}
       />
     </div>

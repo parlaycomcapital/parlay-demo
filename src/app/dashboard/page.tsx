@@ -21,7 +21,7 @@ function Dashboard() {
 
   const loadPosts = async () => {
     if (!session?.user?.id) return;
-    
+
     try {
       const { data, error } = await supabase
         .from('posts')
@@ -38,12 +38,11 @@ function Dashboard() {
 
   const createPost = async () => {
     if (!session?.user?.id) return;
-    
+
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('posts')
-        .insert([{
+      const { error } = await supabase.from('posts').insert([
+        {
           author_id: session.user.id,
           title,
           content,
@@ -51,10 +50,11 @@ function Dashboard() {
           price: parseFloat(price) || 0,
           is_premium: isPremium,
           image_url: imageUrl || null,
-        }]);
+        },
+      ]);
 
       if (error) throw error;
-      
+
       // Reset form
       setTitle('');
       setContent('');
@@ -62,7 +62,7 @@ function Dashboard() {
       setPrice('');
       setIsPremium(false);
       setImageUrl('');
-      
+
       // Reload posts
       loadPosts();
     } catch (err) {
@@ -74,12 +74,9 @@ function Dashboard() {
 
   const deletePost = async (postId: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
-    
+
     try {
-      const { error } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId);
+      const { error } = await supabase.from('posts').delete().eq('id', postId);
 
       if (error) throw error;
       loadPosts();
@@ -100,7 +97,10 @@ function Dashboard() {
         <div className="text-center">
           <ParlayLogo size={80} className="mb-6" />
           <p className="text-white text-xl mb-4">Please log in</p>
-          <Link href="/login" className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+          <Link
+            href="/login"
+            className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+          >
             Go to Login
           </Link>
         </div>
@@ -115,7 +115,10 @@ function Dashboard() {
           <ParlayLogo size={80} className="mb-6" />
           <p className="text-white text-xl mb-4">Access restricted</p>
           <p className="text-slate-300 mb-6">Only analysts and admins can access this dashboard.</p>
-          <Link href="/feed" className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+          <Link
+            href="/feed"
+            className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+          >
             Go to Feed
           </Link>
         </div>
@@ -130,20 +133,16 @@ function Dashboard() {
           <h1 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
             Analyst Dashboard
           </h1>
-          <p className="text-gray-300 text-lg">
-            Create and manage your sports analysis posts
-          </p>
+          <p className="text-gray-300 text-lg">Create and manage your sports analysis posts</p>
         </div>
 
         {/* Create Post Form */}
         <div className="bg-slate/50 rounded-2xl p-8 mb-8">
           <h2 className="text-2xl font-heading font-semibold text-white mb-6">Create New Post</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Title
-              </label>
+              <label className="block text-sm font-medium text-white mb-2">Title</label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -153,9 +152,7 @@ function Dashboard() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Sport
-              </label>
+              <label className="block text-sm font-medium text-white mb-2">Sport</label>
               <select
                 value={sport}
                 onChange={(e) => setSport(e.target.value)}
@@ -172,9 +169,7 @@ function Dashboard() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Price ($)
-              </label>
+              <label className="block text-sm font-medium text-white mb-2">Price ($)</label>
               <input
                 type="number"
                 value={price}
@@ -200,9 +195,7 @@ function Dashboard() {
           </div>
 
           <div className="mt-6">
-            <label className="block text-sm font-medium text-white mb-2">
-              Content
-            </label>
+            <label className="block text-sm font-medium text-white mb-2">Content</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -243,7 +236,7 @@ function Dashboard() {
         {/* Your Posts */}
         <div>
           <h2 className="text-2xl font-heading font-semibold text-white mb-6">Your Posts</h2>
-          
+
           {posts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-white/60 text-lg">No posts yet. Create your first analysis!</p>
@@ -258,7 +251,9 @@ function Dashboard() {
                       <p className="text-slate-300 text-sm mb-2">{post.sport}</p>
                       <p className="text-slate-400 text-sm line-clamp-2">{post.content}</p>
                       <div className="flex items-center space-x-4 mt-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${post.is_premium ? 'bg-amber text-navy' : 'bg-green-500 text-white'}`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${post.is_premium ? 'bg-amber text-navy' : 'bg-green-500 text-white'}`}
+                        >
                           {post.is_premium ? 'Premium' : 'Free'}
                         </span>
                         <span className="text-amber font-medium">${post.price}</span>

@@ -4,35 +4,43 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
-import ParlayLogo from './ParlayLogo';
+import Logo from './ui/Logo';
+import ThemeToggle from './ui/ThemeToggle';
 
 const NavBar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
-  
+
   const user = session?.user;
   const isLoggedIn = !!session?.user;
 
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/feed', label: 'Feed' },
-    ...(isLoggedIn && (user?.role === 'analyst' || user?.role === 'admin') ? [{ href: '/dashboard', label: 'Dashboard' }] : []),
+    ...(isLoggedIn && (user?.role === 'analyst' || user?.role === 'admin')
+      ? [{ href: '/dashboard', label: 'Dashboard' }]
+      : []),
     ...(isLoggedIn ? [{ href: `/profile/${user?.id}`, label: 'Profile' }] : []),
     ...(isLoggedIn && user?.role === 'admin' ? [{ href: '/admin', label: 'Admin' }] : []),
   ];
 
   return (
-                <nav className="bg-navy/95 backdrop-blur-md border-b border-slate/20 sticky top-0 z-50">
-                  <div className="max-w-7xl mx-auto px-6 py-4">
-                    <div className="flex justify-between items-center">
-                      {/* Logo */}
-                      <Link href="/" className="flex items-center gap-4 group">
-                        <ParlayLogo size={48} variant="navbar" className="md:size-[48px] size-[40px]" />
-                        <span className="text-xl font-bold tracking-tight text-white group-hover:text-amber transition-colors duration-200">
-                          Parlay
-                        </span>
-                      </Link>
+    <nav className="bg-navy/95 backdrop-blur-md border-b border-slate/20 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-4 group">
+            <div className="hidden sm:block">
+              <Logo variant="transparent" size={48} />
+            </div>
+            <div className="block sm:hidden">
+              <Logo variant="solid" size={40} />
+            </div>
+            <span className="text-xl font-bold tracking-tight text-white group-hover:text-amber transition-colors duration-200">
+              Parlay
+            </span>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
@@ -49,14 +57,18 @@ const NavBar = () => {
                 {item.label}
               </Link>
             ))}
-            
+
             {/* Auth Section */}
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               {isLoggedIn ? (
                 <>
                   <div className="flex items-center space-x-2">
                     <img
-                      src={user?.image || `https://ui-avatars.com/api/?name=${user?.name}&background=FF6B35&color=fff`}
+                      src={
+                        user?.image ||
+                        `https://ui-avatars.com/api/?name=${user?.name}&background=FF6B35&color=fff`
+                      }
                       alt={user?.name}
                       className="w-8 h-8 rounded-full"
                     />
@@ -89,7 +101,12 @@ const NavBar = () => {
               className="text-gray-300 hover:text-white focus:outline-none focus:text-white"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>
@@ -113,7 +130,7 @@ const NavBar = () => {
                   {item.label}
                 </Link>
               ))}
-              
+
               {/* Mobile Auth Section */}
               <div className="border-t border-gray-700 pt-4 mt-4">
                 {isLoggedIn ? (
@@ -157,5 +174,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-

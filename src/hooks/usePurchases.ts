@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getPurchases, addPurchase, hasPurchased, getUserPurchases, Purchase } from '@/lib/localStorage';
+import {
+  getPurchases,
+  addPurchase,
+  hasPurchased,
+  getUserPurchases,
+  Purchase,
+} from '@/lib/localStorage';
 
 export const usePurchases = () => {
   const [purchases, setPurchasesState] = useState<Purchase[]>([]);
@@ -19,9 +25,9 @@ export const usePurchases = () => {
       userId,
       purchasedAt: new Date().toISOString(),
     };
-    
+
     addPurchase(purchase);
-    setPurchasesState(prev => [...prev, purchase]);
+    setPurchasesState((prev) => [...prev, purchase]);
   };
 
   const checkPurchase = (postId: string, userId: string): boolean => {
@@ -33,7 +39,7 @@ export const usePurchases = () => {
   };
 
   const isPostPurchased = (postId: string, userId: string): boolean => {
-    return purchases.some(p => p.postId === postId && p.userId === userId);
+    return purchases.some((p) => p.postId === postId && p.userId === userId);
   };
 
   return {

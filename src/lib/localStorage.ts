@@ -73,7 +73,7 @@ export const addPost = (post: Post): void => {
 
 export const updatePost = (postId: string, updates: Partial<Post>): void => {
   const posts = getPosts();
-  const index = posts.findIndex(p => p.id === postId);
+  const index = posts.findIndex((p) => p.id === postId);
   if (index !== -1) {
     posts[index] = { ...posts[index], ...updates };
     setPosts(posts);
@@ -82,7 +82,7 @@ export const updatePost = (postId: string, updates: Partial<Post>): void => {
 
 export const deletePost = (postId: string): void => {
   const posts = getPosts();
-  const filtered = posts.filter(p => p.id !== postId);
+  const filtered = posts.filter((p) => p.id !== postId);
   setPosts(filtered);
 };
 
@@ -101,20 +101,18 @@ export const addPurchase = (purchase: Purchase): void => {
 
 export const hasPurchased = (postId: string, userId: string): boolean => {
   const purchases = getPurchases();
-  return purchases.some(p => p.postId === postId && p.userId === userId);
+  return purchases.some((p) => p.postId === postId && p.userId === userId);
 };
 
 export const getUserPurchases = (userId: string): string[] => {
   const purchases = getPurchases();
-  return purchases
-    .filter(p => p.userId === userId)
-    .map(p => p.postId);
+  return purchases.filter((p) => p.userId === userId).map((p) => p.postId);
 };
 
 // Initialize with demo data if empty
 export const initializeDemoData = (): void => {
   if (typeof window === 'undefined') return;
-  
+
   // Only initialize if no data exists
   if (!localStorage.getItem('parlay_posts')) {
     // Import demo data

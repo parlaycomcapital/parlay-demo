@@ -22,10 +22,12 @@ export function useSupabasePurchases() {
       setLoading(true);
       const { data, error } = await supabase
         .from('purchases')
-        .select(`
+        .select(
+          `
           *,
           post:posts(*)
-        `)
+        `
+        )
         .eq('user_id', session.user.id);
 
       if (error) throw error;
@@ -46,19 +48,21 @@ export function useSupabasePurchases() {
         user_id: session.user.id,
         post_id: postId,
       })
-      .select(`
+      .select(
+        `
         *,
         post:posts(*)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
-    setPurchases(prev => [data, ...prev]);
+    setPurchases((prev) => [data, ...prev]);
     return data;
   };
 
   const isPostPurchased = (postId: string): boolean => {
-    return purchases.some(purchase => purchase.post_id === postId);
+    return purchases.some((purchase) => purchase.post_id === postId);
   };
 
   return {

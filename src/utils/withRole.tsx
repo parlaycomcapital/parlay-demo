@@ -31,7 +31,10 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
           <div className="text-center">
             <ParlayLogo size={80} className="mb-6" />
             <p className="text-white text-xl mb-4">Please sign in</p>
-            <Link href="/login" className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+            <Link
+              href="/login"
+              className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            >
               Go to Login
             </Link>
           </div>
@@ -48,7 +51,10 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
             <p className="text-slate-300 mb-6">
               You need {allowedRoles.join(' or ')} role to access this page.
             </p>
-            <Link href="/feed" className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+            <Link
+              href="/feed"
+              className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            >
               Go to Feed
             </Link>
           </div>

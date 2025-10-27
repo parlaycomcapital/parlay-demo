@@ -9,6 +9,7 @@ A social platform for sports analysis where experts share insights and predictio
 ## 🔐 Preview Access
 
 This is a preview version with password protection:
+
 - **Password:** `parlay2024`
 - **Access:** Enter password on the login page
 
@@ -28,7 +29,7 @@ npm run build
 ## 📱 Features
 
 - **Expert Analysis:** Professional sports insights
-- **Community Driven:** Connect with fellow enthusiasts  
+- **Community Driven:** Connect with fellow enthusiasts
 - **Data-Driven:** Statistics and trends
 - **Premium Content:** Paid analysis from top analysts
 
@@ -44,6 +45,7 @@ npm run build
 MIT License - Built with ❤️ for sports enthusiasts
 
 ### 🎯 **Interactive Demo Features**
+
 - **Authentication:** Login as Fan/Analyst/Admin
 - **Content Creation:** Analysts can create posts
 - **Premium Purchases:** Fans can buy premium content

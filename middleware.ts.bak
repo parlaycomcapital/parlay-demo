@@ -1,0 +1,53 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import crypto from 'crypto';
+
+const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME || 'parlay_auth';
+const COOKIE_SECRET = process.env.COOKIE_SECRET || 'dev_secret_placeholder';
+
+// helper to verify cookie format "value.signature"
+function verifyCookie(cookie: string | undefined) {
+  if (!cookie) return false;
+  try {
+    const [value, sig] = cookie.split('.');
+    if (!value || !sig) return false;
+    const hmac = crypto.createHmac('sha256', COOKIE_SECRET);
+    hmac.update(value);
+    const expected = hmac.digest('hex');
+    return crypto.timingSafeEqual(Buffer.from(sig, 'hex'), Buffer.from(expected, 'hex'));
+  } catch {
+    return false;
+  }
+}
+
+export function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
+  const pathname = url.pathname;
+
+  // allow static assets, api, _next, and auth pages
+  const allowedPaths = ['/enter', '/api/auth/password', '/api', '/favicon.ico'];
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static') ||
+    allowedPaths.some((p) => pathname.startsWith(p))
+  ) {
+    return NextResponse.next();
+  }
+
+  const cookie = req.cookies.get(AUTH_COOKIE_NAME);
+  const cookieValue = cookie?.value;
+
+  if (verifyCookie(cookieValue)) {
+    // authorized
+    return NextResponse.next();
+  }
+
+  // redirect to /enter and include original path as redirect param
+  url.pathname = '/enter';
+  url.searchParams.set('redirectTo', req.nextUrl.pathname);
+  return NextResponse.redirect(url);
+}
+
+export const config = {
+  matcher: '/:path*',
+};

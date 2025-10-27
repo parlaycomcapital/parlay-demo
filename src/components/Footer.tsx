@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import ParlayLogo from './ParlayLogo';
+import Logo from './ui/Logo';
 
 const Footer = () => {
   return (
@@ -11,11 +11,12 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <ParlayLogo size={32} />
+              <Logo variant="transparent" size={36} />
               <span className="text-white font-heading font-bold text-xl">Parlay</span>
             </div>
             <p className="text-white/70 mb-4 max-w-md font-body">
-              Smart Sports. Smarter Minds. Connect with expert analysts and share your sports insights.
+              Smart Sports. Smarter Minds. Connect with expert analysts and share your sports
+              insights.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-white/60 hover:text-white transition-colors">
@@ -54,7 +55,10 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/profile/1" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/profile/1"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   My Profile
                 </Link>
               </li>
@@ -89,33 +93,40 @@ const Footer = () => {
           </div>
         </div>
 
-                    <div className="border-t border-slate/30 mt-12 pt-8">
-                      <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="flex items-center gap-4">
-                          <ParlayLogo size={40} variant="footer" />
-                          <div className="flex flex-col">
-                            <span className="font-bold text-white text-lg">Parlay</span>
-                            <span className="text-slate-400 text-sm">© 2025 All rights reserved</span>
-                          </div>
-                        </div>
-                        <div className="flex gap-8">
-                          <Link href="/terms" className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium">
-                            Terms
-                          </Link>
-                          <Link href="/privacy" className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium">
-                            Privacy
-                          </Link>
-                          <Link href="/contact" className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium">
-                            Contact
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+        <div className="border-t border-slate/30 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-4">
+              <Logo variant="transparent" size={36} />
+              <div className="flex flex-col">
+                <span className="font-bold text-white text-lg">Parlay</span>
+                <span className="text-slate-400 text-sm">© 2025 All rights reserved</span>
+              </div>
+            </div>
+            <div className="flex gap-8">
+              <Link
+                href="/terms"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium"
+              >
+                Terms
+              </Link>
+              <Link
+                href="/privacy"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/contact"
+                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium"
+              >
+                Contact
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );
 };
 
 export default Footer;
-
-

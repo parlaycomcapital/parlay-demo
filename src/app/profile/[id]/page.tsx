@@ -10,7 +10,7 @@ import { User, Post } from '@/lib/localStorage';
 export default function Profile() {
   const params = useParams();
   const userId = params.id as string;
-  
+
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [userPosts, setUserPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,7 +88,7 @@ export default function Profile() {
               alt={profileUser.username}
               className="w-24 h-24 rounded-full"
             />
-            
+
             <div className="flex-1">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div>
@@ -121,7 +121,9 @@ export default function Profile() {
 
               <div className="flex space-x-6 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-white">{profileUser.followers.toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-white">
+                    {profileUser.followers.toLocaleString()}
+                  </div>
                   <div className="text-gray-400 text-sm">Followers</div>
                 </div>
                 <div>
@@ -146,7 +148,7 @@ export default function Profile() {
           {userPosts.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-lg mb-2">
-                {isOwnProfile ? "You haven't created any analyses yet" : "No analyses found"}
+                {isOwnProfile ? "You haven't created any analyses yet" : 'No analyses found'}
               </div>
               {isOwnProfile && (
                 <Link
@@ -160,7 +162,10 @@ export default function Profile() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {userPosts.map((post) => (
-                <div key={post.id} className="bg-gray-800/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-colors">
+                <div
+                  key={post.id}
+                  className="bg-gray-800/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-colors"
+                >
                   <div className="relative h-48">
                     <img
                       src={post.imageUrl}
@@ -177,21 +182,21 @@ export default function Profile() {
                   <div className="p-6">
                     <h3 className="text-lg font-semibold mb-2 line-clamp-2">{post.title}</h3>
                     <p className="text-gray-300 text-sm mb-4 line-clamp-3">{post.preview}</p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4 text-sm text-gray-400">
                         <span>👀 {post.views}</span>
                         <span>❤️ {post.likes}</span>
                         <span>💬 {post.comments}</span>
                       </div>
-                      
+
                       <div className="flex space-x-2">
                         {isOwnProfile && (
                           <button className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors">
                             Edit
                           </button>
                         )}
-                        
+
                         <Link
                           href={`/post/${post.id}`}
                           className="bg-gradient-ember text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"

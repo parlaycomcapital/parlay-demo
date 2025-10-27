@@ -11,7 +11,7 @@ import { Post } from '@/lib/localStorage';
 export default function PostPage() {
   const params = useParams();
   const postId = params.id as string;
-  
+
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [canView, setCanView] = useState(false);
@@ -23,12 +23,12 @@ export default function PostPage() {
   useEffect(() => {
     const foundPost = getPostById(postId);
     setPost(foundPost || null);
-    
+
     if (foundPost) {
       const canViewPost = !foundPost.isPremium || isPostPurchased(postId, user?.id || '');
       setCanView(canViewPost);
     }
-    
+
     setLoading(false);
   }, [postId, getPostById, isPostPurchased, user?.id, isLoggedIn]);
 
@@ -87,10 +87,12 @@ export default function PostPage() {
               />
               <div>
                 <h2 className="text-white font-semibold">{post.author.username}</h2>
-                <p className="text-gray-400 text-sm">{post.sport} • {new Date(post.createdAt).toLocaleDateString()}</p>
+                <p className="text-gray-400 text-sm">
+                  {post.sport} • {new Date(post.createdAt).toLocaleDateString()}
+                </p>
               </div>
             </div>
-            
+
             {post.isPremium && (
               <div className="bg-gradient-ember text-white px-4 py-2 rounded-full text-sm font-semibold">
                 🔥 Premium Analysis
@@ -98,17 +100,13 @@ export default function PostPage() {
             )}
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            {post.title}
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{post.title}</h1>
 
           <div className="flex items-center space-x-6 text-gray-400 text-sm mb-6">
             <span>👀 {post.views} views</span>
             <span>❤️ {post.likes} likes</span>
             <span>💬 {post.comments} comments</span>
-            {post.teams.length > 0 && (
-              <span>🏆 {post.teams.join(' vs ')}</span>
-            )}
+            {post.teams.length > 0 && <span>🏆 {post.teams.join(' vs ')}</span>}
           </div>
 
           <img
@@ -127,7 +125,7 @@ export default function PostPage() {
                   {post.content}
                 </div>
               </div>
-              
+
               {/* Action Buttons */}
               <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
                 <div className="flex space-x-4">
@@ -159,7 +157,7 @@ export default function PostPage() {
               <p className="text-gray-300 mb-6 max-w-md mx-auto">
                 This is a premium analysis. Purchase it to unlock the full content and insights.
               </p>
-              
+
               {isLoggedIn ? (
                 <button
                   onClick={handlePurchase}
@@ -169,7 +167,9 @@ export default function PostPage() {
                 </button>
               ) : (
                 <div className="space-y-4">
-                  <p className="text-gray-400">You need to be logged in to purchase this analysis.</p>
+                  <p className="text-gray-400">
+                    You need to be logged in to purchase this analysis.
+                  </p>
                   <Link
                     href="/login"
                     className="bg-gradient-ember text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity inline-block"
@@ -200,7 +200,7 @@ export default function PostPage() {
                 </div>
               </div>
             </div>
-            
+
             <Link
               href={`/profile/${post.authorId}`}
               className="bg-gradient-ember text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
