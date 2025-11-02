@@ -228,7 +228,15 @@ STRIPE_PRO_PRICE_ID=price_xxx
 
 ## 📝 Recent Updates
 
-### Logo Update (Latest)
+### Phase 2 Part 2: Groups & UI Polish (Latest)
+- Created Groups/Communities feature with full UI
+- Added CreateGroupModal for creators to create new communities
+- Integrated Groups into navigation (Sidebar & BottomNav)
+- UI polish pass: exact measurements (260px sidebar, 720px feed, 20px gutters)
+- Enhanced animations: card hover with translateY, consistent motion transitions
+- Logo sizing: Hero 84px, Navbar 28px, Sidebar default
+
+### Logo Update
 - Updated Logo component to use `/logo.png` and `/logotrans.png` from public folder
 - Changed from `/assets/brand/` paths to direct public paths
 - Added variant prop for flexible display (icon/full)
