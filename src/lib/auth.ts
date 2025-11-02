@@ -2,6 +2,7 @@ import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { supabase } from './supabaseClient';
 import bcrypt from 'bcryptjs';
+import { isPlaceholderMode, mockUsers } from './mockData';
 
 export const authOptions: NextAuthConfig = {
   providers: [
@@ -14,6 +15,37 @@ export const authOptions: NextAuthConfig = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
+        }
+
+        // Use mock authentication in placeholder mode
+        if (isPlaceholderMode()) {
+          console.log('Placeholder mode: Authentication attempt', credentials.email);
+          // Accept any password in placeholder mode
+          const mockUser = mockUsers.find(u => u.email === credentials.email);
+          if (mockUser) {
+            return {
+              id: mockUser.id,
+              email: mockUser.email,
+              role: mockUser.role,
+              name: mockUser.name || mockUser.email,
+            };
+          }
+          // Default demo user based on email
+          const emailStr = credentials.email as string;
+          if (emailStr.includes('creator') || emailStr.includes('demo')) {
+            return {
+              id: 'user1',
+              email: 'demo@parlay.app',
+              role: 'creator' as const,
+              name: 'Demo Creator',
+            };
+          }
+          return {
+            id: 'user2',
+            email: 'follower@parlay.app',
+            role: 'follower' as const,
+            name: 'Demo Follower',
+          };
         }
 
         try {

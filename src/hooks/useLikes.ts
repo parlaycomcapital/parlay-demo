@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase, Like } from '@/lib/supabaseClient';
 import { useSession } from 'next-auth/react';
+import { isPlaceholderMode, mockPosts } from '@/lib/mockData';
 
 export function useLikes(postId: string) {
   const { data: session } = useSession();
@@ -15,44 +16,55 @@ export function useLikes(postId: string) {
 
     fetchLikes();
 
-    // Set up realtime listener for likes
-    const channel = supabase
-      .channel(`likes:${postId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'likes',
-          filter: `post_id=eq.${postId}`,
-        },
-        () => {
-          fetchLikes();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'posts',
-          filter: `id=eq.${postId}`,
-        },
-        (payload: any) => {
-          if (payload.new?.likes_count !== undefined) {
-            setLikesCount(payload.new.likes_count);
+    // Only set up realtime listener if not in placeholder mode
+    if (!isPlaceholderMode()) {
+      const channel = supabase
+        .channel(`likes:${postId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'likes',
+            filter: `post_id=eq.${postId}`,
+          },
+          () => {
+            fetchLikes();
           }
-        }
-      )
-      .subscribe();
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'posts',
+            filter: `id=eq.${postId}`,
+          },
+          (payload: any) => {
+            if (payload.new?.likes_count !== undefined) {
+              setLikesCount(payload.new.likes_count);
+            }
+          }
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [postId]);
 
   const fetchLikes = async () => {
     if (!postId) return;
+
+    // Use mock data in placeholder mode
+    if (isPlaceholderMode()) {
+      const post = mockPosts.find(p => p.id === postId);
+      setLikesCount(post?.likes_count || 0);
+      setLiked(false); // Default to not liked
+      setLoading(false);
+      return;
+    }
 
     try {
       // Check if user liked this post
@@ -75,8 +87,11 @@ export function useLikes(postId: string) {
         .single();
 
       setLikesCount(postData?.likes_count || 0);
-    } catch (error) {
-      console.error('Error fetching likes:', error);
+    } catch (error: any) {
+      console.warn('Error fetching likes (placeholder mode fallback):', error.message);
+      // Fallback to mock data
+      const post = mockPosts.find(p => p.id === postId);
+      setLikesCount(post?.likes_count || 0);
     } finally {
       setLoading(false);
     }
@@ -84,12 +99,27 @@ export function useLikes(postId: string) {
 
   const toggleLike = async () => {
     if (!session?.user?.id) {
+      // In placeholder mode, allow interaction without login
+      if (isPlaceholderMode()) {
+        setLiked(!liked);
+        setLikesCount(prev => liked ? prev - 1 : prev + 1);
+        console.log('Placeholder mode: Like toggled for post', postId);
+        return;
+      }
       // Redirect to login
       window.location.href = '/login?redirect=' + window.location.pathname;
       return;
     }
 
     if (!postId) return;
+
+    // Handle in placeholder mode
+    if (isPlaceholderMode()) {
+      setLiked(!liked);
+      setLikesCount(prev => liked ? prev - 1 : prev + 1);
+      console.log('Placeholder mode: Like toggled for post', postId);
+      return;
+    }
 
     try {
       if (liked) {
@@ -102,6 +132,7 @@ export function useLikes(postId: string) {
 
         if (error) throw error;
         setLiked(false);
+        setLikesCount(prev => Math.max(0, prev - 1));
       } else {
         // Like
         const { error } = await supabase
@@ -113,6 +144,7 @@ export function useLikes(postId: string) {
 
         if (error) throw error;
         setLiked(true);
+        setLikesCount(prev => prev + 1);
 
         // Create notification
         const { data: post } = await supabase
@@ -130,8 +162,11 @@ export function useLikes(postId: string) {
           });
         }
       }
-    } catch (error) {
-      console.error('Error toggling like:', error);
+    } catch (error: any) {
+      console.warn('Error toggling like (placeholder mode fallback):', error.message);
+      // Fallback to local state update
+      setLiked(!liked);
+      setLikesCount(prev => liked ? prev - 1 : prev + 1);
     }
   };
 

@@ -61,6 +61,11 @@ export default function SubscribePage() {
           <p className="text-slatex-400 max-w-xl mx-auto">
             Unlock premium content, join exclusive communities, and support your favorite creators.
           </p>
+          {process.env.PLACEHOLDER_MODE === 'true' && (
+            <p className="mt-2 text-xs text-amber/60">
+              Demo Mode: Subscriptions are simulated
+            </p>
+          )}
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">

@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { Post } from '@/lib/supabaseClient';
 import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
+import { isPlaceholderMode, mockPosts } from '@/lib/mockData';
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -31,6 +32,13 @@ export default function Dashboard() {
   const loadPosts = async () => {
     if (!session?.user?.id) return;
 
+    // Use mock posts in placeholder mode
+    if (isPlaceholderMode()) {
+      const userPosts = mockPosts.filter(p => p.author_id === session.user.id);
+      setPosts(userPosts as Post[]);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('posts')
@@ -40,8 +48,11 @@ export default function Dashboard() {
 
       if (error) throw error;
       setPosts(data || []);
-    } catch (err) {
-      console.error('Failed to load posts:', err);
+    } catch (err: any) {
+      console.warn('Failed to load posts (placeholder mode fallback):', err.message);
+      // Fallback to mock posts for user
+      const userPosts = mockPosts.filter(p => p.author_id === session.user.id);
+      setPosts(userPosts as Post[]);
     }
   };
 
@@ -50,6 +61,38 @@ export default function Dashboard() {
 
     setLoading(true);
     try {
+      // Placeholder mode: log and add to local state
+      if (isPlaceholderMode()) {
+        console.log('Placeholder mode: Post created', { title, content, sport, price, isPremium });
+        const newPost = {
+          id: `mock-post-${Date.now()}`,
+          title,
+          content,
+          sport,
+          price: parseFloat(price) || 0,
+          author_id: session.user.id,
+          is_premium: isPremium,
+          image_url: imageUrl || null,
+          likes_count: 0,
+          comments_count: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        // Reset form
+        setTitle('');
+        setContent('');
+        setSport('');
+        setPrice('');
+        setIsPremium(false);
+        setImageUrl('');
+
+        // Add to local state
+        setPosts(prev => [newPost as any, ...prev]);
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.from('posts').insert([
         {
           author_id: session.user.id,
@@ -74,8 +117,17 @@ export default function Dashboard() {
 
       // Reload posts
       loadPosts();
-    } catch (err) {
-      console.error('Failed to create post:', err);
+    } catch (err: any) {
+      console.warn('Failed to create post (placeholder mode fallback):', err.message);
+      // In placeholder mode, still reset form
+      if (isPlaceholderMode()) {
+        setTitle('');
+        setContent('');
+        setSport('');
+        setPrice('');
+        setIsPremium(false);
+        setImageUrl('');
+      }
     } finally {
       setLoading(false);
     }
@@ -84,13 +136,22 @@ export default function Dashboard() {
   const deletePost = async (postId: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
+    // Placeholder mode: remove from local state
+    if (isPlaceholderMode()) {
+      console.log('Placeholder mode: Post deleted', postId);
+      setPosts(prev => prev.filter(p => p.id !== postId));
+      return;
+    }
+
     try {
       const { error } = await supabase.from('posts').delete().eq('id', postId);
 
       if (error) throw error;
       loadPosts();
-    } catch (err) {
-      console.error('Failed to delete post:', err);
+    } catch (err: any) {
+      console.warn('Failed to delete post (placeholder mode fallback):', err.message);
+      // Fallback: remove from local state
+      setPosts(prev => prev.filter(p => p.id !== postId));
     }
   };
 

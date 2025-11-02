@@ -1,9 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
+import { isPlaceholderMode } from './mockData';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create Supabase client, but operations will check placeholder mode
+export const supabase = createClient(
+  supabaseUrl === 'placeholder' || isPlaceholderMode() ? 'https://placeholder.supabase.co' : supabaseUrl,
+  supabaseAnonKey === 'placeholder' || isPlaceholderMode() ? 'placeholder-key' : supabaseAnonKey
+);
 
 // Database types
 export interface User {

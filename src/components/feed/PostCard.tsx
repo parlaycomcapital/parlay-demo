@@ -7,6 +7,7 @@ import Paywall from './Paywall';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useLikes } from '@/hooks/useLikes';
 import ShareTooltip from './ShareTooltip';
+import { PLACEHOLDER_AVATAR, PLACEHOLDER_POST_IMAGE } from '@/lib/mockData';
 
 export default function PostCard({ post }: { post: any }) {
   const premium = !!post.price || post.is_premium;
@@ -23,7 +24,14 @@ export default function PostCard({ post }: { post: any }) {
       transition={{ duration: 0.2 }}
     >
       <header className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-ember to-amber" />
+        <div 
+          className="w-10 h-10 rounded-full bg-gradient-to-br from-ember to-amber flex items-center justify-center overflow-hidden"
+          style={{
+            backgroundImage: `url(${PLACEHOLDER_AVATAR})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
         <div>
           <div className="flex items-center gap-2">
             <span className="font-semibold">{post.title}</span>

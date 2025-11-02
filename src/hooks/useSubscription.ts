@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase, Subscription } from '@/lib/supabaseClient';
 import { useSession } from 'next-auth/react';
+import { isPlaceholderMode, mockSubscription } from '@/lib/mockData';
 
 export function useSubscription() {
   const { data: session } = useSession();
@@ -17,30 +18,41 @@ export function useSubscription() {
 
     fetchSubscription();
 
-    // Set up realtime listener
-    const channel = supabase
-      .channel(`subscription:${session.user.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'subscriptions',
-          filter: `user_id=eq.${session.user.id}`,
-        },
-        () => {
-          fetchSubscription();
-        }
-      )
-      .subscribe();
+    // Only set up realtime listener if not in placeholder mode
+    if (!isPlaceholderMode()) {
+      const channel = supabase
+        .channel(`subscription:${session.user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'subscriptions',
+            filter: `user_id=eq.${session.user.id}`,
+          },
+          () => {
+            fetchSubscription();
+          }
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [session?.user?.id]);
 
   const fetchSubscription = async () => {
     if (!session?.user?.id) return;
+
+    // Use mock subscription in placeholder mode
+    if (isPlaceholderMode()) {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setSubscription(mockSubscription as Subscription);
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase
@@ -51,22 +63,32 @@ export function useSubscription() {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching subscription:', error);
+        console.warn('Subscription fetch error (placeholder mode fallback):', error.message);
+        setSubscription(null);
       } else {
         setSubscription(data || null);
       }
-    } catch (error) {
-      console.error('Subscription fetch error:', error);
+    } catch (error: any) {
+      console.warn('Subscription fetch error (placeholder mode fallback):', error.message);
+      setSubscription(null);
     } finally {
       setLoading(false);
     }
   };
 
   const hasActiveSubscription = (): boolean => {
+    if (isPlaceholderMode()) {
+      // In placeholder mode, allow access for demo purposes
+      return true;
+    }
     return subscription?.status === 'active' || false;
   };
 
   const hasProSubscription = (): boolean => {
+    if (isPlaceholderMode()) {
+      // In placeholder mode, return true for demo
+      return true;
+    }
     return subscription?.status === 'active' && subscription?.tier === 'pro';
   };
 

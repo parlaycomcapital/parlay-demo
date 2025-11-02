@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Heart, MessageCircle } from 'lucide-react';
 import { supabase, Comment } from '@/lib/supabaseClient';
 import { useSession } from 'next-auth/react';
+import { isPlaceholderMode } from '@/lib/mockData';
 
 interface CommentsDrawerProps {
   postId: string;
@@ -21,17 +22,67 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
   useEffect(() => {
     if (open) {
       fetchComments();
-      subscribeToComments();
+      if (!isPlaceholderMode()) {
+        subscribeToComments();
+      }
     }
 
     return () => {
-      const channel = supabase.channel(`comments:${postId}`);
-      supabase.removeChannel(channel);
+      if (!isPlaceholderMode()) {
+        const channel = supabase.channel(`comments:${postId}`);
+        supabase.removeChannel(channel);
+      }
     };
   }, [open, postId]);
 
   const fetchComments = async () => {
     setLoading(true);
+    
+    // Use mock comments in placeholder mode
+    if (isPlaceholderMode()) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setComments([
+        {
+          id: 'comment1',
+          post_id: postId,
+          user_id: 'user1',
+          content: 'Great analysis! Looking forward to seeing how this plays out.',
+          likes_count: 3,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          user: {
+            id: 'user1',
+            email: 'demo@parlay.app',
+            name: 'Demo Creator',
+            role: 'creator' as const,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          replies: [],
+        },
+        {
+          id: 'comment2',
+          post_id: postId,
+          user_id: 'user2',
+          content: 'I agree with your predictions. The stats back this up perfectly.',
+          likes_count: 1,
+          created_at: new Date(Date.now() - 3600000).toISOString(),
+          updated_at: new Date(Date.now() - 3600000).toISOString(),
+          user: {
+            id: 'user2',
+            email: 'follower@parlay.app',
+            name: 'Demo Follower',
+            role: 'follower' as const,
+            created_at: new Date(Date.now() - 3600000).toISOString(),
+            updated_at: new Date(Date.now() - 3600000).toISOString(),
+          },
+          replies: [],
+        },
+      ] as Comment[]);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('comments')
@@ -62,8 +113,9 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
       );
 
       setComments(commentsWithReplies as Comment[]);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
+    } catch (error: any) {
+      console.warn('Error fetching comments (placeholder mode fallback):', error.message);
+      setComments([]);
     } finally {
       setLoading(false);
     }
@@ -94,6 +146,47 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session?.user?.id || !newComment.trim()) return;
+
+    // Handle in placeholder mode
+    if (isPlaceholderMode()) {
+      console.log('Placeholder mode: Comment created', { postId, content: newComment, replyingTo });
+      // Add comment to local state
+      const newCommentObj: Comment = {
+        id: `mock-comment-${Date.now()}`,
+        post_id: postId,
+        user_id: session.user.id,
+        parent_id: replyingTo || undefined,
+        content: newComment.trim(),
+        likes_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+          user: {
+            id: session.user.id,
+            email: session.user.email || '',
+            name: session.user.name || 'User',
+            role: (session.user.role || 'follower') as 'creator' | 'follower',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        replies: [],
+      };
+
+      if (replyingTo) {
+        setComments(prev =>
+          prev.map(comment =>
+            comment.id === replyingTo
+              ? { ...comment, replies: [...(comment.replies || []), newCommentObj] }
+              : comment
+          )
+        );
+      } else {
+        setComments(prev => [newCommentObj, ...prev]);
+      }
+
+      setNewComment('');
+      setReplyingTo(null);
+      return;
+    }
 
     try {
       const { error } = await supabase.from('comments').insert({
@@ -143,8 +236,13 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
       setNewComment('');
       setReplyingTo(null);
       fetchComments();
-    } catch (error) {
-      console.error('Error creating comment:', error);
+    } catch (error: any) {
+      console.warn('Error creating comment (placeholder mode fallback):', error.message);
+      // Fallback: add to local state
+      if (isPlaceholderMode()) {
+        setNewComment('');
+        setReplyingTo(null);
+      }
     }
   };
 

@@ -27,6 +27,17 @@ export default function Login() {
       });
 
       if (result?.error) {
+        // In placeholder mode, allow login with any credentials
+        const { isPlaceholderMode } = await import('@/lib/mockData');
+        if (isPlaceholderMode()) {
+          // Redirect based on email (demo@parlay.app -> creator, others -> follower)
+          if (email.includes('creator') || email.includes('demo')) {
+            router.push('/dashboard');
+          } else {
+            router.push('/feed');
+          }
+          return;
+        }
         setError('Invalid email or password');
       } else {
         // Get session to check role and redirect accordingly
