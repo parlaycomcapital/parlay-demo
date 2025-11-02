@@ -5,6 +5,7 @@ import { SessionProvider } from '@/components/auth/SessionProvider';
 import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://parlay-demo.vercel.app'),
   title: 'Parlay — Smart Sports. Smarter Minds.',
   description: 'Join the Parlay community where insight meets adrenaline.',
   openGraph: {
@@ -27,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
+      <body className="font-sans">
         <Providers>
           <SessionProvider>
             <AppShell>{children}</AppShell>
