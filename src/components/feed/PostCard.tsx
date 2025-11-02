@@ -3,9 +3,18 @@
 import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share2, Lock } from 'lucide-react';
 import CommentsDrawer from './CommentsDrawer';
+import Paywall from './Paywall';
+import { useSubscription } from '@/hooks/useSubscription';
+import { useLikes } from '@/hooks/useLikes';
+import ShareTooltip from './ShareTooltip';
 
 export default function PostCard({ post }: { post: any }) {
-  const premium = !!post.price;
+  const premium = !!post.price || post.is_premium;
+  const requiresSubscription = post.requires_subscription || post.is_premium;
+  const { canAccessPremiumContent } = useSubscription();
+  const { liked, likesCount, toggleLike } = useLikes(post.id);
+  
+  const canViewContent = !requiresSubscription || canAccessPremiumContent();
 
   return (
     <motion.article
@@ -30,16 +39,27 @@ export default function PostCard({ post }: { post: any }) {
         </div>
       </header>
 
-      <p className="text-slatex-300 leading-relaxed mb-4">{post.content}</p>
+      {canViewContent ? (
+        <p className="text-slatex-300 leading-relaxed mb-4">{post.content}</p>
+      ) : (
+        <Paywall 
+          message={requiresSubscription 
+            ? 'This content requires a Pro subscription to view' 
+            : `Unlock this premium analysis for $${Number(post.price).toFixed(2)}`}
+          isSubscriptionRequired={requiresSubscription}
+        />
+      )}
 
       <footer className="mt-4 flex justify-between items-center">
         <div className="flex items-center gap-2 text-slatex-400">
           <motion.button
-            className="icon-btn"
+            onClick={toggleLike}
+            className={`icon-btn ${liked ? 'text-amber' : ''}`}
             whileTap={{ scale: 0.85 }}
             transition={{ duration: 0.1 }}
           >
-            <Heart size={18} />
+            <Heart size={18} fill={liked ? 'currentColor' : 'none'} />
+            <span className="ml-1 text-xs">{likesCount || 0}</span>
           </motion.button>
           <motion.button
             className="icon-btn"
@@ -47,14 +67,9 @@ export default function PostCard({ post }: { post: any }) {
             transition={{ duration: 0.1 }}
           >
             <MessageCircle size={18} />
+            <span className="ml-1 text-xs">{post.comments_count || 0}</span>
           </motion.button>
-          <motion.button
-            className="icon-btn"
-            whileTap={{ scale: 0.85 }}
-            transition={{ duration: 0.1 }}
-          >
-            <Share2 size={18} />
-          </motion.button>
+          <ShareTooltip postId={post.id} title={post.title} />
         </div>
         {premium && (
           <form action="/api/checkout" method="post">

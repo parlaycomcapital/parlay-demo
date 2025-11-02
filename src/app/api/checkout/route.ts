@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
-  const { title, price } = await req.json();
+  const { title, price, postId } = await req.json();
   
   // Check if Stripe is configured
   if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === '') {
@@ -20,13 +20,17 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'usd',
             product_data: { name: title },
-            unit_amount: price * 100,
+            unit_amount: Math.round(price * 100),
           },
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/feed`,
+      success_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/feed`,
+      metadata: {
+        postId: postId || '',
+        type: 'post_purchase',
+      },
     });
     return NextResponse.json({ url: session.url });
   } catch (err) {
