@@ -2,6 +2,7 @@
 
 import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useSession, signOut } from 'next-auth/react';
 
 export default function Topbar() {
@@ -9,7 +10,7 @@ export default function Topbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800 bg-navy-100/80 backdrop-blur-md">
-      <div className="h-14 flex items-center justify-between px-4">
+      <div className="h-14 flex items-center justify-between px-5 lg:px-6">
         <div className="flex items-center gap-3">
           <Link href="/">
             <Logo size={28} />
@@ -32,12 +33,13 @@ export default function Topbar() {
               <Link href="/profile" className="hover:text-amber transition">
                 Profile
               </Link>
-              <button
+              <motion.button
                 onClick={() => signOut({ callbackUrl: '/' })}
+                whileTap={{ scale: 0.95 }}
                 className="text-slatex-400 hover:text-amber transition"
               >
                 Sign out
-              </button>
+              </motion.button>
             </>
           ) : (
             <>

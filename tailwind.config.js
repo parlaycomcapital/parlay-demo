@@ -21,8 +21,16 @@ module.exports = {
         },
       },
       boxShadow: {
-        ember: '0 0 20px rgba(230,62,48,0.18)',
+        ember: '0 0 20px rgba(230,62,48,0.25)',
+        'ember-sm': '0 0 10px rgba(230,62,48,0.15)',
+        'ember-lg': '0 0 30px rgba(230,62,48,0.35)',
         card: '0 6px 24px rgba(0,0,0,0.25)',
+      },
+      spacing: {
+        '8': '8px',
+        '12': '12px',
+        '20': '20px',
+        '24': '24px',
       },
       borderRadius: {
         xl2: '1.25rem',

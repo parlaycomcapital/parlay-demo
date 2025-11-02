@@ -28,8 +28,12 @@ body {
   }
 
   .card-hover:hover {
-    box-shadow: 0 0 20px rgba(230, 62, 48, 0.18);
+    box-shadow: 0 0 20px rgba(230, 62, 48, 0.25);
     border-color: rgba(245, 166, 35, 0.4);
+  }
+
+  .shadow-ember {
+    box-shadow: 0 0 20px rgba(230, 62, 48, 0.25);
   }
 
   .btn-grad {
@@ -65,7 +69,8 @@ body {
   }
 
   .container-narrow {
-    @apply max-w-2xl mx-auto;
+    max-width: 720px;
+    @apply mx-auto;
   }
 
   .container-wide {

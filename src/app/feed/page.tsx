@@ -10,15 +10,15 @@ export default function FeedPage() {
 
   return (
     <div className="container-narrow">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-1">Feed</h1>
-        <p className="text-slatex-400">Follow analysts, explore insights, and support your favorites.</p>
+      <div className="mb-5 lg:mb-6">
+        <h1 className="text-2xl font-bold mb-2">Feed</h1>
+        <p className="text-slatex-400 text-sm">Follow analysts, explore insights, and support your favorites.</p>
       </div>
 
       <Composer />
 
-      {loading && <p className="text-slatex-400">Loading analyses…</p>}
-      <div className="space-y-5">
+      {loading && <p className="text-slatex-400 text-sm py-8">Loading analyses…</p>}
+      <div className="space-y-5 lg:space-y-6">
         {posts.map((p: any, i: number) => (
           <ScrollReveal key={p.id} delay={i * 0.06}>
             <PostCard post={p} />

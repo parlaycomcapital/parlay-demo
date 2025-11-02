@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share2, Lock } from 'lucide-react';
 import CommentsDrawer from './CommentsDrawer';
 
@@ -7,7 +8,11 @@ export default function PostCard({ post }: { post: any }) {
   const premium = !!post.price;
 
   return (
-    <article className="card card-hover p-5">
+    <motion.article
+      className="card card-hover p-5"
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
+    >
       <header className="flex items-center gap-3 mb-3">
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-ember to-amber" />
         <div>
@@ -29,15 +34,27 @@ export default function PostCard({ post }: { post: any }) {
 
       <footer className="mt-4 flex justify-between items-center">
         <div className="flex items-center gap-2 text-slatex-400">
-          <button className="icon-btn">
+          <motion.button
+            className="icon-btn"
+            whileTap={{ scale: 0.85 }}
+            transition={{ duration: 0.1 }}
+          >
             <Heart size={18} />
-          </button>
-          <button className="icon-btn">
+          </motion.button>
+          <motion.button
+            className="icon-btn"
+            whileTap={{ scale: 0.85 }}
+            transition={{ duration: 0.1 }}
+          >
             <MessageCircle size={18} />
-          </button>
-          <button className="icon-btn">
+          </motion.button>
+          <motion.button
+            className="icon-btn"
+            whileTap={{ scale: 0.85 }}
+            transition={{ duration: 0.1 }}
+          >
             <Share2 size={18} />
-          </button>
+          </motion.button>
         </div>
         {premium && (
           <form action="/api/checkout" method="post">
@@ -51,6 +68,6 @@ export default function PostCard({ post }: { post: any }) {
         )}
       </footer>
       <CommentsDrawer postId={post.id} />
-    </article>
+    </motion.article>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Home, Compass, BarChart2, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -23,15 +24,16 @@ export default function BottomNav() {
     <nav className="fixed lg:hidden bottom-0 inset-x-0 h-14 border-t border-slate-800 bg-navy-100/80 backdrop-blur-md z-40">
       <div className={`grid ${gridCols} h-full text-slatex-400`}>
         {links.map(({ href, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`flex items-center justify-center transition ${
-              pathname === href ? 'text-amber' : 'hover:text-amber'
-            }`}
-          >
-            <Icon size={20} />
-          </Link>
+          <motion.div key={href} whileTap={{ scale: 0.9 }} transition={{ duration: 0.1 }}>
+            <Link
+              href={href}
+              className={`flex items-center justify-center transition ${
+                pathname === href ? 'text-amber' : 'hover:text-amber'
+              }`}
+            >
+              <Icon size={20} />
+            </Link>
+          </motion.div>
         ))}
       </div>
     </nav>

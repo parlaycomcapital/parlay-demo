@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Home, Compass, BarChart2, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -21,21 +22,22 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-72 border-r border-slate-800 bg-navy-100/60 backdrop-blur-md">
-      <div className="p-6 flex flex-col gap-2 w-full">
+    <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-[260px] border-r border-slate-800 bg-navy-100/60 backdrop-blur-md">
+      <div className="p-5 lg:p-6 flex flex-col gap-3 w-full">
         {links.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`flex items-center gap-3 px-3 py-2 rounded-xl transition ${
-              pathname === href
-                ? 'text-amber bg-white/5'
-                : 'text-slatex-300 hover:text-amber hover:bg-white/5'
-            }`}
-          >
-            <Icon size={18} />
-            <span>{label}</span>
-          </Link>
+          <motion.div key={href} whileTap={{ scale: 0.97 }} transition={{ duration: 0.1 }}>
+            <Link
+              href={href}
+              className={`flex items-center gap-3 px-3 py-2 rounded-xl transition ${
+                pathname === href
+                  ? 'text-amber bg-white/5 shadow-ember-sm'
+                  : 'text-slatex-300 hover:text-amber hover:bg-white/5'
+              }`}
+            >
+              <Icon size={18} />
+              <span>{label}</span>
+            </Link>
+          </motion.div>
         ))}
         {session?.user?.role === 'follower' && (
           <div className="mt-6 p-4 card">

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import Logo from '@/components/ui/Logo';
 
@@ -46,9 +47,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-navy-100 flex items-center justify-center p-5 lg:p-6">
       <div className="w-full max-w-md">
-        <div className="card p-8">
+        <motion.div
+          className="card p-6 lg:p-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <div className="text-center mb-8">
             <Logo size={64} className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
@@ -62,10 +68,7 @@ export default function Login() {
               </div>
             )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slatex-300 mb-2">
-                Email
-              </label>
+            <div className="space-y-2">
               <input
                 id="email"
                 type="email"
@@ -73,14 +76,11 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="input"
-                placeholder="you@example.com"
+                placeholder="Email"
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slatex-300 mb-2">
-                Password
-              </label>
+            <div className="space-y-2">
               <input
                 id="password"
                 type="password"
@@ -88,17 +88,19 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="input"
-                placeholder="••••••••"
+                placeholder="Password"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-grad w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
+          <motion.button
+            type="submit"
+            disabled={loading}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
+            transition={{ duration: 0.1 }}
+            className="btn-grad w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Signing in...' : 'Sign in'}
+          </motion.button>
           </form>
 
           <div className="mt-6 text-center">
@@ -109,7 +111,7 @@ export default function Login() {
               </Link>
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

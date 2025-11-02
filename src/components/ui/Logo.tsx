@@ -26,7 +26,7 @@ export default function Logo({ size = 48, solid = false, className = '' }: LogoP
         src={src}
         alt="Parlay logo"
         fill
-        style={{ objectFit: 'contain', padding: '4px' }}
+        style={{ objectFit: 'contain', padding: '8px' }}
         priority
       />
     </div>
