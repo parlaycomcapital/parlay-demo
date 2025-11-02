@@ -32,10 +32,10 @@ const NavBar = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-4 group">
             <div className="hidden sm:block">
-              <Logo variant="transparent" size={48} />
+              <Logo size={48} />
             </div>
             <div className="block sm:hidden">
-              <Logo variant="solid" size={40} />
+              <Logo solid size={40} />
             </div>
             <span className="text-xl font-bold tracking-tight text-white group-hover:text-amber transition-colors duration-200">
               Parlay

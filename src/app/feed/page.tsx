@@ -1,42 +1,30 @@
 'use client';
+
 import { usePosts } from '@/hooks/usePosts';
+import Composer from '@/components/feed/Composer';
 import PostCard from '@/components/feed/PostCard';
 import ScrollReveal from '@/components/feed/ScrollReveal';
-import { motion } from 'framer-motion';
 
 export default function FeedPage() {
-  const { posts, loading, error } = usePosts();
-
-  if (loading) return (
-    <section>
-      <p className="text-slate-400 text-center mt-10">Loading analyses...</p>
-    </section>
-  );
-
-  if (error) return (
-    <section>
-      <p className="text-red-400 text-center mt-10">Error: {error}</p>
-    </section>
-  );
+  const { posts, loading } = usePosts();
 
   return (
-    <section>
-      <motion.h1
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-2xl font-bold mb-5 text-white"
-      >
-        Community Feed
-      </motion.h1>
+    <div className="container-narrow">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-1">Feed</h1>
+        <p className="text-slatex-400">Follow analysts, explore insights, and support your favorites.</p>
+      </div>
 
-      <div className="space-y-6">
-        {posts.map((post: any, index: number) => (
-          <ScrollReveal key={post.id} delay={index * 0.1}>
-            <PostCard post={post} />
+      <Composer />
+
+      {loading && <p className="text-slatex-400">Loading analyses…</p>}
+      <div className="space-y-5">
+        {posts.map((p: any, i: number) => (
+          <ScrollReveal key={p.id} delay={i * 0.06}>
+            <PostCard post={p} />
           </ScrollReveal>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

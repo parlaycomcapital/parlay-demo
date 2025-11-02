@@ -1,30 +1,31 @@
 'use client';
+
+import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
-import Logo from '../ui/Logo';
-import ThemeToggle from '../ui/ThemeToggle';
-import { usePathname } from 'next/navigation';
 
 export default function Topbar() {
-  const pathname = usePathname();
-
   return (
-    <header className="sticky top-0 z-50 bg-[#0B132B] border-b border-slate-800 px-5 py-4">
-      <div className="flex items-center justify-between max-w-[var(--content-width)] mx-auto">
-        <Link href="/" className="flex items-center gap-2 text-xl font-semibold">
-          <Logo variant="transparent" size={28} />
-          <span className="text-white">Parlay</span>
-        </Link>
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <Link
-            href="/login"
-            className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition"
-          >
-            Login
-          </Link>
+    <header className="sticky top-0 z-40 w-full border-b border-slate-800 bg-navy-100/80 backdrop-blur-md">
+      <div className="h-14 flex items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <Logo size={28} />
+          <div className="hidden sm:block text-slatex-400 text-sm">Smart Sports. Smarter Minds.</div>
         </div>
+        <nav className="hidden md:flex items-center gap-6 text-slatex-400">
+          <Link href="/feed" className="hover:text-amber transition">
+            Feed
+          </Link>
+          <Link href="/explore" className="hover:text-amber transition">
+            Explore
+          </Link>
+          <Link href="/dashboard" className="hover:text-amber transition">
+            Dashboard
+          </Link>
+          <Link href="/login" className="btn-grad h-9 px-3">
+            Sign in
+          </Link>
+        </nav>
       </div>
     </header>
   );
 }
-

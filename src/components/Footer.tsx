@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <Logo variant="transparent" size={36} />
+              <Logo size={36} />
               <span className="text-white font-heading font-bold text-xl">Parlay</span>
             </div>
             <p className="text-white/70 mb-4 max-w-md font-body">
@@ -96,7 +96,7 @@ const Footer = () => {
         <div className="border-t border-slate/30 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4">
-              <Logo variant="transparent" size={36} />
+              <Logo size={36} />
               <div className="flex flex-col">
                 <span className="font-bold text-white text-lg">Parlay</span>
                 <span className="text-slate-400 text-sm">Parlay ™ {new Date().getFullYear()}</span>

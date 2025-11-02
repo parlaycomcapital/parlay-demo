@@ -1,15 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
+import AppShell from '@/components/shell/AppShell';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import Providers from '@/components/Providers';
-import LayoutWrapper from '@/components/LayoutWrapper';
-import ConditionalNavFooter from '@/components/ConditionalNavFooter';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
 
 export const metadata: Metadata = {
   title: 'Parlay — Smart Sports. Smarter Minds.',
@@ -35,18 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} font-body antialiased transition-colors duration-500 bg-background text-foreground`}
-      >
+      <body>
         <Providers>
           <SessionProvider>
-            <ConditionalNavFooter>
-              <main className="min-h-screen">
-                <LayoutWrapper>
-                  {children}
-                </LayoutWrapper>
-              </main>
-            </ConditionalNavFooter>
+            <AppShell>{children}</AppShell>
           </SessionProvider>
         </Providers>
       </body>

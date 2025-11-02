@@ -58,7 +58,7 @@ export default function Login() {
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-2xl hover:shadow-ember/10 transition-all duration-500">
           <div className="text-center mb-10">
             {/* Parlay Logo */}
-            <Logo variant="solid" size={80} className="mb-6" />
+            <Logo solid size={80} className="mb-6" />
 
             <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">Welcome to Parlay</h1>
             <p className="text-slate-300 text-lg mb-10 font-medium">Smart Sports. Smarter Minds.</p>

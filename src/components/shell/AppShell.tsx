@@ -1,20 +1,18 @@
 'use client';
+
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen">
       <Topbar />
-      <div className="flex flex-1 w-full">
+      <div className="flex">
         <Sidebar />
-        <main className="flex-1 px-5 lg:pl-[calc(var(--sidebar-width)+var(--gutter))] py-6 flex justify-center">
-          <div className="w-full max-w-[var(--content-width)]">{children}</div>
-        </main>
+        <main className="flex-1 pt-6 pb-20 lg:pb-6 px-4 lg:pl-[19rem]">{children}</main>
       </div>
       <BottomNav />
     </div>
   );
 }
-

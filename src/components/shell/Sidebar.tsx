@@ -1,40 +1,43 @@
 'use client';
-import { Home, BarChart2, User, Settings } from 'lucide-react';
+
 import Link from 'next/link';
+import { Home, Compass, BarChart2, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const links = [
-  { icon: <Home size={20} />, label: 'Feed', href: '/feed' },
-  { icon: <BarChart2 size={20} />, label: 'Dashboard', href: '/dashboard' },
-  { icon: <User size={20} />, label: 'Profile', href: '/profile' },
-  { icon: <Settings size={20} />, label: 'Settings', href: '/settings' },
+  { href: '/feed', label: 'Feed', icon: Home },
+  { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/dashboard', label: 'Dashboard', icon: BarChart2 },
+  { href: '/profile', label: 'Profile', icon: User },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col justify-between w-[var(--sidebar-width)] min-h-screen bg-[#0B132B] border-r border-slate-800 p-6 fixed">
-      <div className="space-y-8">
-        <nav className="space-y-2">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-xl transition ${
-                pathname === link.href
-                  ? 'bg-gradient-to-r from-ember to-amber text-white'
-                  : 'text-slate-300 hover:text-amber-400 hover:bg-slate-800/50'
-              }`}
-            >
-              {link.icon}
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+    <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-72 border-r border-slate-800 bg-navy-100/60 backdrop-blur-md">
+      <div className="p-6 flex flex-col gap-2 w-full">
+        {links.map(({ href, label, icon: Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`flex items-center gap-3 px-3 py-2 rounded-xl transition ${
+              pathname === href
+                ? 'text-amber bg-white/5'
+                : 'text-slatex-300 hover:text-amber hover:bg-white/5'
+            }`}
+          >
+            <Icon size={18} />
+            <span>{label}</span>
+          </Link>
+        ))}
+        <div className="mt-6 p-4 card">
+          <p className="text-sm text-slatex-400">Upgrade your profile to post premium analyses.</p>
+          <div className="mt-3">
+            <button className="btn-grad w-full">Become Analyst</button>
+          </div>
+        </div>
       </div>
-      <footer className="text-xs text-slate-500">Parlay ™ {new Date().getFullYear()}</footer>
     </aside>
   );
 }
-
