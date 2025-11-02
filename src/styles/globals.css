@@ -1,24 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
-@import 'tailwindcss';
-
-@theme {
-  --color-navy-50: #0a0f1e;
-  --color-navy-100: #0b132b;
-  --color-navy-200: #101a2e;
-  --color-navy-300: #111c3b;
-  --color-ember: #e63e30;
-  --color-amber: #f5a623;
-  --color-slatex-300: #cbd5e1;
-  --color-slatex-400: #94a3b8;
-  --color-slatex-500: #64748b;
-  
-  --shadow-ember: 0 0 20px rgba(230, 62, 48, 0.18);
-  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.25);
-  
-  --radius-xl2: 1.25rem;
-  
-  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {
@@ -36,31 +19,31 @@ body {
 @layer components {
   .card {
     @apply bg-navy-300/70 backdrop-blur-md border border-slate-800 rounded-2xl;
-    box-shadow: var(--shadow-card);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
   }
 
   .card-hover {
     @apply transition-all duration-300;
-    transition-timing-function: var(--ease-smooth);
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .card-hover:hover {
-    box-shadow: var(--shadow-ember);
+    box-shadow: 0 0 20px rgba(230, 62, 48, 0.18);
     border-color: rgba(245, 166, 35, 0.4);
   }
 
   .btn-grad {
     @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium text-white transition-opacity hover:opacity-90;
-    background: linear-gradient(to right, var(--color-ember), var(--color-amber));
+    background: linear-gradient(to right, #e63e30, #f5a623);
   }
 
   .icon-btn {
     @apply p-2 rounded-full transition;
-    color: var(--color-slatex-400);
+    color: #94a3b8;
   }
 
   .icon-btn:hover {
-    color: var(--color-amber);
+    color: #f5a623;
     background-color: rgba(255, 255, 255, 0.05);
   }
 
@@ -68,11 +51,11 @@ body {
     @apply inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs;
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-slatex-300);
+    color: #cbd5e1;
   }
 
   .input {
-    @apply w-full px-3 py-2 rounded-xl border placeholder-slatex-500 focus:outline-none;
+    @apply w-full px-3 py-2 rounded-xl border placeholder-slate-500 focus:outline-none;
     background-color: rgba(17, 28, 59, 0.7);
     border-color: rgb(30, 41, 59);
   }
