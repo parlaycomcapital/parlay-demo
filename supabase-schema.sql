@@ -1,12 +1,13 @@
 -- Enable Row Level Security
 ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
 
--- Create users table
+-- Create users table with password and role fields
 CREATE TABLE IF NOT EXISTS public.users (
-  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-  name TEXT NOT NULL,
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
-  role TEXT CHECK (role IN ('fan', 'analyst', 'admin')) DEFAULT 'fan',
+  password TEXT NOT NULL,
+  role TEXT CHECK (role IN ('creator', 'follower')) DEFAULT 'follower',
+  name TEXT,
   avatar_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -42,47 +43,35 @@ ALTER TABLE public.purchases ENABLE ROW LEVEL SECURITY;
 
 -- Users policies
 CREATE POLICY "Users can view their own data" ON public.users
-  FOR SELECT USING (auth.uid() = id);
+  FOR SELECT USING (true);
 
 CREATE POLICY "Users can update their own data" ON public.users
-  FOR UPDATE USING (auth.uid() = id);
+  FOR UPDATE USING (true);
 
 -- Posts policies
 CREATE POLICY "Anyone can view posts" ON public.posts
   FOR SELECT USING (true);
 
-CREATE POLICY "Analysts can create posts" ON public.posts
+CREATE POLICY "Creators can create posts" ON public.posts
   FOR INSERT WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('analyst', 'admin')
+      WHERE id = author_id AND role = 'creator'
     )
   );
 
 CREATE POLICY "Authors can update their posts" ON public.posts
-  FOR UPDATE USING (
-    author_id = auth.uid() OR 
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR UPDATE USING (author_id = (SELECT id FROM public.users WHERE email = current_setting('request.jwt.claims', true)::json->>'email'));
 
 CREATE POLICY "Authors can delete their posts" ON public.posts
-  FOR DELETE USING (
-    author_id = auth.uid() OR 
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR DELETE USING (author_id = (SELECT id FROM public.users WHERE email = current_setting('request.jwt.claims', true)::json->>'email'));
 
 -- Purchases policies
 CREATE POLICY "Users can view their purchases" ON public.purchases
-  FOR SELECT USING (user_id = auth.uid());
+  FOR SELECT USING (true);
 
 CREATE POLICY "Users can create purchases" ON public.purchases
-  FOR INSERT WITH CHECK (user_id = auth.uid());
+  FOR INSERT WITH CHECK (true);
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS posts_author_id_idx ON public.posts(author_id);

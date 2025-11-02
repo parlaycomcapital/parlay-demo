@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import Logo from '@/components/ui/Logo';
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [role, setRole] = useState<'creator' | 'follower'>('follower');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -19,6 +21,22 @@ export default function Login() {
     setError('');
 
     try {
+      // Register user
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role, name }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Registration failed');
+        setLoading(false);
+        return;
+      }
+
+      // Auto sign in after registration
       const result = await signIn('credentials', {
         email,
         password,
@@ -26,13 +44,10 @@ export default function Login() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
+        setError('Account created but sign in failed. Please try logging in.');
       } else {
-        // Get session to check role and redirect accordingly
-        const response = await fetch('/api/auth/session');
-        const session = await response.json();
-        
-        if (session?.user?.role === 'creator') {
+        // Redirect based on role
+        if (role === 'creator') {
           router.push('/dashboard');
         } else {
           router.push('/feed');
@@ -51,8 +66,8 @@ export default function Login() {
         <div className="card p-8">
           <div className="text-center mb-8">
             <Logo size={64} className="mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
-            <p className="text-slatex-400">Sign in to your Parlay account</p>
+            <h1 className="text-2xl font-bold text-white mb-2">Create an account</h1>
+            <p className="text-slatex-400">Join Parlay and start sharing insights</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -61,6 +76,20 @@ export default function Login() {
                 {error}
               </div>
             )}
+
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-slatex-300 mb-2">
+                Name (optional)
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="input"
+                placeholder="Your name"
+              />
+            </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slatex-300 mb-2">
@@ -87,9 +116,27 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
                 className="input"
                 placeholder="••••••••"
               />
+              <p className="text-xs text-slatex-500 mt-1">At least 6 characters</p>
+            </div>
+
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-slatex-300 mb-2">
+                Role
+              </label>
+              <select
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value as 'creator' | 'follower')}
+                required
+                className="input"
+              >
+                <option value="follower">Follower - Browse and subscribe to content</option>
+                <option value="creator">Creator - Post content and manage groups</option>
+              </select>
             </div>
 
             <button
@@ -97,15 +144,15 @@ export default function Login() {
               disabled={loading}
               className="btn-grad w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? 'Creating account...' : 'Create account'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-slatex-400 text-sm">
-              Don't have an account?{' '}
-              <Link href="/register" className="text-amber hover:underline">
-                Sign up
+              Already have an account?{' '}
+              <Link href="/login" className="text-amber hover:underline">
+                Sign in
               </Link>
             </p>
           </div>

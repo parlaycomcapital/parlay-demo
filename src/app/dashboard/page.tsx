@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { Post } from '@/lib/supabaseClient';
+import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
-import ParlayLogo from '@/components/ParlayLogo';
-import { withRole } from '@/utils/withRole';
 
-function Dashboard() {
-  const { data: session } = useSession();
+export default function Dashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -18,6 +19,14 @@ function Dashboard() {
   const [isPremium, setIsPremium] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    } else if (status === 'authenticated' && session?.user?.role !== 'creator') {
+      router.push('/feed');
+    }
+  }, [status, session, router]);
 
   const loadPosts = async () => {
     if (!session?.user?.id) return;
@@ -86,39 +95,30 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    if (session?.user) {
+    if (session?.user && session.user.role === 'creator') {
       loadPosts();
     }
   }, [session?.user]);
 
-  if (!session?.user) {
+  if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-navy flex items-center justify-center">
+      <div className="min-h-screen bg-navy-100 flex items-center justify-center">
         <div className="text-center">
-          <ParlayLogo size={80} className="mb-6" />
-          <p className="text-white text-xl mb-4">Please log in</p>
-          <Link
-            href="/login"
-            className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
-          >
-            Go to Login
-          </Link>
+          <Logo size={80} className="mx-auto mb-6" />
+          <p className="text-white text-xl">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (session.user.role !== 'analyst' && session.user.role !== 'admin') {
+  if (!session?.user || session.user.role !== 'creator') {
     return (
-      <div className="min-h-screen bg-navy flex items-center justify-center">
+      <div className="min-h-screen bg-navy-100 flex items-center justify-center">
         <div className="text-center">
-          <ParlayLogo size={80} className="mb-6" />
+          <Logo size={80} className="mx-auto mb-6" />
           <p className="text-white text-xl mb-4">Access restricted</p>
-          <p className="text-slate-300 mb-6">Only analysts and admins can access this dashboard.</p>
-          <Link
-            href="/feed"
-            className="bg-gradient-ember text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
-          >
+          <p className="text-slatex-400 mb-6">Only creators can access this dashboard.</p>
+          <Link href="/feed" className="btn-grad">
             Go to Feed
           </Link>
         </div>
@@ -127,49 +127,47 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-navy">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
-            Analyst Dashboard
-          </h1>
-          <p className="text-gray-300 text-lg">Create and manage your sports analysis posts</p>
-        </div>
+    <div className="container-narrow">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-white mb-2">Creator Dashboard</h1>
+        <p className="text-slatex-400">Create and manage your sports analysis posts</p>
+      </div>
 
-        {/* Create Post Form */}
-        <div className="bg-slate/50 rounded-2xl p-8 mb-8">
-          <h2 className="text-2xl font-heading font-semibold text-white mb-6">Create New Post</h2>
+      {/* Create Post Form */}
+      <div className="card p-6 mb-6">
+        <h2 className="text-xl font-semibold text-white mb-6">Create New Post</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slatex-300 mb-2">Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter post title"
+              className="input"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Title</label>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter post title"
-                className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-amber focus:ring-amber"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-white mb-2">Sport</label>
+              <label className="block text-sm font-medium text-slatex-300 mb-2">Sport</label>
               <select
                 value={sport}
                 onChange={(e) => setSport(e.target.value)}
-                className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-amber focus:ring-amber"
+                className="input"
               >
                 <option value="">Select Sport</option>
-                <option value="football">Football</option>
-                <option value="basketball">Basketball</option>
-                <option value="tennis">Tennis</option>
-                <option value="esports">Esports</option>
-                <option value="baseball">Baseball</option>
-                <option value="soccer">Soccer</option>
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Hockey">Hockey</option>
+                <option value="Baseball">Baseball</option>
+                <option value="Soccer">Soccer</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">Price ($)</label>
+              <label className="block text-sm font-medium text-slatex-300 mb-2">Price ($)</label>
               <input
                 type="number"
                 value={price}
@@ -177,106 +175,95 @@ function Dashboard() {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-amber focus:ring-amber"
+                className="input"
               />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={isPremium}
-                  onChange={(e) => setIsPremium(e.target.checked)}
-                  className="w-4 h-4 text-amber bg-slate-600 border-slate-500 rounded focus:ring-amber focus:ring-2"
-                />
-                <span className="ml-2 text-white">Premium Post</span>
-              </label>
             </div>
           </div>
 
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-white mb-2">Content</label>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={isPremium}
+              onChange={(e) => setIsPremium(e.target.checked)}
+              className="w-4 h-4 text-amber bg-slate-800 border-slate-600 rounded focus:ring-amber"
+            />
+            <label className="ml-2 text-slatex-300 text-sm">Premium Post</label>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slatex-300 mb-2">Content</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Write your analysis here..."
               rows={6}
-              className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-amber focus:ring-amber"
+              className="input resize-none"
             />
           </div>
 
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-white mb-2">
+          <div>
+            <label className="block text-sm font-medium text-slatex-300 mb-2">
               Image URL (Optional)
             </label>
             <input
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://example.com/image.jpg"
-              className="w-full px-4 py-3 bg-slate/30 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-amber focus:ring-amber"
+              className="input"
             />
           </div>
 
           <button
             onClick={createPost}
             disabled={loading || !title || !content || !sport}
-            className="mt-6 bg-gradient-ember text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 hover:shadow-2xl hover:shadow-ember/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+            className="btn-grad w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                Creating Post...
-              </span>
-            ) : (
-              'Create Post'
-            )}
+            {loading ? 'Creating Post...' : 'Create Post'}
           </button>
         </div>
+      </div>
 
-        {/* Your Posts */}
-        <div>
-          <h2 className="text-2xl font-heading font-semibold text-white mb-6">Your Posts</h2>
+      {/* Your Posts */}
+      <div>
+        <h2 className="text-xl font-semibold text-white mb-4">Your Posts</h2>
 
-          {posts.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-white/60 text-lg">No posts yet. Create your first analysis!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <div key={post.id} className="bg-slate/50 rounded-xl p-6">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-2">{post.title}</h3>
-                      <p className="text-slate-300 text-sm mb-2">{post.sport}</p>
-                      <p className="text-slate-400 text-sm line-clamp-2">{post.content}</p>
-                      <div className="flex items-center space-x-4 mt-3">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${post.is_premium ? 'bg-amber text-navy' : 'bg-green-500 text-white'}`}
-                        >
-                          {post.is_premium ? 'Premium' : 'Free'}
-                        </span>
+        {posts.length === 0 ? (
+          <div className="card p-8 text-center">
+            <p className="text-slatex-400">No posts yet. Create your first analysis!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {posts.map((post) => (
+              <div key={post.id} className="card p-5">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-white mb-2">{post.title}</h3>
+                    <p className="text-slatex-400 text-sm mb-2">{post.sport}</p>
+                    <p className="text-slatex-300 text-sm line-clamp-2 mb-3">{post.content}</p>
+                    <div className="flex items-center gap-3">
+                      <span className={`badge ${post.is_premium ? 'bg-amber/20 text-amber' : ''}`}>
+                        {post.is_premium ? 'Premium' : 'Free'}
+                      </span>
+                      {post.price > 0 && (
                         <span className="text-amber font-medium">${post.price}</span>
-                        <span className="text-slate-400 text-sm">
-                          {new Date(post.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
+                      )}
+                      <span className="text-slatex-500 text-xs">
+                        {new Date(post.created_at).toLocaleDateString()}
+                      </span>
                     </div>
-                    <button
-                      onClick={() => deletePost(post.id)}
-                      className="ml-4 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-500 transition-colors"
-                    >
-                      Delete
-                    </button>
                   </div>
+                  <button
+                    onClick={() => deletePost(post.id)}
+                    className="ml-4 text-red-400 hover:text-red-300 text-sm px-3 py-1 rounded-lg hover:bg-red-500/10 transition"
+                  >
+                    Delete
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-export default withRole(Dashboard, ['analyst', 'admin']);

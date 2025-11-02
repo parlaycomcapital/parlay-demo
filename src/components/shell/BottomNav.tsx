@@ -3,20 +3,25 @@
 import Link from 'next/link';
 import { Home, Compass, BarChart2, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   const links = [
     { href: '/feed', icon: Home },
     { href: '/explore', icon: Compass },
-    { href: '/dashboard', icon: BarChart2 },
+    ...(session?.user?.role === 'creator' ? [{ href: '/dashboard', icon: BarChart2 }] : []),
     { href: '/profile', icon: User },
   ];
 
+  // Adjust grid columns based on number of links
+  const gridCols = links.length === 4 ? 'grid-cols-4' : 'grid-cols-3';
+
   return (
     <nav className="fixed lg:hidden bottom-0 inset-x-0 h-14 border-t border-slate-800 bg-navy-100/80 backdrop-blur-md z-40">
-      <div className="grid grid-cols-4 h-full text-slatex-400">
+      <div className={`grid ${gridCols} h-full text-slatex-400`}>
         {links.map(({ href, icon: Icon }) => (
           <Link
             key={href}

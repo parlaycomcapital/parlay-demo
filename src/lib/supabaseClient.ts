@@ -8,9 +8,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Database types
 export interface User {
   id: string;
-  name: string;
   email: string;
-  role: 'fan' | 'analyst' | 'admin';
+  password?: string; // Only used during registration/auth
+  role: 'creator' | 'follower';
+  name?: string;
   avatar_url?: string;
   created_at: string;
   updated_at: string;

@@ -3,16 +3,22 @@
 import Link from 'next/link';
 import { Home, Compass, BarChart2, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
-const links = [
+const baseLinks = [
   { href: '/feed', label: 'Feed', icon: Home },
   { href: '/explore', label: 'Explore', icon: Compass },
-  { href: '/dashboard', label: 'Dashboard', icon: BarChart2 },
-  { href: '/profile', label: 'Profile', icon: User },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const links = [
+    ...baseLinks,
+    ...(session?.user?.role === 'creator' ? [{ href: '/dashboard', label: 'Dashboard', icon: BarChart2 }] : []),
+    { href: '/profile', label: 'Profile', icon: User },
+  ];
 
   return (
     <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-72 border-r border-slate-800 bg-navy-100/60 backdrop-blur-md">
@@ -31,12 +37,16 @@ export default function Sidebar() {
             <span>{label}</span>
           </Link>
         ))}
-        <div className="mt-6 p-4 card">
-          <p className="text-sm text-slatex-400">Upgrade your profile to post premium analyses.</p>
-          <div className="mt-3">
-            <button className="btn-grad w-full">Become Analyst</button>
+        {session?.user?.role === 'follower' && (
+          <div className="mt-6 p-4 card">
+            <p className="text-sm text-slatex-400">Upgrade your profile to post premium analyses.</p>
+            <div className="mt-3">
+              <Link href="/register" className="btn-grad w-full block text-center">
+                Become Creator
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </aside>
   );

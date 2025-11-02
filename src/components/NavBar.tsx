@@ -18,11 +18,10 @@ const NavBar = () => {
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/feed', label: 'Feed' },
-    ...(isLoggedIn && (user?.role === 'analyst' || user?.role === 'admin')
+    ...(isLoggedIn && user?.role === 'creator'
       ? [{ href: '/dashboard', label: 'Dashboard' }]
       : []),
     ...(isLoggedIn ? [{ href: `/profile/${user?.id}`, label: 'Profile' }] : []),
-    ...(isLoggedIn && user?.role === 'admin' ? [{ href: '/admin', label: 'Admin' }] : []),
   ];
 
   return (
