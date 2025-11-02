@@ -4,6 +4,7 @@ import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useSession, signOut } from 'next-auth/react';
+import NotificationBell from './NotificationBell';
 
 export default function Topbar() {
   const { data: session, status } = useSession();
@@ -33,6 +34,7 @@ export default function Topbar() {
               <Link href="/profile" className="hover:text-amber transition">
                 Profile
               </Link>
+              <NotificationBell />
               <motion.button
                 onClick={() => signOut({ callbackUrl: '/' })}
                 whileTap={{ scale: 0.95 }}

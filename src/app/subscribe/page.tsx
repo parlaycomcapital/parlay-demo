@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Check, Lock, Sparkles } from 'lucide-react';
+import { Check, Lock, Sparkles, Globe } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 import { subscriptionTiers } from '@/lib/stripe';
 
@@ -13,7 +13,7 @@ export default function SubscribePage() {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
 
-  const handleSubscribe = async (tier: 'basic' | 'pro') => {
+  const handleSubscribe = async (tier: 'basic' | 'pro', provider: 'stripe' | 'gopay' = 'stripe') => {
     if (!session?.user) {
       router.push('/login?redirect=/subscribe');
       return;
@@ -22,7 +22,8 @@ export default function SubscribePage() {
     setLoading(tier);
 
     try {
-      const response = await fetch('/api/stripe/checkout', {
+      const endpoint = provider === 'gopay' ? '/api/gopay/checkout' : '/api/stripe/checkout';
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tier, userId: session.user.id }),
@@ -105,19 +106,31 @@ export default function SubscribePage() {
                   ))}
                 </ul>
 
-                <motion.button
-                  onClick={() => handleSubscribe(tier)}
-                  disabled={!!loading}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.1 }}
-                  className={`w-full py-3 rounded-xl font-semibold transition ${
-                    isPro
-                      ? 'btn-grad'
-                      : 'bg-white/5 border border-slate-700 text-white hover:bg-white/10'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-                >
-                  {loading === tier ? 'Processing...' : `Subscribe to ${config.name}`}
-                </motion.button>
+                <div className="space-y-2">
+                  <motion.button
+                    onClick={() => handleSubscribe(tier, 'stripe')}
+                    disabled={!!loading}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.1 }}
+                    className={`w-full py-3 rounded-xl font-semibold transition ${
+                      isPro
+                        ? 'btn-grad'
+                        : 'bg-white/5 border border-slate-700 text-white hover:bg-white/10'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {loading === tier ? 'Processing...' : `Subscribe to ${config.name}`}
+                  </motion.button>
+                  <motion.button
+                    onClick={() => handleSubscribe(tier, 'gopay')}
+                    disabled={!!loading}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.1 }}
+                    className="w-full py-2 rounded-xl text-sm font-medium bg-slate-700/50 border border-slate-600 text-white hover:bg-slate-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Globe size={16} />
+                    Pay with GoPay (CZ/SK)
+                  </motion.button>
+                </div>
               </motion.div>
             );
           })}
