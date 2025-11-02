@@ -31,7 +31,7 @@ function EnterPageContent() {
       <div className="max-w-md w-full bg-[#0F1A33] p-8 rounded-2xl shadow-lg">
         <div className="flex flex-col items-center">
           {/* Logo component */}
-          <Logo solid size={96} className="mb-4" />
+          <Logo size={96} variant="solid" className="mb-4" />
           <h1 className="text-white text-2xl font-semibold mb-2">Site access</h1>
           <p className="text-slate-300 mb-4">Enter the access password to continue.</p>
         </div>

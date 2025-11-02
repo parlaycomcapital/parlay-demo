@@ -1,57 +1,37 @@
 'use client';
-
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
 
 interface LogoProps {
   size?: number;
-  solid?: boolean;
+  variant?: 'solid' | 'transparent';
   className?: string;
-  variant?: 'default' | 'icon' | 'full';
 }
 
 export default function Logo({ 
   size = 48, 
-  solid = false, 
+  variant = 'solid', 
   className = '',
-  variant = 'icon'
 }: LogoProps) {
-  // Default sizes by context
-  // Hero: 84px, Sidebar: 40px, Navbar: 28px
-  // Use icon-only logos from public folder
-  const src = solid
-    ? '/logo.png'
-    : '/logotrans.png';
-
-  // For icon variant, use circular container
-  // For full variant, allow rectangular display
-  const isCircular = variant === 'icon';
+  const src = variant === 'solid' ? '/logo.png' : '/logotrans.png';
 
   return (
     <div
-      className={twMerge(
-        isCircular 
-          ? 'relative flex items-center justify-center overflow-hidden rounded-full' 
-          : 'relative flex items-center justify-center',
-        className
-      )}
-      style={{ 
-        width: size, 
-        height: size,
-        minWidth: size,
-        minHeight: size,
+      className={twMerge('relative flex items-center justify-center', className)}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        aspectRatio: '1 / 1',
+        minWidth: `${size}px`,
+        minHeight: `${size}px`,
       }}
     >
       <Image
         src={src}
-        alt="Parlay"
-        fill={isCircular}
-        width={!isCircular ? size : undefined}
-        height={!isCircular ? size : undefined}
-        style={{ 
-          objectFit: isCircular ? 'contain' : 'contain',
-          padding: isCircular ? '8px' : '0',
-        }}
+        alt="Parlay logo"
+        fill
+        sizes={`${size}px`}
+        style={{ objectFit: 'contain', padding: '4px' }}
         priority
         className="select-none"
       />

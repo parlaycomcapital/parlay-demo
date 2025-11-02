@@ -18,7 +18,7 @@ export default function Sidebar() {
     <aside className="hidden md:flex flex-col justify-between w-64 min-h-screen bg-[#0B132B] border-r border-slate-800 p-6 fixed">
       <div className="space-y-8">
         <Link href="/" className="flex items-center gap-2 text-2xl font-semibold">
-          <Logo size={32} />
+          <Logo size={32} variant="solid" />
           <span className="text-white">Parlay</span>
         </Link>
         <nav className="space-y-3">

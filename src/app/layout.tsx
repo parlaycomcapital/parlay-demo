@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Parlay — Smart Sports. Smarter Minds.',
     description: 'Join the Parlay community where insight meets adrenaline.',
-    images: ['/assets/brand/hero-banner.png'],
+    images: ['/logo.png'],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Parlay — Smart Sports. Smarter Minds.',
     description: 'Join the Parlay community where insight meets adrenaline.',
-    images: ['/assets/brand/hero-banner.png'],
+    images: ['/logo.png'],
   },
 };
 

@@ -39,7 +39,7 @@ export default function MobileNav() {
       >
         <div className="p-6 space-y-8">
           <div className="flex items-center gap-2 text-2xl font-semibold">
-            <Logo size={32} />
+            <Logo size={32} variant="solid" />
             <span className="text-white">Parlay</span>
           </div>
           <nav className="space-y-3">

@@ -14,7 +14,7 @@ export default function Topbar() {
       <div className="h-14 flex items-center justify-between px-5 lg:px-6">
         <div className="flex items-center gap-3">
           <Link href="/">
-            <Logo size={28} />
+            <Logo size={28} variant="solid" />
           </Link>
           <div className="hidden sm:block text-slatex-400 text-sm">Smart Sports. Smarter Minds.</div>
         </div>

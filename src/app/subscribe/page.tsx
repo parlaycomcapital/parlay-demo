@@ -55,7 +55,7 @@ export default function SubscribePage() {
           transition={{ duration: 0.3 }}
           className="text-center mb-12"
         >
-          <Logo size={64} className="mx-auto mb-6" />
+          <Logo size={64} variant="transparent" className="mx-auto mb-6" />
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Choose Your Plan
           </h1>

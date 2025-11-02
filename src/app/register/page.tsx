@@ -71,7 +71,7 @@ export default function Register() {
           transition={{ duration: 0.3 }}
         >
           <div className="text-center mb-8">
-            <Logo size={64} className="mx-auto mb-4" />
+            <Logo size={64} variant="transparent" className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Create an account</h1>
             <p className="text-slatex-400">Join Parlay and start sharing insights</p>
           </div>

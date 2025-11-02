@@ -12,11 +12,11 @@ export default function HomePage() {
         initial={{ backgroundPosition: 'center top' }}
         animate={{ backgroundPosition: 'center bottom' }}
         transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute inset-0 bg-[url('/assets/brand/pattern.png')] opacity-10 bg-cover"
+        className="absolute inset-0 opacity-10 bg-cover"
       />
       <section className="relative container-narrow text-center pt-24 pb-20">
         <ScrollReveal>
-          <Logo size={84} solid className="mx-auto mb-6 drop-shadow-[0_0_24px_rgba(230,62,48,0.35)]" />
+          <Logo size={84} variant="transparent" className="mx-auto mb-6 drop-shadow-[0_0_24px_rgba(230,62,48,0.35)]" />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">Analytics Meets Adrenaline</h1>
