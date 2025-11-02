@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   const pass = (body?.password || '').toString();
   const SITE_PASSWORD = process.env.SITE_PASSWORD || '';

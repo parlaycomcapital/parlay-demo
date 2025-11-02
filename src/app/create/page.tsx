@@ -44,7 +44,7 @@ export default function CreatePost() {
         .map((t) => t.trim())
         .filter((t) => t);
 
-      const newPost = createPost({
+      await createPost({
         title: title.trim(),
         content: content.trim(),
         preview: content.trim().substring(0, 150) + '...',

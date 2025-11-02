@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
-import NavBar from '@/components/NavBar';
-import Footer from '@/components/Footer';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import Providers from '@/components/Providers';
 import LayoutWrapper from '@/components/LayoutWrapper';
+import ConditionalNavFooter from '@/components/ConditionalNavFooter';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,13 +40,13 @@ export default function RootLayout({
       >
         <Providers>
           <SessionProvider>
-            <NavBar />
-            <main className="min-h-screen">
-              <LayoutWrapper>
-                {children}
-              </LayoutWrapper>
-            </main>
-            <Footer />
+            <ConditionalNavFooter>
+              <main className="min-h-screen">
+                <LayoutWrapper>
+                  {children}
+                </LayoutWrapper>
+              </main>
+            </ConditionalNavFooter>
           </SessionProvider>
         </Providers>
       </body>

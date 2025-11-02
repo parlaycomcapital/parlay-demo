@@ -1,16 +1,16 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 
-export default function EnterPage() {
+function EnterPageContent() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
   const params = useSearchParams();
   const redirectTo = params?.get('redirectTo') || '/';
 
-  async function submit(e) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError('');
     const res = await fetch('/api/auth/password', {
@@ -55,5 +55,17 @@ export default function EnterPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function EnterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#0B132B]">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <EnterPageContent />
+    </Suspense>
   );
 }

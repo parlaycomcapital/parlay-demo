@@ -1,16 +1,24 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import AppShell from './shell/AppShell';
+import NavBar from './NavBar';
+import Footer from './Footer';
 
 const pagesWithAppShell = ['/feed', '/dashboard', '/profile', '/settings', '/admin'];
 
-export default function LayoutWrapper({ children, hideNavAndFooter = false }: { children: React.ReactNode; hideNavAndFooter?: boolean }) {
+export default function ConditionalNavFooter({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const useAppShell = pagesWithAppShell.some(page => pathname.startsWith(page));
 
   if (useAppShell) {
-    return <AppShell>{children}</AppShell>;
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <NavBar />
+      {children}
+      <Footer />
+    </>
+  );
 }
+

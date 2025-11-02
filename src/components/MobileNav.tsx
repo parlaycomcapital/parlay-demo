@@ -59,7 +59,7 @@ export default function MobileNav() {
               </Link>
             ))}
           </nav>
-          <footer className="text-xs text-slate-500">© 2025 Parlay</footer>
+          <footer className="text-xs text-slate-500">Parlay ™ {new Date().getFullYear()}</footer>
         </div>
       </aside>
     </>

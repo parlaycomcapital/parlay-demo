@@ -69,11 +69,11 @@ const NavBar = () => {
                         user?.image ||
                         `https://ui-avatars.com/api/?name=${user?.name}&background=FF6B35&color=fff`
                       }
-                      alt={user?.name}
+                      alt={user?.name || 'User'}
                       className="w-8 h-8 rounded-full"
                     />
                     <span className="text-gray-300 text-sm">
-                      {user?.name} ({user?.role})
+                      {user?.name || 'User'} ({user?.role})
                     </span>
                   </div>
                   <button
@@ -137,17 +137,20 @@ const NavBar = () => {
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2 px-3 py-2">
                       <img
-                        src={user?.avatar}
-                        alt={user?.username}
+                        src={
+                          user?.image ||
+                          `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=FF6B35&color=fff`
+                        }
+                        alt={user?.name || 'User'}
                         className="w-8 h-8 rounded-full"
                       />
                       <span className="text-gray-300 text-sm">
-                        {user?.username} ({user?.role})
+                        {user?.name || 'User'} ({user?.role})
                       </span>
                     </div>
                     <button
                       onClick={() => {
-                        logout();
+                        signOut();
                         setIsMenuOpen(false);
                       }}
                       className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"

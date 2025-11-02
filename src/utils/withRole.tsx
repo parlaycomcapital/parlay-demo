@@ -42,7 +42,7 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
       );
     }
 
-    if (!allowedRoles.includes(session.user.role)) {
+    if (!session.user.role || !allowedRoles.includes(session.user.role)) {
       return (
         <div className="min-h-screen bg-navy flex items-center justify-center">
           <div className="text-center">

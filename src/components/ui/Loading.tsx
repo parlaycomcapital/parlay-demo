@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import Logo from '@/components/Logo';
+import Logo from './Logo';
 
 export default function Loading() {
   return (

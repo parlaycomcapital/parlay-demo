@@ -6,6 +6,12 @@
   --foreground: #ffffff;
   --accent-start: #e63e30;
   --accent-end: #f5a623;
+  /* Consistent proportions */
+  --content-width: 700px;
+  --sidebar-width: 260px;
+  --radius: 1.25rem;
+  --gutter: 20px;
+  --shadow-glow: 0 0 16px rgba(230,62,48,0.25);
 }
 
 /* Light theme variables */
@@ -162,6 +168,25 @@ body {
   background: #f5a623;
 }
 
+/* Custom scrollbar utility class */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(230, 62, 48, 0.6);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 166, 35, 0.8);
+}
+
 /* Enhanced animations */
 @keyframes float {
   0%,
@@ -196,19 +221,28 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Social Media Style Components */
+/* Base */
 body {
-  @apply bg-[#0A0F1E] text-white font-body;
+  @apply bg-[#0B132B] text-white font-sans antialiased;
 }
 
+/* Reusable utilities */
 .card {
-  @apply bg-[#111C3B] border border-slate-800 rounded-2xl shadow-md hover:shadow-[0_0_20px_rgba(230,62,48,0.15)] transition-all duration-300;
+  @apply bg-[#101A2E] border border-slate-800 rounded-[var(--radius)]
+  p-5 shadow-md transition-all duration-300 ease-in-out;
+}
+.card:hover { box-shadow: var(--shadow-glow); }
+
+.btn-grad {
+  @apply px-4 py-2 bg-gradient-to-r from-ember to-amber
+  text-white rounded-xl font-medium transition-opacity hover:opacity-90;
 }
 
 .btn-primary {
-  @apply px-4 py-2 bg-gradient-to-r from-ember to-amber rounded-xl font-medium text-white hover:opacity-90 transition;
+  @apply px-4 py-2 bg-gradient-to-r from-ember to-amber
+  text-white rounded-xl font-medium transition-opacity hover:opacity-90;
 }
 
 .icon-btn {
-  @apply p-2 rounded-full hover:bg-slate-800 transition;
+  @apply p-2 rounded-full text-slate-400 hover:text-amber hover:bg-white/5 transition;
 }

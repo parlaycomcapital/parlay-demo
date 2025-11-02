@@ -21,28 +21,53 @@ export default function Profile() {
 
   useEffect(() => {
     // For demo purposes, we'll use the current user or create a mock user
-    if (userId === currentUser?.id) {
-      setProfileUser(currentUser);
-    } else {
-      // Create a mock user for demo
-      const mockUser: User = {
-        id: userId,
-        username: `user_${userId}`,
-        role: 'analyst',
-        email: `user${userId}@example.com`,
-        avatar: `https://ui-avatars.com/api/?name=User${userId}&background=FF6B35&color=fff`,
-        bio: 'Professional sports analyst with years of experience',
-        followers: Math.floor(Math.random() * 5000),
-        following: Math.floor(Math.random() * 200),
-        isAnalyst: true,
-        isAdmin: false,
-        joinDate: '2023-01-01',
-      };
-      setProfileUser(mockUser);
-    }
+    const userToSet: User = userId === currentUser?.id && currentUser ? currentUser : {
+      id: userId,
+      username: `user_${userId}`,
+      role: 'analyst',
+      email: `user${userId}@example.com`,
+      avatar: `https://ui-avatars.com/api/?name=User${userId}&background=FF6B35&color=fff`,
+      bio: 'Professional sports analyst with years of experience',
+      followers: Math.floor(Math.random() * 5000),
+      following: Math.floor(Math.random() * 200),
+      isAnalyst: true,
+      isAdmin: false,
+      joinDate: '2023-01-01',
+    };
+    setProfileUser(userToSet);
 
     const posts = getPostsByAuthor(userId);
-    setUserPosts(posts);
+    // Convert usePosts Post type to localStorage Post type
+    const mappedPosts: Post[] = posts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      content: p.content,
+      preview: p.content.substring(0, 150) + '...',
+      authorId: p.user_id || '',
+      author: {
+        id: p.user_id || '',
+        username: userToSet.username,
+        role: userToSet.role,
+        email: userToSet.email,
+        avatar: userToSet.avatar,
+        bio: userToSet.bio,
+        followers: userToSet.followers,
+        following: userToSet.following,
+        isAnalyst: userToSet.isAnalyst,
+        isAdmin: userToSet.isAdmin,
+        joinDate: userToSet.joinDate,
+      },
+      sport: p.sport,
+      teams: [],
+      price: p.price || 0,
+      isPremium: !!p.price,
+      imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=400&fit=crop',
+      createdAt: p.created_at,
+      likes: 0,
+      comments: 0,
+      views: 0,
+    }));
+    setUserPosts(mappedPosts);
     setLoading(false);
   }, [userId, currentUser, getPostsByAuthor]);
 

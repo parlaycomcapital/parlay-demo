@@ -22,11 +22,42 @@ export default function PostPage() {
 
   useEffect(() => {
     const foundPost = getPostById(postId);
-    setPost(foundPost || null);
-
+    // Convert usePosts Post type to localStorage Post type
     if (foundPost) {
-      const canViewPost = !foundPost.isPremium || isPostPurchased(postId, user?.id || '');
+      const mappedPost: Post = {
+        id: foundPost.id,
+        title: foundPost.title,
+        content: foundPost.content,
+        preview: foundPost.content.substring(0, 150) + '...',
+        authorId: foundPost.user_id || '',
+        author: {
+          id: foundPost.user_id || '',
+          username: 'Unknown User',
+          role: 'fan' as const,
+          email: '',
+          avatar: `https://ui-avatars.com/api/?name=User&background=FF6B35&color=fff`,
+          bio: '',
+          followers: 0,
+          following: 0,
+          isAnalyst: false,
+          isAdmin: false,
+          joinDate: new Date().toISOString(),
+        },
+        sport: foundPost.sport,
+        teams: [],
+        price: foundPost.price || 0,
+        isPremium: !!foundPost.price,
+        imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=400&fit=crop',
+        createdAt: foundPost.created_at,
+        likes: 0,
+        comments: 0,
+        views: 0,
+      };
+      setPost(mappedPost);
+      const canViewPost = !mappedPost.isPremium || isPostPurchased(postId, user?.id || '');
       setCanView(canViewPost);
+    } else {
+      setPost(null);
     }
 
     setLoading(false);

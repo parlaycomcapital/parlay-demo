@@ -2,7 +2,6 @@
 import { Home, BarChart2, User, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Logo from './ui/Logo';
 
 const links = [
   { icon: <Home size={20} />, label: 'Feed', href: '/feed' },
@@ -15,13 +14,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex flex-col justify-between w-64 min-h-screen bg-[#0B132B] border-r border-slate-800 p-6 fixed">
+    <aside className="hidden lg:flex flex-col justify-between w-[var(--sidebar-width)] min-h-screen bg-[#0B132B] border-r border-slate-800 p-6 fixed">
       <div className="space-y-8">
-        <Link href="/" className="flex items-center gap-2 text-2xl font-semibold">
-          <Logo variant="transparent" size={32} />
-          <span className="text-white">Parlay</span>
-        </Link>
-        <nav className="space-y-3">
+        <nav className="space-y-2">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -42,3 +37,4 @@ export default function Sidebar() {
     </aside>
   );
 }
+

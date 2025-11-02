@@ -99,7 +99,7 @@ const Footer = () => {
               <Logo variant="transparent" size={36} />
               <div className="flex flex-col">
                 <span className="font-bold text-white text-lg">Parlay</span>
-                <span className="text-slate-400 text-sm">© 2025 All rights reserved</span>
+                <span className="text-slate-400 text-sm">Parlay ™ {new Date().getFullYear()}</span>
               </div>
             </div>
             <div className="flex gap-8">
