@@ -65,7 +65,7 @@ const NavBar = () => {
                   <div className="flex items-center space-x-2">
                     <img
                       src={
-                        user?.image ||
+                        (user as any)?.image ||
                         `https://ui-avatars.com/api/?name=${user?.name}&background=FF6B35&color=fff`
                       }
                       alt={user?.name || 'User'}
@@ -137,7 +137,7 @@ const NavBar = () => {
                     <div className="flex items-center space-x-2 px-3 py-2">
                       <img
                         src={
-                          user?.image ||
+                          (user as any)?.image ||
                           `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=FF6B35&color=fff`
                         }
                         alt={user?.name || 'User'}

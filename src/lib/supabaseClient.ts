@@ -15,7 +15,7 @@ export interface User {
   id: string;
   email: string;
   password?: string; // Only used during registration/auth
-  role: 'creator' | 'follower';
+  role: 'creator' | 'follower' | 'admin';
   name?: string;
   avatar_url?: string;
   roi?: number;

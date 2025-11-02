@@ -81,22 +81,22 @@ export const authOptions: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
-      if (token?.sub) {
-        session.user.id = token.sub;
-        session.user.role = token.role as 'creator' | 'follower';
-        session.user.email = token.email as string;
-      }
-      return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id;
-        token.role = user.role as 'creator' | 'follower';
-        token.email = user.email;
-      }
-      return token;
-    },
+            async session({ session, token }) {
+              if (token?.sub) {
+                session.user.id = token.sub;
+                session.user.role = token.role as 'creator' | 'follower' | 'admin';
+                session.user.email = token.email as string;
+              }
+              return session;
+            },
+            async jwt({ token, user }) {
+              if (user) {
+                token.sub = user.id;
+                token.role = user.role as 'creator' | 'follower' | 'admin';
+                token.email = user.email || undefined;
+              }
+              return token;
+            },
   },
   pages: {
     signIn: '/login',

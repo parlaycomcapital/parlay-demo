@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
-  role TEXT CHECK (role IN ('creator', 'follower')) DEFAULT 'follower',
+  role TEXT CHECK (role IN ('creator', 'follower', 'admin')) DEFAULT 'follower',
   name TEXT,
   avatar_url TEXT,
   roi DECIMAL(10,2) DEFAULT 0,

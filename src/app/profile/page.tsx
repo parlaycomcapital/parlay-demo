@@ -36,15 +36,15 @@ export default function ProfilePage() {
       <div className="card overflow-hidden">
         <div className="h-28 bg-gradient-to-r from-ember/60 to-amber/60" />
         <div className="p-5 -mt-8 flex items-end gap-4">
-          <div 
-            className="w-20 h-20 rounded-full bg-navy-100 border-4 border-navy-100 shadow-ember flex items-center justify-center"
-            style={{
-              backgroundImage: user.avatar_url || PLACEHOLDER_AVATAR ? `url(${user.avatar_url || PLACEHOLDER_AVATAR})` : 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            {!user.avatar_url && !PLACEHOLDER_AVATAR && (
+                  <div 
+                    className="w-20 h-20 rounded-full bg-navy-100 border-4 border-navy-100 shadow-ember flex items-center justify-center"
+                    style={{
+                      backgroundImage: (user as any).avatar_url || PLACEHOLDER_AVATAR ? `url(${(user as any).avatar_url || PLACEHOLDER_AVATAR})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  >
+            {!(user as any).avatar_url && !PLACEHOLDER_AVATAR && (
               <span className="text-2xl font-bold text-amber">
                 {(user.name || user.email)[0].toUpperCase()}
               </span>

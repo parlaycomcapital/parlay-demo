@@ -12,6 +12,7 @@ export default function BottomNav() {
 
   const links = [
     { href: '/feed', icon: Home },
+    { href: '/leaderboard', icon: BarChart2 },
     { href: '/groups', icon: Users },
     ...(session?.user?.role === 'creator' ? [{ href: '/dashboard', icon: BarChart2 }] : []),
     { href: '/profile', icon: User },

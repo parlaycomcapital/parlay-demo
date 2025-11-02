@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Home, Compass, BarChart2, User, Users } from 'lucide-react';
+import { Home, Compass, BarChart2, User, Users, Shield } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 const baseLinks = [
   { href: '/feed', label: 'Feed', icon: Home },
-  { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/leaderboard', label: 'Leaderboard', icon: BarChart2 },
   { href: '/groups', label: 'Communities', icon: Users },
 ];
 
@@ -19,6 +19,7 @@ export default function Sidebar() {
   const links = [
     ...baseLinks,
     ...(session?.user?.role === 'creator' ? [{ href: '/dashboard', label: 'Dashboard', icon: BarChart2 }] : []),
+    ...(session?.user?.role === 'admin' ? [{ href: '/admin', label: 'Admin', icon: Shield }] : []),
     { href: '/profile', label: 'Profile', icon: User },
   ];
 

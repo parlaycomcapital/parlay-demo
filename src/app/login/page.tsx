@@ -114,14 +114,19 @@ export default function Login() {
           </motion.button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-slatex-400 text-sm">
-              Don't have an account?{' '}
-              <Link href="/register" className="text-amber hover:underline">
-                Sign up
-              </Link>
-            </p>
-          </div>
+                  <div className="mt-6 text-center space-y-2">
+                    <p className="text-slatex-400 text-sm">
+                      Don't have an account?{' '}
+                      <Link href="/register" className="text-amber hover:underline">
+                        Sign up
+                      </Link>
+                    </p>
+                    <p className="text-slatex-400 text-sm">
+                      <Link href="/forgot-password" className="text-amber hover:underline">
+                        Forgot your password?
+                      </Link>
+                    </p>
+                  </div>
         </motion.div>
       </div>
     </div>
