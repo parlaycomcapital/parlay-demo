@@ -50,12 +50,24 @@ export default function PostCard({ post }: { post: any }) {
       {canViewContent ? (
         <p className="text-slatex-300 leading-relaxed mb-4">{post.content}</p>
       ) : (
-        <Paywall 
-          message={requiresSubscription 
-            ? 'This content requires a Pro subscription to view' 
-            : `Unlock this premium analysis for $${Number(post.price).toFixed(2)}`}
-          isSubscriptionRequired={requiresSubscription}
-        />
+        <div>
+          {/* Content Preview/Teaser */}
+          {post.content && post.content.length > 0 && (
+            <div className="relative mb-4">
+              <p className="text-slatex-300 leading-relaxed line-clamp-3">
+                {post.content.substring(0, 150)}
+                {post.content.length > 150 && '...'}
+              </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-300 via-navy-300/80 to-transparent pointer-events-none" />
+            </div>
+          )}
+          <Paywall 
+            message={requiresSubscription 
+              ? 'This content requires a Pro subscription to view' 
+              : `Unlock this premium analysis for $${Number(post.price).toFixed(2)}`}
+            isSubscriptionRequired={requiresSubscription}
+          />
+        </div>
       )}
 
       <footer className="mt-4 flex justify-between items-center">

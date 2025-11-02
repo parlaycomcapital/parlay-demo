@@ -41,6 +41,11 @@ module.exports = {
       transitionTimingFunction: {
         smooth: 'cubic-bezier(0.25,0.1,0.25,1)',
       },
+      lineClamp: {
+        1: '1',
+        2: '2',
+        3: '3',
+      },
     },
   },
   plugins: [],
