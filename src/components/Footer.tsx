@@ -5,7 +5,7 @@ import Logo from './ui/Logo';
 
 const Footer = () => {
   return (
-    <footer className="bg-navy border-t border-slate">
+    <footer className="bg-navy-100 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -45,21 +45,23 @@ const Footer = () => {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/feed" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/feed" className="text-slatex-400 hover:text-white transition-colors">
                   Browse Analyses
                 </Link>
               </li>
               <li>
-                <Link href="/create" className="text-gray-400 hover:text-white transition-colors">
-                  Create Post
+                <Link href="/leaderboard" className="text-slatex-400 hover:text-white transition-colors">
+                  Leaderboard
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/profile/1"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  My Profile
+                <Link href="/groups" className="text-slatex-400 hover:text-white transition-colors">
+                  Communities
+                </Link>
+              </li>
+              <li>
+                <Link href="/subscribe" className="text-slatex-400 hover:text-white transition-colors">
+                  Subscribe
                 </Link>
               </li>
             </ul>
@@ -70,30 +72,34 @@ const Footer = () => {
             <h3 className="text-white font-semibold mb-4">Support</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/help" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/help" className="text-slatex-400 hover:text-white transition-colors">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/contact" className="text-slatex-400 hover:text-white transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/terms" className="text-slatex-400 hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="text-slatex-400 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                  Terms of Service
+                <Link href="/responsible-use" className="text-slatex-400 hover:text-white transition-colors">
+                  Responsible Use
                 </Link>
               </li>
             </ul>
           </div>
         </div>
-
-        <div className="border-t border-slate/30 mt-12 pt-8">
+        <div className="border-t border-slate-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4">
               <Logo size={36} variant="transparent" />
@@ -102,26 +108,7 @@ const Footer = () => {
                 <span className="text-slate-400 text-sm">Parlay ™ {new Date().getFullYear()}</span>
               </div>
             </div>
-            <div className="flex gap-8">
-              <Link
-                href="/terms"
-                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/privacy"
-                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/contact"
-                className="text-slate-400 hover:text-amber-400 transition-colors duration-200 font-medium"
-              >
-                Contact
-              </Link>
-            </div>
+            <p className="text-slate-400 text-sm">Alpha Release — Built with ❤️ for sports minds</p>
           </div>
         </div>
       </div>

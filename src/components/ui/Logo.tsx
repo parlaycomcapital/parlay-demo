@@ -13,7 +13,7 @@ export default function Logo({
   variant = 'solid', 
   className = '',
 }: LogoProps) {
-  const src = variant === 'solid' ? '/logo.png' : '/logotrans.png';
+  const src = variant === 'solid' ? '/assets/brand/logo-solid.png' : '/assets/brand/logo-transparent.png';
 
   return (
     <div

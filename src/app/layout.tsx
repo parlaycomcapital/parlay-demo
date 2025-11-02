@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
-import AppShell from '@/components/shell/AppShell';
+import ConditionalAppShell from '@/components/shell/ConditionalAppShell';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import Providers from '@/components/Providers';
 
@@ -32,7 +32,7 @@ export default function RootLayout({
       <body className="font-sans">
         <Providers>
           <SessionProvider>
-            <AppShell>{children}</AppShell>
+            <ConditionalAppShell>{children}</ConditionalAppShell>
           </SessionProvider>
         </Providers>
       </body>
