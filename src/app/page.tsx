@@ -16,7 +16,7 @@ export default function HomePage() {
       />
       <section className="relative container-narrow text-center pt-24 pb-20">
         <ScrollReveal>
-          <Logo size={84} className="mx-auto mb-6 drop-shadow-[0_0_24px_rgba(230,62,48,0.35)]" />
+          <Logo size={84} solid className="mx-auto mb-6 drop-shadow-[0_0_24px_rgba(230,62,48,0.35)]" />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <h1 className="text-4xl md:text-5xl font-bold mb-3">Analytics Meets Adrenaline</h1>

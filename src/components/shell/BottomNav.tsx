@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Home, Compass, BarChart2, User } from 'lucide-react';
+import { Home, Compass, BarChart2, User, Users } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
@@ -12,7 +12,7 @@ export default function BottomNav() {
 
   const links = [
     { href: '/feed', icon: Home },
-    { href: '/explore', icon: Compass },
+    { href: '/groups', icon: Users },
     ...(session?.user?.role === 'creator' ? [{ href: '/dashboard', icon: BarChart2 }] : []),
     { href: '/profile', icon: User },
   ];

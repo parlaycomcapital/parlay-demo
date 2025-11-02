@@ -16,6 +16,8 @@ export default function Logo({
   className = '',
   variant = 'icon'
 }: LogoProps) {
+  // Default sizes by context
+  // Hero: 84px, Sidebar: 40px, Navbar: 28px
   // Use icon-only logos from public folder
   const src = solid
     ? '/logo.png'

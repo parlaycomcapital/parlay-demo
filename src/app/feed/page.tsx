@@ -9,7 +9,7 @@ export default function FeedPage() {
   const { posts, loading } = usePosts();
 
   return (
-    <div className="container-narrow">
+    <div>
       <div className="mb-5 lg:mb-6">
         <h1 className="text-2xl font-bold mb-2">Feed</h1>
         <p className="text-slatex-400 text-sm">Follow analysts, explore insights, and support your favorites.</p>

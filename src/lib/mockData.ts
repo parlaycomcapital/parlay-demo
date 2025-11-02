@@ -136,7 +136,7 @@ export const mockGroups: MockGroup[] = [
     id: 'group1',
     creator_id: 'user1',
     name: 'Premier League Insights',
-    description: 'Expert analysis and predictions for Premier League matches',
+    description: 'Expert analysis and predictions for Premier League matches. Join to get exclusive insights from top analysts.',
     avatar_url: '/assets/placeholders/group-avatar.png',
     member_count: 342,
     is_public: true,
@@ -145,12 +145,29 @@ export const mockGroups: MockGroup[] = [
     id: 'group2',
     creator_id: 'user3',
     name: 'Tennis Experts',
-    description: 'In-depth tennis analysis and tournament predictions',
+    description: 'In-depth tennis analysis and tournament predictions. Follow Grand Slam experts and track their performance.',
     avatar_url: '/assets/placeholders/group-avatar.png',
     member_count: 189,
     is_public: true,
   },
+  {
+    id: 'group3',
+    creator_id: 'user1',
+    name: 'NBA Analytics Hub',
+    description: 'Advanced NBA statistics, player performance metrics, and game predictions from data-driven analysts.',
+    avatar_url: '/assets/placeholders/group-avatar.png',
+    member_count: 256,
+    is_public: true,
+  },
 ];
+
+// Update mock posts to include group_id for some posts
+export const mockPostsWithGroups = mockPosts.map((post, index) => {
+  if (index < 2) {
+    return { ...post, group_id: mockGroups[0].id };
+  }
+  return post;
+});
 
 export const mockSubscription = {
   id: 'sub1',

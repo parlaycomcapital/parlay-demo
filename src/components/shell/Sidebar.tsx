@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Home, Compass, BarChart2, User } from 'lucide-react';
+import { Home, Compass, BarChart2, User, Users } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 const baseLinks = [
   { href: '/feed', label: 'Feed', icon: Home },
   { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/groups', label: 'Communities', icon: Users },
 ];
 
 export default function Sidebar() {
@@ -22,7 +23,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-[260px] border-r border-slate-800 bg-navy-100/60 backdrop-blur-md">
+    <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-[260px] border-r border-slate-800 bg-navy-100/60 backdrop-blur-md z-30">
       <div className="p-5 lg:p-6 flex flex-col gap-3 w-full">
         {links.map(({ href, label, icon: Icon }) => (
           <motion.div key={href} whileTap={{ scale: 0.97 }} transition={{ duration: 0.1 }}>

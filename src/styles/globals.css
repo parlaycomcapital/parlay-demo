@@ -30,6 +30,7 @@ body {
   .card-hover:hover {
     box-shadow: 0 0 20px rgba(230, 62, 48, 0.25);
     border-color: rgba(245, 166, 35, 0.4);
+    transform: translateY(-2px);
   }
 
   .shadow-ember {
@@ -70,7 +71,7 @@ body {
 
   .container-narrow {
     max-width: 720px;
-    @apply mx-auto;
+    @apply mx-auto px-5 lg:px-6;
   }
 
   .container-wide {
