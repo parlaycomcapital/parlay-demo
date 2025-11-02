@@ -7,27 +7,51 @@ interface LogoProps {
   size?: number;
   solid?: boolean;
   className?: string;
+  variant?: 'default' | 'icon' | 'full';
 }
 
-export default function Logo({ size = 48, solid = false, className = '' }: LogoProps) {
+export default function Logo({ 
+  size = 48, 
+  solid = false, 
+  className = '',
+  variant = 'icon'
+}: LogoProps) {
+  // Use icon-only logos from public folder
   const src = solid
-    ? '/assets/brand/logo-solid.png'
-    : '/assets/brand/logo-transparent.png';
+    ? '/logo.png'
+    : '/logotrans.png';
+
+  // For icon variant, use circular container
+  // For full variant, allow rectangular display
+  const isCircular = variant === 'icon';
 
   return (
     <div
       className={twMerge(
-        'relative flex items-center justify-center overflow-hidden rounded-full',
+        isCircular 
+          ? 'relative flex items-center justify-center overflow-hidden rounded-full' 
+          : 'relative flex items-center justify-center',
         className
       )}
-      style={{ width: size, height: size }}
+      style={{ 
+        width: size, 
+        height: size,
+        minWidth: size,
+        minHeight: size,
+      }}
     >
       <Image
         src={src}
-        alt="Parlay logo"
-        fill
-        style={{ objectFit: 'contain', padding: '8px' }}
+        alt="Parlay"
+        fill={isCircular}
+        width={!isCircular ? size : undefined}
+        height={!isCircular ? size : undefined}
+        style={{ 
+          objectFit: isCircular ? 'contain' : 'contain',
+          padding: isCircular ? '8px' : '0',
+        }}
         priority
+        className="select-none"
       />
     </div>
   );
