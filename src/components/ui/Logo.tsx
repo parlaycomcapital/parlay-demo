@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
+import { motion } from 'framer-motion';
 
 interface LogoProps {
   size?: number;
@@ -16,8 +17,8 @@ export default function Logo({
   const src = variant === 'solid' ? '/assets/brand/logo-solid.png' : '/assets/brand/logo-transparent.png';
 
   return (
-    <div
-      className={twMerge('relative flex items-center justify-center', className)}
+    <motion.div
+      className={twMerge('relative flex items-center justify-center group', className)}
       style={{
         width: `${size}px`,
         height: `${size}px`,
@@ -25,7 +26,17 @@ export default function Logo({
         minWidth: `${size}px`,
         minHeight: `${size}px`,
       }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
     >
+      {/* Glow effect on hover */}
+      <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md"
+        style={{
+          background: 'radial-gradient(circle, rgba(245, 166, 35, 0.4), transparent)',
+        }}
+      />
+      
       <Image
         src={src}
         alt="Parlay logo"
@@ -33,8 +44,8 @@ export default function Logo({
         sizes={`${size}px`}
         style={{ objectFit: 'contain', padding: '4px' }}
         priority
-        className="select-none"
+        className="select-none relative z-10"
       />
-    </div>
+    </motion.div>
   );
 }

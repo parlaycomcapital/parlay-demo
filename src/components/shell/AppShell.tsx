@@ -10,7 +10,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Topbar />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 pt-6 pb-20 lg:pb-6 lg:pl-[280px] w-full min-h-[calc(100vh-3.5rem)]">
+        <main id="main-content" className="flex-1 pt-6 pb-20 lg:pb-6 lg:pl-[280px] w-full min-h-[calc(100vh-3.5rem)]">
           <div className="max-w-[720px] mx-auto px-5 lg:px-6">
             {children}
           </div>

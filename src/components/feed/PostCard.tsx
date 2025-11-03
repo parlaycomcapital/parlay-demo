@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Lock, TrendingUp } from 'lucide-react';
 import CommentsDrawer from './CommentsDrawer';
 import Paywall from './Paywall';
+import PremiumBadge from '@/components/ui/PremiumBadge';
+import VerifiedBadge from '@/components/ui/VerifiedBadge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useLikes } from '@/hooks/useLikes';
 import ShareTooltip from './ShareTooltip';
@@ -14,51 +16,61 @@ export default function PostCard({ post }: { post: any }) {
   const requiresSubscription = post.requires_subscription || post.is_premium;
   const { canAccessPremiumContent } = useSubscription();
   const { liked, likesCount, toggleLike } = useLikes(post.id);
+  const isVerified = post.author?.role === 'creator' || post.verified; // Add verified check
   
   const canViewContent = !requiresSubscription || canAccessPremiumContent();
 
   return (
     <motion.article
-      className="card card-hover p-6"
+      className="card card-hover p-4 md:p-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ 
+        scale: 1.01, 
+        y: -2,
+        transition: { duration: 0.2 }
+      }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.15, ease: 'easeOut' }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       {/* Header */}
       <header className="flex items-start gap-3 mb-4">
         {/* Avatar */}
-        <div 
+        <motion.div 
           className="w-12 h-12 rounded-full bg-gradient-to-br from-ember/30 to-amber/30 flex items-center justify-center overflow-hidden ring-2 ring-navy-300 flex-shrink-0"
           style={{
             backgroundImage: `url(${PLACEHOLDER_AVATAR})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
         >
           {!PLACEHOLDER_AVATAR && (
             <span className="text-lg font-bold text-amber">{(post.title || 'A')[0].toUpperCase()}</span>
           )}
-        </div>
+        </motion.div>
         
         {/* Title and Meta */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-heading font-semibold text-base text-white truncate">{post.title}</h3>
+            <h3 className="font-heading font-semibold text-base md:text-lg text-white truncate">{post.title}</h3>
+            {isVerified && <VerifiedBadge size="sm" />}
             <span className="badge flex-shrink-0">{post.sport}</span>
             {premium && (
-              <span className="badge flex items-center gap-1 bg-amber/10 text-amber border-amber/20 flex-shrink-0">
-                <Lock size={12} />
-                Premium
-              </span>
+              <PremiumBadge variant="default" />
             )}
           </div>
-          <p className="text-xs text-slatex-500 mt-1">{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+          <p className="text-xs text-slatex-500 mt-1">
+            {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </p>
         </div>
       </header>
 
       {/* Content */}
       <div className="mb-4">
         {canViewContent ? (
-          <p className="text-slatex-300 leading-relaxed text-sm whitespace-pre-wrap">{post.content}</p>
+          <p className="text-slatex-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">{post.content}</p>
         ) : (
           <div>
             {/* Content Preview/Teaser */}
@@ -86,24 +98,24 @@ export default function PostCard({ post }: { post: any }) {
         <div className="flex items-center gap-4">
           <motion.button
             onClick={toggleLike}
-            className={`flex items-center gap-1.5 text-sm ${liked ? 'text-ember' : 'text-slatex-400'}`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className={`flex items-center gap-1.5 text-sm font-medium ${liked ? 'text-ember' : 'text-slatex-400'}`}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             transition={{ duration: 0.1 }}
             aria-label={liked ? 'Unlike this post' : 'Like this post'}
           >
             <Heart size={18} fill={liked ? 'currentColor' : 'none'} strokeWidth={2} />
-            <span className="font-medium">{likesCount || 0}</span>
+            <span>{likesCount || 0}</span>
           </motion.button>
           
           <motion.button
-            className="flex items-center gap-1.5 text-sm text-slatex-400 hover:text-amber transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-1.5 text-sm font-medium text-slatex-400 hover:text-amber transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             aria-label="Open comments"
           >
             <MessageCircle size={18} strokeWidth={2} />
-            <span className="font-medium">{post.comments_count || 0}</span>
+            <span>{post.comments_count || 0}</span>
           </motion.button>
           
           <ShareTooltip postId={post.id} title={post.title} />
@@ -114,8 +126,8 @@ export default function PostCard({ post }: { post: any }) {
           <motion.button
             type="button"
             className="px-4 py-2 rounded-lg font-medium text-sm bg-gradient-to-r from-ember to-amber text-white hover:shadow-ember-sm transition-all duration-fast"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(230, 62, 48, 0.4)' }}
+            whileTap={{ scale: 0.95 }}
             aria-label={`Buy premium content for $${Number(post.price).toFixed(2)}`}
           >
             ${Number(post.price).toFixed(2)}

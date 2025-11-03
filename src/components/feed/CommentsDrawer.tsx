@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Heart, MessageCircle } from 'lucide-react';
+import { Send, Heart, MessageCircle, X } from 'lucide-react';
 import { supabase, Comment } from '@/lib/supabaseClient';
 import { useSession } from 'next-auth/react';
-import { isPlaceholderMode } from '@/lib/mockData';
+import { isPlaceholderMode, PLACEHOLDER_AVATAR } from '@/lib/mockData';
 
 interface CommentsDrawerProps {
   postId: string;
@@ -78,7 +78,7 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
           },
           replies: [],
         },
-      ] as Comment[]);
+      ]);
       setLoading(false);
       return;
     }
@@ -86,36 +86,14 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
     try {
       const { data, error } = await supabase
         .from('comments')
-        .select(`
-          *,
-          user:users(id, name, email, avatar_url)
-        `)
+        .select('*, user:users(*)')
         .eq('post_id', postId)
-        .is('parent_id', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      // Fetch replies for each comment
-      const commentsWithReplies = await Promise.all(
-        (data || []).map(async (comment) => {
-          const { data: replies } = await supabase
-            .from('comments')
-            .select(`
-              *,
-              user:users(id, name, email, avatar_url)
-            `)
-            .eq('parent_id', comment.id)
-            .order('created_at', { ascending: true });
-
-          return { ...comment, replies: replies || [] };
-        })
-      );
-
-      setComments(commentsWithReplies as Comment[]);
-    } catch (error: any) {
-      console.warn('Error fetching comments (placeholder mode fallback):', error.message);
-      setComments([]);
+      setComments(data || []);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
     } finally {
       setLoading(false);
     }
@@ -145,257 +123,196 @@ export default function CommentsDrawer({ postId }: CommentsDrawerProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!session?.user?.id || !newComment.trim()) return;
+    if (!newComment.trim() || !session?.user) return;
 
-    // Handle in placeholder mode
+    // Placeholder mode: add to local state
     if (isPlaceholderMode()) {
-      console.log('Placeholder mode: Comment created', { postId, content: newComment, replyingTo });
-      // Add comment to local state
-      const newCommentObj: Comment = {
-        id: `mock-comment-${Date.now()}`,
+      const comment: Comment = {
+        id: `comment${Date.now()}`,
         post_id: postId,
         user_id: session.user.id,
-        parent_id: replyingTo || undefined,
-        content: newComment.trim(),
+        content: newComment,
         likes_count: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-          user: {
-            id: session.user.id,
-            email: session.user.email || '',
-            name: session.user.name || 'User',
-            role: (session.user.role || 'follower') as 'creator' | 'follower',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
+        user: {
+          id: session.user.id,
+          email: session.user.email || '',
+          name: session.user.name || '',
+          role: (session.user.role as 'creator' | 'follower' | 'admin') || 'follower',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
         replies: [],
       };
-
-      if (replyingTo) {
-        setComments(prev =>
-          prev.map(comment =>
-            comment.id === replyingTo
-              ? { ...comment, replies: [...(comment.replies || []), newCommentObj] }
-              : comment
-          )
-        );
-      } else {
-        setComments(prev => [newCommentObj, ...prev]);
-      }
-
+      setComments([comment, ...comments]);
       setNewComment('');
-      setReplyingTo(null);
       return;
     }
 
     try {
-      const { error } = await supabase.from('comments').insert({
-        post_id: postId,
-        user_id: session.user.id,
-        parent_id: replyingTo || null,
-        content: newComment.trim(),
-      });
+      const { data, error } = await supabase
+        .from('comments')
+        .insert({
+          post_id: postId,
+          user_id: session.user.id,
+          content: newComment,
+        })
+        .select()
+        .single();
 
       if (error) throw error;
-
-      // Create notification if replying to a comment
-      if (replyingTo) {
-        const { data: parentComment } = await supabase
-          .from('comments')
-          .select('user_id')
-          .eq('id', replyingTo)
-          .single();
-
-        if (parentComment && parentComment.user_id !== session.user.id) {
-          await supabase.from('notifications').insert({
-            user_id: parentComment.user_id,
-            type: 'comment',
-            actor_id: session.user.id,
-            post_id: postId,
-            comment_id: replyingTo,
-          });
-        }
-      } else {
-        // Notify post author
-        const { data: post } = await supabase
-          .from('posts')
-          .select('author_id')
-          .eq('id', postId)
-          .single();
-
-        if (post && post.author_id !== session.user.id) {
-          await supabase.from('notifications').insert({
-            user_id: post.author_id,
-            type: 'comment',
-            actor_id: session.user.id,
-            post_id: postId,
-          });
-        }
-      }
-
       setNewComment('');
-      setReplyingTo(null);
       fetchComments();
-    } catch (error: any) {
-      console.warn('Error creating comment (placeholder mode fallback):', error.message);
-      // Fallback: add to local state
-      if (isPlaceholderMode()) {
-        setNewComment('');
-        setReplyingTo(null);
-      }
+    } catch (error) {
+      console.error('Error creating comment:', error);
     }
   };
 
   return (
-    <div className="mt-3">
+    <>
+      {/* Trigger Button */}
       <motion.button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 text-amber hover:underline text-sm transition"
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1.5 text-sm text-slatex-400 hover:text-amber transition-colors"
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        aria-label="Open comments"
       >
-        <MessageCircle size={16} />
-        {open ? 'Hide' : 'Show'} comments
+        <MessageCircle size={18} strokeWidth={2} />
+        <span className="font-medium">{comments.length || 0}</span>
       </motion.button>
 
+      {/* Drawer */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="mt-3 overflow-hidden"
-          >
-            <div className="rounded-xl border border-slate-800 bg-navy-300/50 p-4 space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
-              {session ? (
-                <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
-                  <input
-                    type="text"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder={replyingTo ? 'Write a reply...' : 'Write a comment...'}
-                    className="input flex-1 text-sm"
-                  />
-                  <motion.button
-                    type="submit"
-                    whileTap={{ scale: 0.95 }}
-                    className="icon-btn"
-                    disabled={!newComment.trim()}
-                  >
-                    <Send size={18} />
-                  </motion.button>
-                </form>
-              ) : (
-                <p className="text-slatex-400 text-sm mb-4">
-                  <a href="/login" className="text-amber hover:underline">
-                    Sign in
-                  </a>{' '}
-                  to comment
-                </p>
-              )}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            />
+            
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 md:left-auto md:right-0 md:top-0 md:w-96 h-[85vh] md:h-screen bg-slate-900/95 backdrop-blur-md border-t md:border-t-0 md:border-l border-slate-800 z-50 flex flex-col"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-slate-800">
+                <h3 className="text-lg font-heading font-semibold text-white">
+                  Comments ({comments.length})
+                </h3>
+                <motion.button
+                  onClick={() => setOpen(false)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="text-slatex-400 hover:text-white transition-colors"
+                  aria-label="Close comments"
+                >
+                  <X size={24} strokeWidth={2} />
+                </motion.button>
+              </div>
 
-              {loading ? (
-                <p className="text-slatex-400 text-sm text-center py-4">Loading comments...</p>
-              ) : comments.length === 0 ? (
-                <p className="text-slatex-400 text-sm text-center py-4">No comments yet</p>
-              ) : (
-                <div className="space-y-4">
-                  {comments.map((comment) => (
-                    <CommentItem
+              {/* Comments List */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+                {loading ? (
+                  <div className="text-center text-slatex-400 py-8">Loading comments...</div>
+                ) : comments.length === 0 ? (
+                  <div className="text-center text-slatex-400 py-8">
+                    <MessageCircle size={48} className="mx-auto mb-3 opacity-50" />
+                    <p>No comments yet. Be the first to comment!</p>
+                  </div>
+                ) : (
+                  comments.map((comment) => (
+                    <motion.div
                       key={comment.id}
-                      comment={comment}
-                      postId={postId}
-                      onReply={() => setReplyingTo(comment.id)}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex gap-3"
+                    >
+                      {/* Avatar */}
+                      <div 
+                        className="w-8 h-8 rounded-full bg-gradient-to-br from-ember/30 to-amber/30 flex-shrink-0"
+                        style={{
+                          backgroundImage: PLACEHOLDER_AVATAR ? `url(${PLACEHOLDER_AVATAR})` : 'none',
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        }}
+                      >
+                        {!PLACEHOLDER_AVATAR && (
+                          <span className="text-xs font-bold text-amber">
+                            {(comment.user?.name || 'U')[0].toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="bg-slate-800/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-medium text-sm text-white">
+                              {comment.user?.name || 'Anonymous'}
+                            </span>
+                            <span className="text-xs text-slatex-500">
+                              {new Date(comment.created_at).toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              })}
+                            </span>
+                          </div>
+                          <p className="text-sm text-slatex-300 whitespace-pre-wrap">
+                            {comment.content}
+                          </p>
+                        </div>
+                        
+                        {/* Actions */}
+                        <div className="flex items-center gap-4 mt-2 ml-2">
+                          <button className="flex items-center gap-1 text-xs text-slatex-500 hover:text-ember transition-colors">
+                            <Heart size={14} strokeWidth={2} />
+                            <span>{comment.likes_count || 0}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </div>
+
+              {/* Comment Input */}
+              {session?.user && (
+                <form onSubmit={handleSubmit} className="p-4 border-t border-slate-800 bg-slate-900/50">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Write a comment..."
+                      className="flex-1 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slatex-500 focus:outline-none focus:ring-2 focus:ring-amber/50"
                     />
-                  ))}
-                </div>
+                    <motion.button
+                      type="submit"
+                      disabled={!newComment.trim()}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-ember to-amber text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label="Send comment"
+                    >
+                      <Send size={20} strokeWidth={2} />
+                    </motion.button>
+                  </div>
+                </form>
               )}
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </div>
-  );
-}
-
-function CommentItem({
-  comment,
-  postId,
-  onReply,
-}: {
-  comment: Comment;
-  postId: string;
-  onReply: () => void;
-}) {
-  const { data: session } = useSession();
-  
-  // Note: Comment likes would need a separate hook or implementation
-  // For now, we'll keep it simple
-  const [liked, setLiked] = useState(false);
-  
-  const toggleLike = async () => {
-    if (!session?.user?.id) return;
-    setLiked(!liked);
-    // TODO: Implement comment liking
-  };
-
-  return (
-    <div className="border-b border-slate-800 pb-3 last:border-0">
-      <div className="flex items-start gap-3">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-ember to-amber flex-shrink-0" />
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="font-semibold text-sm text-white">
-              {comment.user?.name || comment.user?.email || 'Anonymous'}
-            </span>
-            <span className="text-xs text-slatex-500">
-              {new Date(comment.created_at).toLocaleDateString()}
-            </span>
-          </div>
-          <p className="text-slatex-300 text-sm mb-2">{comment.content}</p>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleLike}
-              className={`flex items-center gap-1 text-xs text-slatex-400 hover:text-amber transition ${
-                liked ? 'text-amber' : ''
-              }`}
-            >
-              <Heart size={14} fill={liked ? 'currentColor' : 'none'} />
-              {comment.likes_count || 0}
-            </button>
-            {session && (
-              <button
-                onClick={onReply}
-                className="text-xs text-slatex-400 hover:text-amber transition"
-              >
-                Reply
-              </button>
-            )}
-          </div>
-
-          {/* Replies */}
-          {comment.replies && comment.replies.length > 0 && (
-            <div className="mt-3 ml-4 space-y-3 border-l-2 border-slate-800 pl-4">
-              {comment.replies.map((reply) => (
-                <div key={reply.id} className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-ember to-amber flex-shrink-0" />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-xs text-white">
-                        {reply.user?.name || reply.user?.email || 'Anonymous'}
-                      </span>
-                      <span className="text-xs text-slatex-500">
-                        {new Date(reply.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-slatex-300 text-xs">{reply.content}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import ConditionalAppShell from '@/components/shell/ConditionalAppShell';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import Providers from '@/components/Providers';
+import SkipToContent from '@/components/ui/SkipToContent';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://parlay-demo.vercel.app'),
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body className="font-sans">
+        <SkipToContent />
         <Providers>
           <SessionProvider>
             <ConditionalAppShell>{children}</ConditionalAppShell>

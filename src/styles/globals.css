@@ -15,8 +15,28 @@ body {
 }
 
 :root {
+  /* Brand Colors */
+  --color-bg: #0B132B;
+  --color-card: #101A2E;
+  --color-ember: #E63E30;
+  --color-amber: #F5A623;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #9CA3AF;
+  
+  /* Shadows */
+  --shadow-ember: 0 0 20px rgba(230, 62, 48, 0.25);
+  --shadow-ember-sm: 0 0 10px rgba(230, 62, 48, 0.15);
+  --shadow-ember-lg: 0 0 30px rgba(230, 62, 48, 0.35);
+  
+  /* Borders */
+  --radius: 1.25rem;
+  
+  /* Focus States */
   --ring: 0 0 0 3px rgba(245, 166, 35, 0.18);
   --ring-offset: 0 0 0 3px rgba(11, 19, 43, 0.9);
+  
+  /* Light Mode */
+  --color-bg-light: #F9FAFB;
 }
 
 /* Focus visible styles for accessibility */
