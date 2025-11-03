@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Logo from '@/components/ui/Logo';
 import ScrollReveal from '@/components/feed/ScrollReveal';
+import AnimatedGradient from '@/components/ui/AnimatedGradient';
 import Link from 'next/link';
 import { TrendingUp, Shield, Users, Zap } from 'lucide-react';
 import Footer from '@/components/Footer';
@@ -10,25 +11,44 @@ import Footer from '@/components/Footer';
 export default function HomePage() {
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Background with ambient glow */}
+      {/* Ambient animated gradient background */}
+      <AnimatedGradient variant="ambient" className="opacity-20" />
+      
+      {/* Animated Background Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          initial={{ backgroundPosition: 'center top' }}
-          animate={{ backgroundPosition: 'center bottom' }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-0 opacity-10 bg-cover"
+          className="absolute top-20 left-10 w-20 h-20 rounded-full blur-2xl opacity-20"
+          style={{ background: 'radial-gradient(circle, rgba(230,62,48,0.6), transparent)' }}
+          animate={{
+            y: [0, -100, 0],
+            x: [0, 50, 0],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
         />
-        <div 
-          className="absolute inset-0 opacity-40"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(230,62,48,0.2) 0%, transparent 70%)',
+        <motion.div
+          className="absolute bottom-20 right-10 w-32 h-32 rounded-full blur-3xl opacity-15"
+          style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.6), transparent)' }}
+          animate={{
+            y: [0, 80, 0],
+            x: [0, -30, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 2,
           }}
         />
       </div>
       
       {/* Hero Content */}
-      <section className="relative container-narrow text-center pt-24 pb-20">
+      <section className="relative container-narrow text-center pt-24 pb-20 z-10">
         <ScrollReveal>
+          {/* Logo with pulse glow */}
           <motion.div
             animate={{
               filter: [
@@ -37,7 +57,8 @@ export default function HomePage() {
                 'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
               ],
             }}
-            transition={{ duration: 3, repeat: Infinity }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            className="inline-block"
           >
             <Logo 
               size={84} 
@@ -62,18 +83,26 @@ export default function HomePage() {
         
         <ScrollReveal delay={0.3}>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
               <Link 
                 href="/feed" 
-                className="btn-grad px-8 py-3 text-base"
+                className="btn-grad px-8 py-3 text-base inline-block"
               >
                 Explore the Platform
               </Link>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
               <Link
                 href="/register"
-                className="px-8 py-3 rounded-xl border border-amber/40 text-amber hover:bg-amber/10 transition-all duration-fast font-medium"
+                className="px-8 py-3 rounded-xl border border-amber/40 text-amber hover:bg-amber/10 transition-all duration-fast font-medium inline-block"
               >
                 Get Started Free
               </Link>
@@ -81,22 +110,32 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* Alpha Badge */}
+        {/* Alpha Badge with subtle animation */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.4 }}
           className="mt-6"
         >
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber/10 border border-amber/20 text-amber text-xs font-medium">
+          <motion.span 
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber/10 border border-amber/20 text-amber text-xs font-medium"
+            animate={{
+              boxShadow: [
+                '0 0 10px rgba(245,166,35,0.2)',
+                '0 0 20px rgba(245,166,35,0.3)',
+                '0 0 10px rgba(245,166,35,0.2)',
+              ],
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
             <Zap size={14} />
             Free Alpha — No Credit Card Required
-          </span>
+          </motion.span>
         </motion.div>
       </section>
 
       {/* Value Propositions */}
-      <section className="relative container-narrow py-20 border-t border-slate-800">
+      <section className="relative container-narrow py-20 border-t border-slate-800 z-10">
         <ScrollReveal>
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-center mb-12">
             Why Choose <span className="gradient-text">Parlay</span>?
@@ -105,10 +144,20 @@ export default function HomePage() {
 
         <div className="grid md:grid-cols-3 gap-6">
           <ScrollReveal delay={0.1}>
-            <div className="card p-6 text-center group">
+            <motion.div
+              className="card p-6 text-center"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            >
               <motion.div 
                 className="w-16 h-16 rounded-full bg-gradient-to-br from-ember/20 to-amber/20 flex items-center justify-center mx-auto mb-4"
-                whileHover={{ scale: 1.1, rotate: 5 }}
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(230,62,48,0.2)',
+                    '0 0 30px rgba(230,62,48,0.3)',
+                    '0 0 20px rgba(230,62,48,0.2)',
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
               >
                 <TrendingUp size={32} className="text-ember" />
               </motion.div>
@@ -116,14 +165,24 @@ export default function HomePage() {
               <p className="text-slatex-400 text-sm">
                 Real ROI, win rates, and performance metrics for every analyst. Trust the numbers.
               </p>
-            </div>
+            </motion.div>
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <div className="card p-6 text-center group">
+            <motion.div
+              className="card p-6 text-center"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            >
               <motion.div 
                 className="w-16 h-16 rounded-full bg-gradient-to-br from-ember/20 to-amber/20 flex items-center justify-center mx-auto mb-4"
-                whileHover={{ scale: 1.1, rotate: 5 }}
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(245,166,35,0.2)',
+                    '0 0 30px rgba(245,166,35,0.3)',
+                    '0 0 20px rgba(245,166,35,0.2)',
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
               >
                 <Shield size={32} className="text-amber" />
               </motion.div>
@@ -131,14 +190,24 @@ export default function HomePage() {
               <p className="text-slatex-400 text-sm">
                 Only verified analysts can post premium content. Quality over quantity.
               </p>
-            </div>
+            </motion.div>
           </ScrollReveal>
 
           <ScrollReveal delay={0.3}>
-            <div className="card p-6 text-center group">
+            <motion.div
+              className="card p-6 text-center"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            >
               <motion.div 
                 className="w-16 h-16 rounded-full bg-gradient-to-br from-ember/20 to-amber/20 flex items-center justify-center mx-auto mb-4"
-                whileHover={{ scale: 1.1, rotate: 5 }}
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(59,130,246,0.2)',
+                    '0 0 30px rgba(59,130,246,0.3)',
+                    '0 0 20px rgba(59,130,246,0.2)',
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
               >
                 <Users size={32} className="text-info" />
               </motion.div>
@@ -146,39 +215,58 @@ export default function HomePage() {
               <p className="text-slatex-400 text-sm">
                 Join sport-specific groups, share insights, and learn from the best minds.
               </p>
-            </div>
+            </motion.div>
           </ScrollReveal>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="relative container-narrow py-20 border-t border-slate-800">
+      <section className="relative container-narrow py-20 border-t border-slate-800 z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: 'Verified Analysts', value: '50+', color: 'text-white' },
-            { label: 'Active Users', value: '2,000+', color: 'text-white' },
-            { label: 'Daily Insights', value: '100+', color: 'text-white' },
-            { label: 'Avg. ROI', value: '12.5%', color: 'text-amber' },
-          ].map((stat, i) => (
-            <ScrollReveal key={stat.label} delay={i * 0.05}>
-              <div className="text-center">
-                <div className={`text-3xl md:text-4xl font-bold mb-2 ${stat.color}`}>
-                  {stat.value}
-                </div>
-                <div className="text-sm text-slatex-400">{stat.label}</div>
-              </div>
-            </ScrollReveal>
-          ))}
+          <motion.div 
+            className="text-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="text-3xl font-bold text-white mb-2">50+</div>
+            <div className="text-sm text-slatex-400">Verified Analysts</div>
+          </motion.div>
+          <motion.div 
+            className="text-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="text-3xl font-bold text-white mb-2">2,000+</div>
+            <div className="text-sm text-slatex-400">Active Users</div>
+          </motion.div>
+          <motion.div 
+            className="text-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="text-3xl font-bold text-white mb-2">100+</div>
+            <div className="text-sm text-slatex-400">Daily Insights</div>
+          </motion.div>
+          <motion.div 
+            className="text-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="text-3xl font-bold text-amber mb-2">12.5%</div>
+            <div className="text-sm text-slatex-400">Avg. ROI</div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="relative container-narrow py-20 border-t border-slate-800">
+      <section className="relative container-narrow py-20 border-t border-slate-800 z-10">
         <ScrollReveal>
-          <motion.div 
+          <motion.div
             className="card p-12 text-center"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
+            whileHover={{
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 30px rgba(230, 62, 48, 0.15)',
+              transition: { duration: 0.3 },
+            }}
           >
             <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">
               Ready to Level Up Your Game?
@@ -188,13 +276,15 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link href="/register" className="btn-grad px-8 py-3">
+                <Link href="/register" className="btn-grad px-8 py-3 inline-block">
                   Start Free Today
                 </Link>
               </motion.div>
-              <Link href="/feed" className="text-slatex-400 hover:text-amber transition">
-                Explore First →
-              </Link>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href="/feed" className="text-slatex-400 hover:text-amber transition">
+                  Explore First →
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         </ScrollReveal>

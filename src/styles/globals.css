@@ -37,6 +37,12 @@ body {
   
   /* Light Mode */
   --color-bg-light: #F9FAFB;
+  
+  /* Motion System */
+  --motion-duration-short: 0.2s;
+  --motion-duration-medium: 0.4s;
+  --motion-duration-long: 0.8s;
+  --motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* Focus visible styles for accessibility */

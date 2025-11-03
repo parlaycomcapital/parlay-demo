@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Heart, MessageCircle, Lock, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, MessageCircle } from 'lucide-react';
 import CommentsDrawer from './CommentsDrawer';
 import Paywall from './Paywall';
 import PremiumBadge from '@/components/ui/PremiumBadge';
@@ -16,9 +17,16 @@ export default function PostCard({ post }: { post: any }) {
   const requiresSubscription = post.requires_subscription || post.is_premium;
   const { canAccessPremiumContent } = useSubscription();
   const { liked, likesCount, toggleLike } = useLikes(post.id);
-  const isVerified = post.author?.role === 'creator' || post.verified; // Add verified check
+  const isVerified = post.author?.role === 'creator' || post.verified;
+  const [showLikeAnimation, setShowLikeAnimation] = useState(false);
   
   const canViewContent = !requiresSubscription || canAccessPremiumContent();
+
+  const handleLike = () => {
+    toggleLike();
+    setShowLikeAnimation(true);
+    setTimeout(() => setShowLikeAnimation(false), 600);
+  };
 
   return (
     <motion.article
@@ -27,7 +35,7 @@ export default function PostCard({ post }: { post: any }) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ 
         scale: 1.01, 
-        y: -2,
+        y: -4,
         transition: { duration: 0.2 }
       }}
       whileTap={{ scale: 0.98 }}
@@ -43,8 +51,8 @@ export default function PostCard({ post }: { post: any }) {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.2 }}
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.2, type: 'spring', stiffness: 300 }}
         >
           {!PLACEHOLDER_AVATAR && (
             <span className="text-lg font-bold text-amber">{(post.title || 'A')[0].toUpperCase()}</span>
@@ -95,9 +103,10 @@ export default function PostCard({ post }: { post: any }) {
 
       {/* Footer Actions */}
       <footer className="flex justify-between items-center pt-4 border-t border-slate-800">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 relative">
+          {/* Like button with spark animation */}
           <motion.button
-            onClick={toggleLike}
+            onClick={handleLike}
             className={`flex items-center gap-1.5 text-sm font-medium ${liked ? 'text-ember' : 'text-slatex-400'}`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -107,6 +116,21 @@ export default function PostCard({ post }: { post: any }) {
             <Heart size={18} fill={liked ? 'currentColor' : 'none'} strokeWidth={2} />
             <span>{likesCount || 0}</span>
           </motion.button>
+          
+          {/* Like spark animation */}
+          <AnimatePresence>
+            {showLikeAnimation && (
+              <motion.div
+                className="absolute left-0 top-0 pointer-events-none"
+                initial={{ scale: 0, opacity: 1 }}
+                animate={{ scale: 3, opacity: 0 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+              >
+                <div className="w-4 h-4 rounded-full bg-ember blur-sm" />
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           <motion.button
             className="flex items-center gap-1.5 text-sm font-medium text-slatex-400 hover:text-amber transition-colors"
@@ -126,7 +150,10 @@ export default function PostCard({ post }: { post: any }) {
           <motion.button
             type="button"
             className="px-4 py-2 rounded-lg font-medium text-sm bg-gradient-to-r from-ember to-amber text-white hover:shadow-ember-sm transition-all duration-fast"
-            whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(230, 62, 48, 0.4)' }}
+            whileHover={{ 
+              scale: 1.05, 
+              boxShadow: '0 0 20px rgba(230, 62, 48, 0.4)' 
+            }}
             whileTap={{ scale: 0.95 }}
             aria-label={`Buy premium content for $${Number(post.price).toFixed(2)}`}
           >

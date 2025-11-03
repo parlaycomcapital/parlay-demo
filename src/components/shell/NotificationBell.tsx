@@ -61,14 +61,31 @@ export default function NotificationBell() {
       <motion.button
         onClick={() => setOpen(!open)}
         className="icon-btn relative"
+        whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.1 }}
+        animate={unreadCount > 0 ? {
+          rotate: [0, -5, 5, -5, 0],
+        } : {}}
+        transition={{
+          duration: 0.5,
+          repeat: unreadCount > 0 ? Infinity : 0,
+          repeatDelay: 2,
+        }}
+        aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
       >
         <Bell size={20} />
         {unreadCount > 0 && (
           <motion.span
             initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            animate={{ 
+              scale: 1,
+              boxShadow: [
+                '0 0 8px rgba(245, 166, 35, 0.5)',
+                '0 0 16px rgba(245, 166, 35, 0.7)',
+                '0 0 8px rgba(245, 166, 35, 0.5)',
+              ],
+            }}
+            transition={{ duration: 1, repeat: Infinity }}
             className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber text-navy-100 text-xs font-bold flex items-center justify-center"
           >
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -79,87 +96,87 @@ export default function NotificationBell() {
       <AnimatePresence>
         {open && (
           <>
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-40"
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
             />
+            
+            {/* Dropdown */}
             <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ duration: 0.15 }}
-              className="absolute right-0 top-full mt-2 w-80 bg-navy-300 border border-slate-800 rounded-xl shadow-card z-50 max-h-96 overflow-hidden"
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl z-50"
             >
+              {/* Header */}
               <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-                <h3 className="font-semibold text-white">Notifications</h3>
+                <h3 className="font-heading font-semibold text-white">Notifications</h3>
                 {unreadCount > 0 && (
-                  <button
+                  <motion.button
                     onClick={markAllAsRead}
-                    className="text-xs text-amber hover:underline"
+                    className="text-xs text-amber hover:text-amber-300 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     Mark all read
-                  </button>
+                  </motion.button>
                 )}
               </div>
-              <div className="overflow-y-auto max-h-80 custom-scrollbar">
+
+              {/* Notifications List */}
+              <div className="p-2">
                 {loading ? (
-                  <div className="p-8 text-center text-slatex-400 text-sm">
-                    Loading notifications...
-                  </div>
+                  <div className="text-center text-slatex-400 py-8 text-sm">Loading notifications...</div>
                 ) : notifications.length === 0 ? (
-                  <div className="p-8 text-center text-slatex-400 text-sm">
-                    No notifications yet
+                  <div className="text-center text-slatex-400 py-8 text-sm">
+                    <Bell size={32} className="mx-auto mb-2 opacity-50" />
+                    <p>No notifications yet</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-slate-800">
-                    {notifications.map((notification) => (
-                      <Link
+                  <div className="space-y-1">
+                    {notifications.map((notification, index) => (
+                      <motion.div
                         key={notification.id}
-                        href={getNotificationLink(notification)}
-                        onClick={() => {
-                          if (!notification.read) {
-                            markAsRead(notification.id);
-                          }
-                        }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
                       >
-                        <motion.div
-                          whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
-                          className={`p-4 cursor-pointer transition ${!notification.read ? 'bg-white/5' : ''}`}
+                        <Link
+                          href={getNotificationLink(notification)}
+                          onClick={() => setOpen(false)}
+                          className={`block p-3 rounded-lg transition-colors hover:bg-slate-800/50 ${
+                            !notification.read ? 'bg-amber/5 border-l-2 border-amber' : ''
+                          }`}
                         >
                           <div className="flex items-start gap-3">
-                            <div className="mt-0.5">{getNotificationIcon(notification.type)}</div>
+                            <div className="flex-shrink-0 mt-0.5">
+                              {getNotificationIcon(notification.type)}
+                            </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm text-slatex-300">
+                              <p className="text-sm text-slatex-300 line-clamp-2">
                                 {getNotificationMessage(notification)}
                               </p>
                               <p className="text-xs text-slatex-500 mt-1">
-                                {new Date(notification.created_at).toLocaleString()}
+                                {new Date(notification.created_at).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: 'numeric',
+                                  minute: '2-digit',
+                                })}
                               </p>
                             </div>
-                            {!notification.read && (
-                              <div className="w-2 h-2 rounded-full bg-amber mt-2 flex-shrink-0" />
-                            )}
                           </div>
-                        </motion.div>
-                      </Link>
+                        </Link>
+                      </motion.div>
                     ))}
                   </div>
                 )}
               </div>
-              {notifications.length > 0 && (
-                <div className="p-3 border-t border-slate-800 text-center">
-                  <Link
-                    href="/notifications"
-                    className="text-xs text-amber hover:underline"
-                    onClick={() => setOpen(false)}
-                  >
-                    View all notifications
-                  </Link>
-                </div>
-              )}
             </motion.div>
           </>
         )}
