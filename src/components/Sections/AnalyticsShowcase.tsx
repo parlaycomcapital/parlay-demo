@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { fadeUp, stagger } from '@/lib/motion';
+import { copy } from '@/content/landing';
 
 function AnimatedCounter({ value, suffix = '', decimals = 1 }: { value: number; suffix?: string; decimals?: number }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -57,12 +58,35 @@ export default function AnalyticsShowcase() {
           variants={stagger(0.1, 0.06)}
           className="rounded-2xl bg-card/70 backdrop-blur-lg border border-slate-800/60 p-8 md:p-12"
         >
+          <motion.p
+            variants={fadeUp}
+            className="text-amber text-sm font-medium uppercase tracking-wider mb-2 text-center"
+          >
+            {copy.sections.analytics.eyebrow}
+          </motion.p>
           <motion.h2
             variants={fadeUp}
-            className="text-[clamp(1.8rem,3vw,2.5rem)] font-poppins font-semibold text-white mb-8 text-center"
+            className="text-[clamp(1.8rem,3vw,2.5rem)] font-poppins font-semibold text-white mb-4 text-center"
           >
-            Trust the Numbers
+            {copy.sections.analytics.title}
           </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            className="text-textSecondary text-center mb-8 max-w-2xl mx-auto"
+          >
+            {copy.sections.analytics.body}
+          </motion.p>
+          <motion.ul
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-4 mb-8 text-sm text-textSecondary"
+          >
+            {copy.sections.analytics.bullets.map((bullet, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber" />
+                {bullet}
+              </li>
+            ))}
+          </motion.ul>
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <motion.div variants={fadeUp} className="text-center">

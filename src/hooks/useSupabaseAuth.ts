@@ -8,8 +8,10 @@ import { useRouter } from 'next/navigation';
 export interface Profile {
   id: string;
   full_name: string | null;
+  handle: string | null;
   avatar_url: string | null;
   role: 'creator' | 'follower';
+  agreed_tos: boolean;
   created_at: string;
   updated_at: string;
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import IntroGate from '@/components/ui/IntroGate';
+import FlameIntro from '@/components/ui/FlameIntro';
 import Hero from '@/components/Hero';
 import FeedShowcase from '@/components/Sections/FeedShowcase';
 import GroupsShowcase from '@/components/Sections/GroupsShowcase';
@@ -11,16 +12,19 @@ import Footer from '@/components/Footer';
 
 export default function HomePage() {
   return (
-    <IntroGate>
-      <main className="relative min-h-screen bg-navy">
-        <Hero />
-        <FeedShowcase />
-        <GroupsShowcase />
-        <AnalyticsShowcase />
-        <SubscriptionsShowcase />
-        <CTA />
-        <Footer />
-      </main>
-    </IntroGate>
+    <>
+      <FlameIntro />
+      <IntroGate>
+        <main className="relative min-h-screen bg-navy">
+          <Hero />
+          <FeedShowcase />
+          <GroupsShowcase />
+          <AnalyticsShowcase />
+          <SubscriptionsShowcase />
+          <CTA />
+          <Footer />
+        </main>
+      </IntroGate>
+    </>
   );
 }

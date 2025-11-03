@@ -46,7 +46,7 @@ export default function SubscribePage() {
         throw new Error(data.error || 'Failed to create checkout session');
       }
 
-      if (data.url) {
+      if (data.url && typeof window !== 'undefined') {
         window.location.href = data.url;
       }
     } catch (error: any) {

@@ -16,7 +16,12 @@ export default function ParticleField() {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    // Check for reduced motion preference
+    // Check for reduced motion preference (client-side only)
+    if (typeof window === 'undefined') {
+      setReducedMotion(true);
+      return;
+    }
+
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mediaQuery.matches);
     
@@ -27,7 +32,7 @@ export default function ParticleField() {
   }, []);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || typeof window === 'undefined') return;
 
     // Initialize particles
     const particleCount = 75;
@@ -47,7 +52,7 @@ export default function ParticleField() {
   }, [reducedMotion]);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || typeof window === 'undefined') return;
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);

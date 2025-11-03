@@ -107,7 +107,9 @@ export function useLikes(postId: string) {
         return;
       }
       // Redirect to auth
-      window.location.href = '/auth?redirect=' + window.location.pathname;
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth?redirect=' + window.location.pathname;
+      }
       return;
     }
 

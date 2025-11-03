@@ -12,7 +12,12 @@ export default function IntroGate({ children }: IntroGateProps) {
   const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
-    // Check if intro has been seen
+    // Check if intro has been seen (client-side only)
+    if (typeof window === 'undefined') {
+      setShowIntro(false);
+      return;
+    }
+
     const hasSeenIntro = sessionStorage.getItem('parlay_intro') === 'seen';
     
     if (!hasSeenIntro) {

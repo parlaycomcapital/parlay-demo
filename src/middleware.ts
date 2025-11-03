@@ -1,105 +1,66 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Create response object
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+  // Public routes - allow access
+  const publicRoutes = [
+    '/',
+    '/auth',
+    '/onboarding',
+    '/screenshot',
+    '/terms',
+    '/privacy',
+    '/responsible-use',
+    '/help',
+    '/contact',
+  ];
 
-  // Create Supabase client for server-side
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: any) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: any) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-        },
-      },
-    }
-  );
-
-  // Get session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // Protected routes
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/create')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/auth', request.url));
-    }
-
-    // Check if user is creator (requires profile lookup in component level)
-    // For now, just check if authenticated
+  // Check if route is public
+  const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith('/api/'));
+  
+  if (isPublicRoute) {
+    return NextResponse.next();
   }
 
-  // Optional: Protect feed route (can be made public)
-  // if (pathname.startsWith('/feed') && !session) {
-  //   return NextResponse.redirect(new URL('/auth', request.url));
-  // }
+  // Protected routes - check for session cookie
+  const protectedRoutes = ['/feed', '/groups', '/settings', '/dashboard', '/create', '/profile'];
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+
+  if (isProtectedRoute) {
+    // Check for Supabase session cookie (lightweight check)
+    const accessToken = request.cookies.get('sb-access-token')?.value;
+    const refreshToken = request.cookies.get('sb-refresh-token')?.value;
+
+    // If no session cookies, redirect to auth
+    if (!accessToken && !refreshToken) {
+      const redirectUrl = new URL('/auth', request.url);
+      redirectUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
 
   // Redirect authenticated users away from auth page
-  if (pathname.startsWith('/auth') && session) {
-    return NextResponse.redirect(new URL('/feed', request.url));
+  if (pathname.startsWith('/auth')) {
+    const accessToken = request.cookies.get('sb-access-token')?.value;
+    if (accessToken) {
+      return NextResponse.redirect(new URL('/feed', request.url));
+    }
   }
 
-  // Redirect authenticated users from onboarding to feed if already onboarded
-  if (pathname.startsWith('/onboarding') && session) {
-    // Check if profile exists (this is handled in the component)
-    // Allow access for now
-  }
-
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/feed/:path*',
-    '/create/:path*',
-    '/profile/:path*',
-    '/auth/:path*',
-    '/onboarding/:path*',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

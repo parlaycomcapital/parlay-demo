@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 import { fadeUp, stagger, slideIn } from '@/lib/motion';
+import { copy } from '@/content/landing';
 
 export default function GroupsShowcase() {
   const ref = useRef(null);
@@ -53,18 +54,35 @@ export default function GroupsShowcase() {
           variants={stagger(0.1, 0.06)}
           className="text-center"
         >
+          <motion.p
+            variants={fadeUp}
+            className="text-amber text-sm font-medium uppercase tracking-wider mb-2"
+          >
+            {copy.sections.groups.eyebrow}
+          </motion.p>
           <motion.h2
             variants={fadeUp}
             className="text-[clamp(2rem,4vw,3rem)] font-poppins font-semibold text-white mb-4"
           >
-            Join Analyst Communities
+            {copy.sections.groups.title}
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="text-textSecondary text-lg max-w-2xl mx-auto mb-8"
+            className="text-textSecondary text-lg max-w-2xl mx-auto mb-6"
           >
-            Connect with verified creators, join private groups, and access exclusive insights.
+            {copy.sections.groups.body}
           </motion.p>
+          <motion.ul
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-4 mb-8 text-sm text-textSecondary"
+          >
+            {copy.sections.groups.bullets.map((bullet, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber" />
+                {bullet}
+              </li>
+            ))}
+          </motion.ul>
           <motion.div variants={fadeUp}>
             <Link
               href="/groups"

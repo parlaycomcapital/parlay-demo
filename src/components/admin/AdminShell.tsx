@@ -30,7 +30,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   };
 
   return (

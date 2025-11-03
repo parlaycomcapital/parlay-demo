@@ -3,6 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { fadeUp, stagger } from '@/lib/motion';
+import { copy } from '@/content/landing';
 
 export default function FeedShowcase() {
   const ref = useRef(null);
@@ -21,18 +22,35 @@ export default function FeedShowcase() {
           variants={stagger(0.1, 0.06)}
           className="text-center mb-16"
         >
+          <motion.p
+            variants={fadeUp}
+            className="text-amber text-sm font-medium uppercase tracking-wider mb-2"
+          >
+            {copy.sections.feed.eyebrow}
+          </motion.p>
           <motion.h2
             variants={fadeUp}
             className="text-[clamp(2rem,4vw,3rem)] font-poppins font-semibold text-white mb-4"
           >
-            Real-time Insights
+            {copy.sections.feed.title}
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="text-textSecondary text-lg max-w-2xl mx-auto"
           >
-            Realtime insights • Creator-led
+            {copy.sections.feed.body}
           </motion.p>
+          <motion.ul
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-4 mt-6 text-sm text-textSecondary"
+          >
+            {copy.sections.feed.bullets.map((bullet, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber" />
+                {bullet}
+              </li>
+            ))}
+          </motion.ul>
         </motion.div>
 
         {/* Mock cards */}

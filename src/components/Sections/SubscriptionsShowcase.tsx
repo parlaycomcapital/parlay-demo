@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { fadeUp, stagger } from '@/lib/motion';
 import { Check, Zap } from 'lucide-react';
+import { copy } from '@/content/landing';
 
 export default function SubscriptionsShowcase() {
   const ref = useRef(null);
@@ -19,18 +20,35 @@ export default function SubscriptionsShowcase() {
           animate={inView ? 'visible' : 'hidden'}
           variants={stagger(0.1, 0.06)}
         >
+          <motion.p
+            variants={fadeUp}
+            className="text-amber text-sm font-medium uppercase tracking-wider mb-2 text-center"
+          >
+            {copy.sections.subscriptions.eyebrow}
+          </motion.p>
           <motion.h2
             variants={fadeUp}
             className="text-[clamp(2rem,4vw,3rem)] font-poppins font-semibold text-white mb-4 text-center"
           >
-            Unlock Premium Insights
+            {copy.sections.subscriptions.title}
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="text-textSecondary text-lg text-center mb-12 max-w-2xl mx-auto"
+            className="text-textSecondary text-lg text-center mb-6 max-w-2xl mx-auto"
           >
-            Trust & unlock premium insights from verified analysts.
+            {copy.sections.subscriptions.body}
           </motion.p>
+          <motion.ul
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-4 mb-12 text-sm text-textSecondary"
+          >
+            {copy.sections.subscriptions.bullets.map((bullet, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber" />
+                {bullet}
+              </li>
+            ))}
+          </motion.ul>
 
           {/* Pricing card */}
           <motion.div

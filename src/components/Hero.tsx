@@ -1,15 +1,17 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 import GradientMotion from '@/components/ui/GradientMotion';
 import ParticleField from '@/components/ui/ParticleField';
+import FlameButton from '@/components/ui/FlameButton';
 import { fadeUp, stagger, slideIn } from '@/lib/motion';
+import { copy } from '@/content/landing';
 
 export default function Hero() {
   const scrollToFeed = () => {
+    if (typeof document === 'undefined') return;
     const feedSection = document.getElementById('feed');
     if (feedSection) {
       feedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -45,9 +47,9 @@ export default function Hero() {
           variants={fadeUp}
           className="text-[clamp(2.5rem,6vw,4.5rem)] font-poppins font-semibold text-white leading-tight tracking-tight mb-6"
         >
-          Smart Sports.{' '}
+          {copy.hero.headline.split('. ')[0]}.{' '}
           <span className="bg-gradient-to-r from-ember to-amber bg-clip-text text-transparent">
-            Smarter Minds.
+            {copy.hero.headline.split('. ')[1]}
           </span>
         </motion.h1>
 
@@ -56,7 +58,7 @@ export default function Hero() {
           variants={fadeUp}
           className="text-[clamp(1rem,1.5vw,1.25rem)] text-textSecondary font-inter leading-relaxed max-w-2xl mx-auto mb-10"
         >
-          The social network where verified analysts share insights, track ROI, and build communities around data-driven sports intelligence.
+          {copy.hero.subline}
         </motion.p>
 
         {/* CTAs */}
@@ -64,30 +66,21 @@ export default function Hero() {
           variants={fadeUp}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
         >
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <FlameButton
+            href="/auth"
+            variant="primary"
+            flameDuration={450}
+            ariaLabel={copy.hero.primaryCta}
           >
-            <Link
-              href="/auth"
-              className="inline-block px-8 py-4 rounded-xl bg-gradient-to-r from-ember to-amber text-white font-medium text-lg hover:shadow-[0_0_28px_rgba(245,166,35,0.4)] transition-all"
-              aria-label="Create account"
-            >
-              Create Account
-            </Link>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            {copy.hero.primaryCta}
+          </FlameButton>
+          <FlameButton
+            href="#feed"
+            variant="secondary"
+            ariaLabel={copy.hero.secondaryCta}
           >
-            <Link
-              href="#feed"
-              className="inline-block px-8 py-4 rounded-xl border border-slate-700 text-slate-200 hover:bg-slate-800/50 hover:border-slate-600 transition-all text-lg"
-              aria-label="Explore feed"
-            >
-              Explore Feed
-            </Link>
-          </motion.div>
+            {copy.hero.secondaryCta}
+          </FlameButton>
         </motion.div>
 
         {/* Scroll indicator */}

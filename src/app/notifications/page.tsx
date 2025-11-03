@@ -65,10 +65,10 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !loading) {
       router.push('/auth?redirect=/notifications');
     }
-  }, [user, router]);
+  }, [user, loading, router]);
 
   if (!user) {
     return null;
