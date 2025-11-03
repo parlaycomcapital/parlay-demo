@@ -4,60 +4,46 @@ import { motion } from 'framer-motion';
 import Logo from '@/components/ui/Logo';
 import ScrollReveal from '@/components/feed/ScrollReveal';
 import AnimatedGradient from '@/components/ui/AnimatedGradient';
+import GradientField from '@/components/ui/GradientField';
+import { useAmbientLight } from '@/hooks/useAmbientLight';
 import Link from 'next/link';
-import { TrendingUp, Shield, Users, Zap } from 'lucide-react';
+import { TrendingUp, Shield, Users, Zap, ArrowDown } from 'lucide-react';
 import Footer from '@/components/Footer';
 
 export default function HomePage() {
+  const { x, y } = useAmbientLight();
+
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Ambient animated gradient background */}
-      <AnimatedGradient variant="ambient" className="opacity-20" />
+    <div className="relative min-h-screen overflow-hidden perspective-container">
+      {/* Gradient particle field */}
+      <GradientField particleCount={35} intensity={0.12} />
       
-      {/* Animated Background Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-20 left-10 w-20 h-20 rounded-full blur-2xl opacity-20"
-          style={{ background: 'radial-gradient(circle, rgba(230,62,48,0.6), transparent)' }}
-          animate={{
-            y: [0, -100, 0],
-            x: [0, 50, 0],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-32 h-32 rounded-full blur-3xl opacity-15"
-          style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.6), transparent)' }}
-          animate={{
-            y: [0, 80, 0],
-            x: [0, -30, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 2,
-          }}
-        />
-      </div>
+      {/* Ambient animated gradient background */}
+      <AnimatedGradient variant="ambient" className="opacity-15" />
+      
+      {/* Cursor-reactive ambient lighting */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-[1]"
+        style={{
+          background: `radial-gradient(circle 800px at ${x} ${y}, rgba(245,166,35,0.08), transparent)`,
+          transition: 'background 0.1s ease-out',
+        }}
+      />
       
       {/* Hero Content */}
       <section className="relative container-narrow text-center pt-24 pb-20 z-10">
         <ScrollReveal>
-          {/* Logo with pulse glow */}
+          {/* Logo with enhanced glow */}
           <motion.div
             animate={{
+              y: [0, -8, 0],
               filter: [
                 'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
                 'drop-shadow(0 0 32px rgba(230,62,48,0.45))',
                 'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
               ],
             }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             className="inline-block"
           >
             <Logo 
@@ -110,7 +96,7 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* Alpha Badge with subtle animation */}
+        {/* Alpha Badge with enhanced animation */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -131,6 +117,18 @@ export default function HomePage() {
             <Zap size={14} />
             Free Alpha — No Credit Card Required
           </motion.span>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="mt-12 flex flex-col items-center gap-2 text-slatex-400 text-xs"
+          animate={{
+            y: [0, 8, 0],
+          }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <span>Scroll for insights</span>
+          <ArrowDown size={16} />
         </motion.div>
       </section>
 
