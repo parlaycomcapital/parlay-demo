@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server';
-import { createCheckoutSession } from '@/lib/stripe';
-import { isPlaceholderMode } from '@/lib/mockData';
+import Stripe from 'stripe';
 
-export async function POST(request: Request) {
+// Only initialize Stripe if secret key exists
+const getStripe = () => {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey || secretKey === 'placeholder' || secretKey === '') {
+    return null;
+  }
+  return new Stripe(secretKey, {
+    apiVersion: '2025-10-29.clover',
+  });
+};
+
+export async function POST(req: Request) {
   try {
-    const { tier, userId } = await request.json();
-    
+    const { userId, tier, email } = await req.json();
+
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -14,26 +24,60 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid tier' }, { status: 400 });
     }
 
-    // Placeholder mode: return success without real Stripe call
-    if (isPlaceholderMode() || !process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'placeholder') {
-      console.log('Placeholder mode: Checkout initiated for plan:', tier, 'userId:', userId);
-      // Redirect to success page in placeholder mode
-      const successUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/subscribe/success?session_id=placeholder_${Date.now()}`;
-      return NextResponse.json({ url: successUrl });
+    // Email can be passed from client, or Stripe will prompt
+    const userEmail = email || undefined;
+
+    // Get price ID from environment or use tier-based pricing
+    const priceId = tier === 'pro' 
+      ? (process.env.STRIPE_PRO_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || '')
+      : (process.env.STRIPE_BASIC_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID || '');
+
+    if (!priceId) {
+      return NextResponse.json(
+        { error: 'Stripe price ID not configured' },
+        { status: 500 }
+      );
     }
 
-    const checkoutSession = await createCheckoutSession(userId, tier);
-    
-    return NextResponse.json({ url: checkoutSession.url });
-  } catch (error: any) {
-    console.warn('Stripe checkout error (placeholder mode fallback):', error.message);
-    // In placeholder mode, still return success
-    if (isPlaceholderMode() || !process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'placeholder') {
-      const successUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/subscribe/success?session_id=placeholder_${Date.now()}`;
-      return NextResponse.json({ url: successUrl });
+    // Get Stripe instance
+    const stripe = getStripe();
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Stripe not configured' },
+        { status: 500 }
+      );
     }
+
+    // Create Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      customer_email: userEmail,
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/subscribe?canceled=true`,
+      metadata: {
+        userId,
+        tier,
+      },
+      subscription_data: {
+        metadata: {
+          userId,
+          tier,
+        },
+      },
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch (err: any) {
+    console.error('Stripe checkout error:', err);
     return NextResponse.json(
-      { error: error.message || 'Failed to create checkout session' },
+      { error: err.message || 'Checkout failed' },
       { status: 500 }
     );
   }

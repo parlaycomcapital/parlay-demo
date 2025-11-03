@@ -1,180 +1,127 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase, Notification } from '@/lib/supabaseClient';
-import { useSession } from 'next-auth/react';
-import { isPlaceholderMode } from '@/lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
+import { useSupabaseAuth } from './useSupabaseAuth';
+
+export interface Notification {
+  id: string;
+  recipient_id: string;
+  sender_id: string | null;
+  type: 'like' | 'comment' | 'follow' | 'reply';
+  entity_id: string | null;
+  entity_type: 'post' | 'comment' | 'user' | null;
+  is_read: boolean;
+  created_at: string;
+  sender?: {
+    full_name: string;
+    avatar_url: string;
+  };
+}
 
 export function useNotifications() {
-  const { data: session } = useSession();
+  const { user } = useSupabaseAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!session?.user?.id) {
-      setLoading(false);
-      return;
-    }
-
-    fetchNotifications();
-
-    // Set up real-time listener
-    if (!isPlaceholderMode()) {
-      const channel = supabase
-        .channel(`notifications:${session.user.id}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'notifications',
-            filter: `user_id=eq.${session.user.id}`,
-          },
-          () => {
-            fetchNotifications();
-          }
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-  }, [session?.user?.id]);
-
   const fetchNotifications = async () => {
-    if (!session?.user?.id) return;
+    if (!user?.id) return;
 
     setLoading(true);
-
-    // Use mock notifications in placeholder mode
-    if (isPlaceholderMode()) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const mockNotifications: Notification[] = [
-        {
-          id: 'notif1',
-          user_id: session.user.id,
-          type: 'like',
-          actor_id: 'user1',
-          post_id: 'post1',
-          read: false,
-          created_at: new Date().toISOString(),
-          actor: {
-            id: 'user1',
-            email: 'demo@parlay.app',
-            name: 'Demo Creator',
-            role: 'creator' as const,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-        },
-        {
-          id: 'notif2',
-          user_id: session.user.id,
-          type: 'comment',
-          actor_id: 'user2',
-          post_id: 'post1',
-          read: false,
-          created_at: new Date(Date.now() - 3600000).toISOString(),
-          actor: {
-            id: 'user2',
-            email: 'follower@parlay.app',
-            name: 'Demo Follower',
-            role: 'follower' as const,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-        },
-        {
-          id: 'notif3',
-          user_id: session.user.id,
-          type: 'follow',
-          actor_id: 'user3',
-          read: true,
-          created_at: new Date(Date.now() - 7200000).toISOString(),
-          actor: {
-            id: 'user3',
-            email: 'analyst@parlay.app',
-            name: 'Sports Analyst',
-            role: 'creator' as const,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-        },
-      ];
-      setNotifications(mockNotifications);
-      setUnreadCount(mockNotifications.filter(n => !n.read).length);
-      setLoading(false);
-      return;
-    }
-
     try {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
       const { data, error } = await supabase
         .from('notifications')
         .select(`
           *,
-          actor:users(id, name, email, avatar_url)
+          sender:profiles!notifications_sender_id_fkey(full_name, avatar_url)
         `)
-        .eq('user_id', session.user.id)
+        .eq('recipient_id', user.id)
+        .gte('created_at', thirtyDaysAgo.toISOString())
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(100);
 
       if (error) throw error;
 
-      setNotifications(data || []);
-      setUnreadCount((data || []).filter(n => !n.read).length);
-    } catch (error: any) {
-      console.warn('Error fetching notifications:', error.message);
-      setNotifications([]);
-      setUnreadCount(0);
+      const notificationsData = (data as Notification[]) || [];
+      setNotifications(notificationsData);
+      
+      const unread = notificationsData.filter((n) => !n.is_read).length;
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!user?.id) return;
+
+    fetchNotifications();
+
+    // Subscribe to real-time notifications
+    const channel = supabase
+      .channel('notifications-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `recipient_id=eq.${user.id}`,
+        },
+        (payload) => {
+          fetchNotifications();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
+
   const markAsRead = async (notificationId: string) => {
-    if (isPlaceholderMode()) {
-      setNotifications(prev =>
-        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
-      );
-      setUnreadCount(prev => Math.max(0, prev - 1));
-      return;
-    }
+    if (!user?.id) return;
 
     try {
       const { error } = await supabase
         .from('notifications')
-        .update({ read: true })
-        .eq('id', notificationId);
+        .update({ is_read: true })
+        .eq('id', notificationId)
+        .eq('recipient_id', user.id);
 
       if (error) throw error;
-      fetchNotifications();
-    } catch (error: any) {
-      console.warn('Error marking notification as read:', error.message);
+
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
     }
   };
 
   const markAllAsRead = async () => {
-    if (!session?.user?.id) return;
-
-    if (isPlaceholderMode()) {
-      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-      setUnreadCount(0);
-      return;
-    }
+    if (!user?.id) return;
 
     try {
       const { error } = await supabase
         .from('notifications')
-        .update({ read: true })
-        .eq('user_id', session.user.id)
-        .eq('read', false);
+        .update({ is_read: true })
+        .eq('recipient_id', user.id)
+        .eq('is_read', false);
 
       if (error) throw error;
-      fetchNotifications();
-    } catch (error: any) {
-      console.warn('Error marking all as read:', error.message);
+
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Error marking all as read:', error);
     }
   };
 
@@ -184,6 +131,6 @@ export function useNotifications() {
     loading,
     markAsRead,
     markAllAsRead,
-    refetch: fetchNotifications,
+    refresh: fetchNotifications,
   };
 }

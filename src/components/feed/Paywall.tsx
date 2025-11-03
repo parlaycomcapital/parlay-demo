@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Lock, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 
 interface PaywallProps {
   message?: string;

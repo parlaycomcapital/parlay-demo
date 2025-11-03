@@ -34,24 +34,58 @@ export const fadeIn = {
   },
 };
 
+// Updated fadeUp to match requirements
 export const fadeUp = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { duration: 0.3, ease: [0.19, 1, 0.22, 1] as const } 
+    transition: { duration: 0.4, ease: [0.19, 1, 0.22, 1] as const } 
   },
 };
 
-// Slide animations
-export const slideIn = (direction: 'left' | 'right' = 'left') => ({
-  hidden: { x: direction === 'left' ? -50 : 50, opacity: 0 },
-  visible: { 
-    x: 0, 
-    opacity: 1, 
-    transition: { duration: 0.35, ease: [0.19, 1, 0.22, 1] as const } 
+// Stagger helper
+export const stagger = (parentDelay: number = 0.1, childDelay: number = 0.06) => ({
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: childDelay,
+      delayChildren: parentDelay,
+    },
   },
 });
+
+// Scale in animation
+export const scaleIn = {
+  hidden: { opacity: 0, scale: 0.98 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.35 }
+  },
+};
+
+// Slide in animations
+export const slideIn = (direction: 'up' | 'left' | 'right' = 'up') => {
+  const directions = {
+    up: { y: 20, x: 0 },
+    left: { x: -20, y: 0 },
+    right: { x: 20, y: 0 },
+  };
+  
+  return {
+    hidden: { 
+      opacity: 0, 
+      ...directions[direction] 
+    },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      y: 0,
+      transition: { duration: 0.4, ease: 'easeOut' }
+    },
+  };
+};
 
 // Scale pulse for interactive elements
 export const scalePulse = {

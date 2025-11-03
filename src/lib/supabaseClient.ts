@@ -4,11 +4,28 @@ import { isPlaceholderMode } from './mockData';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
 
-// Create Supabase client, but operations will check placeholder mode
-export const supabase = createClient(
-  supabaseUrl === 'placeholder' || isPlaceholderMode() ? 'https://placeholder.supabase.co' : supabaseUrl,
-  supabaseAnonKey === 'placeholder' || isPlaceholderMode() ? 'placeholder-key' : supabaseAnonKey
-);
+// Create Supabase client with real credentials or placeholder
+const getSupabaseUrl = () => {
+  if (supabaseUrl === 'placeholder' || isPlaceholderMode()) {
+    return 'https://placeholder.supabase.co';
+  }
+  return supabaseUrl;
+};
+
+const getSupabaseKey = () => {
+  if (supabaseAnonKey === 'placeholder' || isPlaceholderMode()) {
+    return 'placeholder-key';
+  }
+  return supabaseAnonKey;
+};
+
+export const supabase = createClient(getSupabaseUrl(), getSupabaseKey(), {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+});
 
 // Database types
 export interface User {

@@ -9,12 +9,12 @@ module.exports = {
         // Base Navy
         navy: '#0B132B',
         card: '#101A2E',
-                // Primary Accents (10% reduced saturation)
-                ember: '#B24230',
-                amber: '#C89144',
-                accent: '#E0961F',
+        // Primary Accents (exact brand tokens)
+        ember: '#E63E30',
+        amber: '#F5A623',
+        accent: '#E0961F',
         // Text Colors
-        textPrimary: '#F5F5F5',
+        textPrimary: '#E2E8F0',
         textSecondary: '#9CA3AF',
         // Semantic Colors
         success: '#10B981',
@@ -54,9 +54,9 @@ module.exports = {
         'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
         'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
         // Brand shadows
-        'ember': '0 0 16px rgba(198, 74, 56, 0.15)',
-        'ember-sm': '0 0 10px rgba(198, 74, 56, 0.1)',
-        'ember-lg': '0 0 30px rgba(198, 74, 56, 0.2)',
+        'ember': '0 0 20px rgba(230,62,48,0.12)',
+        'ember-sm': '0 0 10px rgba(230,62,48,0.1)',
+        'ember-lg': '0 0 30px rgba(230,62,48,0.2)',
         'card': '0 6px 24px rgba(0, 0, 0, 0.25)',
         'card-hover': '0 8px 32px rgba(0, 0, 0, 0.3)',
       },

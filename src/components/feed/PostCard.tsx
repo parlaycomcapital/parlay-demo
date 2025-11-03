@@ -1,26 +1,35 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, Share2 } from 'lucide-react';
 import CommentsDrawer from './CommentsDrawer';
 import Paywall from './Paywall';
 import PremiumBadge from '@/components/ui/PremiumBadge';
 import VerifiedBadge from '@/components/ui/VerifiedBadge';
-import { useSubscription } from '@/hooks/useSubscription';
+import { useSupabaseSubscription } from '@/hooks/useSupabaseSubscription';
 import { useLikes } from '@/hooks/useLikes';
 import ShareTooltip from './ShareTooltip';
-import { PLACEHOLDER_AVATAR, PLACEHOLDER_POST_IMAGE } from '@/lib/mockData';
+import { PLACEHOLDER_AVATAR } from '@/lib/mockData';
 
-export default function PostCard({ post }: { post: any }) {
+interface PostCardProps {
+  post: any;
+  priority?: boolean;
+}
+
+export default function PostCard({ post, priority = false }: PostCardProps) {
   const premium = !!post.price || post.is_premium;
   const requiresSubscription = post.requires_subscription || post.is_premium;
-  const { canAccessPremiumContent } = useSubscription();
+  const { canAccessPremiumContent } = useSupabaseSubscription();
   const { liked, likesCount, toggleLike } = useLikes(post.id);
   const isVerified = post.author?.role === 'creator' || post.verified;
   const [showLikeAnimation, setShowLikeAnimation] = useState(false);
   
   const canViewContent = !requiresSubscription || canAccessPremiumContent();
+  const authorName = post.author?.name || post.author_name || 'Anonymous';
+  const authorUsername = post.author?.username || post.author_username || 'anonymous';
+  const authorAvatar = post.author?.avatar || PLACEHOLDER_AVATAR;
 
   const handleLike = () => {
     toggleLike();
@@ -30,138 +39,151 @@ export default function PostCard({ post }: { post: any }) {
 
   return (
     <motion.article
-      className="max-w-[680px] w-full mx-auto rounded-2xl shadow-ember bg-card p-4 md:p-6"
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      className="bg-card/70 backdrop-blur-lg border border-slate-800/60 rounded-2xl shadow-[0_0_20px_rgba(230,62,48,0.05)] hover:shadow-[0_0_28px_rgba(245,166,35,0.15)] transition-all duration-300 overflow-hidden"
       whileHover={{ 
         scale: 1.01,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(230, 62, 48, 0.1)',
         transition: { duration: 0.25, ease: 'easeOut' }
       }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.3, ease: 'easeOut', layout: { duration: 0.3, ease: 'easeInOut' } }}
     >
-      {/* Header */}
-      <header className="flex items-start gap-3 mb-4">
-        {/* Avatar */}
-        <motion.div 
-          className="w-12 h-12 rounded-full bg-gradient-to-br from-ember/30 to-amber/30 flex items-center justify-center overflow-hidden ring-2 ring-navy-300 flex-shrink-0"
-          style={{
-            backgroundImage: `url(${PLACEHOLDER_AVATAR})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.2, type: 'spring', stiffness: 300 }}
-        >
-          {!PLACEHOLDER_AVATAR && (
-            <span className="text-lg font-bold text-amber">{(post.title || 'A')[0].toUpperCase()}</span>
-          )}
-        </motion.div>
-        
-        {/* Title and Meta */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-heading font-semibold text-base md:text-lg text-white truncate">{post.title}</h3>
-            {isVerified && <VerifiedBadge size="sm" />}
-            <span className="badge flex-shrink-0">{post.sport}</span>
-            {premium && (
-              <PremiumBadge variant="default" />
-            )}
-          </div>
-          <p className="text-xs text-slatex-500 mt-1">
-            {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </p>
-        </div>
-      </header>
-
-      {/* Content */}
-      <div className="mb-4">
-        {canViewContent ? (
-          <p className="text-slatex-300 leading-[1.4] text-[clamp(0.9rem,1vw,1.1rem)] whitespace-pre-wrap">{post.content}</p>
-        ) : (
-          <div>
-            {/* Content Preview/Teaser */}
-            {post.content && post.content.length > 0 && (
-              <div className="relative mb-4">
-                <p className="text-slatex-300 leading-[1.4] line-clamp-3 text-[clamp(0.9rem,1vw,1.1rem)]">
-                  {post.content.substring(0, 150)}
-                  {post.content.length > 150 && '...'}
-                </p>
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-300 via-navy-300/80 to-transparent pointer-events-none rounded-lg" />
-              </div>
-            )}
-            <Paywall 
-              message={requiresSubscription 
-                ? 'This content requires a Pro subscription to view' 
-                : `Unlock this premium analysis for $${Number(post.price).toFixed(2)}`}
-              isSubscriptionRequired={requiresSubscription}
+      <div className="p-4 md:p-6 flex flex-col gap-4">
+        {/* Author Header */}
+        <div className="flex items-center gap-3">
+          <div className="relative w-11 h-11 rounded-full overflow-hidden ring-2 ring-slate-800 flex-shrink-0">
+            <Image
+              src={authorAvatar}
+              alt={authorName}
+              fill
+              className="object-cover"
+              sizes="44px"
+              priority={priority}
+              unoptimized={authorAvatar === PLACEHOLDER_AVATAR}
             />
           </div>
-        )}
-      </div>
-
-      {/* Footer Actions */}
-      <footer className="flex justify-between items-center pt-4 border-t border-slate-800">
-        <div className="flex items-center gap-4 relative">
-          {/* Like button with spark animation */}
-          <motion.button
-            onClick={handleLike}
-            className={`flex items-center gap-1.5 text-sm font-medium ${liked ? 'text-ember' : 'text-slatex-400'}`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ duration: 0.1 }}
-            aria-label={liked ? 'Unlike this post' : 'Like this post'}
-          >
-            <Heart size={18} fill={liked ? 'currentColor' : 'none'} strokeWidth={2} />
-            <span>{likesCount || 0}</span>
-          </motion.button>
-          
-          {/* Like spark animation */}
-          <AnimatePresence>
-            {showLikeAnimation && (
-              <motion.div
-                className="absolute left-0 top-0 pointer-events-none"
-                initial={{ scale: 0, opacity: 1 }}
-                animate={{ scale: 3, opacity: 0 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-              >
-                <div className="w-4 h-4 rounded-full bg-ember blur-sm" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
-          <motion.button
-            className="flex items-center gap-1.5 text-sm font-medium text-slatex-400 hover:text-amber transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label="Open comments"
-          >
-            <MessageCircle size={18} strokeWidth={2} />
-            <span>{post.comments_count || 0}</span>
-          </motion.button>
-          
-          <ShareTooltip postId={post.id} title={post.title} />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-medium text-slate-100 leading-snug">{authorName}</h3>
+              {isVerified && <VerifiedBadge size="sm" />}
+              <span className="text-slate-500 text-sm">@{authorUsername}</span>
+            </div>
+            <p className="text-slate-400 text-xs mt-0.5">
+              {new Date(post.created_at).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
+            </p>
+          </div>
         </div>
 
-        {/* CTA Button */}
-        {premium && !canViewContent && (
-          <motion.button
-            type="button"
-            className="px-4 py-2 rounded-lg font-medium text-sm bg-gradient-to-r from-ember to-amber text-white hover:shadow-ember-sm transition-all duration-fast"
-            whileHover={{ 
-              scale: 1.05, 
-              boxShadow: '0 0 20px rgba(230, 62, 48, 0.4)' 
-            }}
-            whileTap={{ scale: 0.95 }}
-            aria-label={`Buy premium content for $${Number(post.price).toFixed(2)}`}
-          >
-            ${Number(post.price).toFixed(2)}
-          </motion.button>
-        )}
-      </footer>
+        {/* Post Title */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <h2 className="text-lg md:text-xl font-semibold text-white leading-snug">{post.title}</h2>
+          {premium && <PremiumBadge variant="default" />}
+          {post.sport && (
+            <span className="px-2 py-1 rounded-lg text-xs font-medium bg-slate-800/50 text-slate-300">
+              {post.sport}
+            </span>
+          )}
+        </div>
+
+        {/* Content */}
+        <div>
+          {canViewContent ? (
+            <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">
+              {post.content}
+            </p>
+          ) : (
+            <div>
+              {/* Content Preview */}
+              {post.content && post.content.length > 0 && (
+                <div className="relative mb-4">
+                  <p className="text-slate-300 leading-relaxed line-clamp-3">
+                    {post.content.substring(0, 150)}
+                    {post.content.length > 150 && '...'}
+                  </p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-[#0B132B]/80 to-transparent pointer-events-none rounded-lg" />
+                </div>
+              )}
+              <Paywall 
+                message={requiresSubscription 
+                  ? 'This content requires a Pro subscription to view' 
+                  : `Unlock this premium analysis for $${Number(post.price).toFixed(2)}`}
+                isSubscriptionRequired={requiresSubscription}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Footer Actions */}
+        <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-800/60">
+          <div className="flex gap-4 text-slate-400 relative">
+            {/* Like button */}
+            <motion.button
+              onClick={handleLike}
+              className={`flex items-center gap-1.5 hover:text-amber transition-colors ${
+                liked ? 'text-ember' : ''
+              }`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.1 }}
+              aria-label={liked ? 'Unlike this post' : 'Like this post'}
+            >
+              <Heart size={20} fill={liked ? 'currentColor' : 'none'} strokeWidth={2} />
+              <span className="text-sm font-medium">{likesCount || 0}</span>
+            </motion.button>
+
+            {/* Like spark animation */}
+            <AnimatePresence>
+              {showLikeAnimation && (
+                <motion.div
+                  className="absolute left-0 top-0 pointer-events-none"
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: 3, opacity: 0 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                >
+                  <div className="w-4 h-4 rounded-full bg-ember blur-sm" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
+            {/* Comments button */}
+            <motion.button
+              className="flex items-center gap-1.5 hover:text-amber transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Open comments"
+            >
+              <MessageCircle size={20} strokeWidth={2} />
+              <span className="text-sm font-medium">{post.comments_count || 0}</span>
+            </motion.button>
+            
+            {/* Share button */}
+            <ShareTooltip postId={post.id} title={post.title} />
+          </div>
+
+          {/* Premium CTA */}
+          <div>
+            {premium && !canViewContent ? (
+              <motion.button
+                type="button"
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 0 20px rgba(245,166,35,0.5)'
+                }}
+                whileTap={{ scale: 0.97 }}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-ember to-amber text-white text-sm font-medium shadow-[0_0_12px_rgba(245,166,35,0.3)] hover:shadow-[0_0_20px_rgba(245,166,35,0.5)] transition-all"
+                aria-label={`Unlock premium content for $${Number(post.price).toFixed(2)}`}
+              >
+                {requiresSubscription ? 'Unlock Premium' : `$${Number(post.price).toFixed(2)}`}
+              </motion.button>
+            ) : (
+              <span className="text-amber text-sm font-medium">Free Insight</span>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Comments Drawer */}
       <CommentsDrawer postId={post.id} />

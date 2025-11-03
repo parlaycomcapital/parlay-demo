@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { supabase, Like } from '@/lib/supabaseClient';
-import { useSession } from 'next-auth/react';
+import { useSupabaseAuth } from './useSupabaseAuth';
 import { isPlaceholderMode, mockPosts } from '@/lib/mockData';
 
 export function useLikes(postId: string) {
-  const { data: session } = useSession();
+  const { user } = useSupabaseAuth();
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -68,12 +68,12 @@ export function useLikes(postId: string) {
 
     try {
       // Check if user liked this post
-      if (session?.user?.id) {
+      if (user?.id) {
         const { data: likeData } = await supabase
           .from('likes')
           .select('id')
           .eq('post_id', postId)
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
           .single();
 
         setLiked(!!likeData);
@@ -98,7 +98,7 @@ export function useLikes(postId: string) {
   };
 
   const toggleLike = async () => {
-    if (!session?.user?.id) {
+    if (!user?.id) {
       // In placeholder mode, allow interaction without login
       if (isPlaceholderMode()) {
         setLiked(!liked);
@@ -106,8 +106,8 @@ export function useLikes(postId: string) {
         console.log('Placeholder mode: Like toggled for post', postId);
         return;
       }
-      // Redirect to login
-      window.location.href = '/login?redirect=' + window.location.pathname;
+      // Redirect to auth
+      window.location.href = '/auth?redirect=' + window.location.pathname;
       return;
     }
 
@@ -128,7 +128,7 @@ export function useLikes(postId: string) {
           .from('likes')
           .delete()
           .eq('post_id', postId)
-          .eq('user_id', session.user.id);
+          .eq('user_id', user.id);
 
         if (error) throw error;
         setLiked(false);
@@ -139,27 +139,30 @@ export function useLikes(postId: string) {
           .from('likes')
           .insert({
             post_id: postId,
-            user_id: session.user.id,
+            user_id: user.id,
           });
 
         if (error) throw error;
         setLiked(true);
         setLikesCount(prev => prev + 1);
 
-        // Create notification
+        // Create notification (only if not liking own post)
         const { data: post } = await supabase
           .from('posts')
           .select('author_id')
           .eq('id', postId)
           .single();
 
-        if (post && post.author_id !== session.user.id) {
-          await supabase.from('notifications').insert({
-            user_id: post.author_id,
-            type: 'like',
-            actor_id: session.user.id,
-            post_id: postId,
-          });
+        if (post && post.author_id !== user.id) {
+          await supabase.from('notifications').insert([
+            {
+              recipient_id: post.author_id,
+              sender_id: user.id,
+              type: 'like',
+              entity_id: postId,
+              entity_type: 'post',
+            },
+          ]);
         }
       }
     } catch (error: any) {

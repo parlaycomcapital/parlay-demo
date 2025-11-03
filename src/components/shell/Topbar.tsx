@@ -5,7 +5,7 @@ import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useSession, signOut } from 'next-auth/react';
-import NotificationBell from './NotificationBell';
+import NotificationBell from '@/components/ui/NotificationBell';
 
 export default function Topbar() {
   const { data: session, status } = useSession();
