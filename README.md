@@ -1,176 +1,106 @@
-﻿# 🔥 Parlay Alpha (v0.3.2-alpha-final)
+﻿# Parlay — Smart Sports. Smarter Minds.
 
-**The Social Network for Smart Sports Insights**
+The social network where verified analysts share insights, track ROI, and build communities around data-driven sports intelligence.
 
-A premium social platform for sports analysis where verified experts share insights and predictions with transparent performance tracking.
+## 🚀 Quick Start
 
-## 🚀 Live Demo
+See **[QUICK_START.md](./QUICK_START.md)** for quick setup instructions.
 
-**🌐 Production**: https://parlay-demo.vercel.app
+See **[SETUP.md](./SETUP.md)** for detailed setup guide.
 
 ## ✨ Features
 
-### ✅ Authentication & Authorization
-- NextAuth + Supabase integration
-- Email/password authentication
-- Role-based access (Creator, Follower, Admin)
-- Secure session management
+- 🔐 **Supabase Authentication** - Secure email/password auth
+- 📊 **Real-time Feed** - Live posts from verified analysts
+- ❤️ **Social Interactions** - Likes, comments, follows with real-time notifications
+- 💬 **Comment Threading** - Nested discussions (2 levels max)
+- 👥 **Groups & Communities** - Creator-led private/public groups
+- 💳 **Stripe Subscriptions** - Pro/Basic tiers for premium content
+- 🛡️ **Admin Dashboard** - Reports, verification, group approvals
+- 🎨 **Cinematic UI** - Premium design with Framer Motion animations
 
-### 💳 Payment & Subscriptions
-- Stripe integration for subscriptions
-- GoPay support for CZ/SK markets
-- Premium content paywall system
-- Subscription tiers (Basic, Pro)
+## 📁 Project Structure
 
-### 👥 Groups & Communities
-- Create and manage communities
-- Public/Private groups
-- Member management
-- Community-based content
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── admin/             # Admin dashboard (admin-only)
+│   ├── auth/              # Authentication pages
+│   ├── feed/              # Main feed page
+│   ├── groups/            # Groups/communities
+│   ├── notifications/     # Notifications center
+│   └── subscribe/         # Stripe subscription
+├── components/
+│   ├── admin/             # Admin components
+│   ├── comments/          # Comment threads
+│   ├── feed/              # Post cards, paywalls
+│   ├── sections/          # Landing page sections
+│   ├── ui/                # Reusable UI components
+│   └── providers/         # Context providers
+├── hooks/                 # Custom React hooks
+└── lib/                   # Utilities & clients
+```
 
-### 🔒 Premium Content
-- Paywall system for locked content
-- One-time purchase posts
-- Subscription-based access
-- Content preview system
+## 🛠️ Tech Stack
 
-### 🏆 Leaderboard & Reputation
-- Analyst ROI tracking
-- Win rate calculations
-- Trust score algorithm
-- Follower metrics
-- Leaderboard rankings
+- **Next.js 16** (App Router)
+- **TypeScript**
+- **Supabase** (Auth, Database, Realtime)
+- **Stripe** (Payments)
+- **Tailwind CSS** (Styling)
+- **Framer Motion** (Animations)
 
-### 📱 Social Feed
-- Real-time post feed
-- Like & Share functionality
-- Comments & discussions
-- Notification system
-- Community engagement
+## 📚 Documentation
 
-### 🛡️ Admin & Moderation
-- Admin dashboard
-- User management
-- Content moderation tools
-- Platform analytics
-- Verification system
+- **[QUICK_START.md](./QUICK_START.md)** - Quick setup guide
+- **[SETUP.md](./SETUP.md)** - Detailed setup instructions
+- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Deployment checklist
 
-## 🎨 Design System
+## 🗄️ Database Setup
 
-This project follows a cinematic, premium design system that makes Parlay feel like a billion-dollar tech product.
+Run these SQL scripts in Supabase SQL Editor (in order):
 
-### Motion Philosophy
-- **Cinematic**: Every interaction breathes with purpose
-- **Elegant**: Smooth, never flashy
-- **Premium**: Apple × Tesla × Coinbase aesthetic
-- **Alive**: Gradient fields, ambient lighting, parallax depth
+1. `supabase-auth-schema.sql` - Authentication & profiles
+2. `supabase-groups-schema.sql` - Groups & communities
+3. `supabase-subscription-schema.sql` - Stripe subscriptions
+4. `supabase-social-schema.sql` - Social features (follows, comments, notifications)
+5. `supabase-admin-schema.sql` - Admin dashboard & moderation
 
-### Visual Identity
-- **Typography**: Poppins (headings), Inter (body), JetBrains Mono (code)
-- **Colors**: Navy base, Ember (#B24230), Amber (#C89144)
-- **Layout**: 260px sidebar, 720px feed width, 20px gutters
-- **Motion**: Spring physics, staggered reveals, GPU acceleration
-- **Effects**: Particle fields, ambient light, subtle glow animations
+## 🔧 Environment Variables
 
-### Quality Standards
-- 60fps animations
-- WCAG 2.1 AA accessibility
-- Mobile-first responsive
-- Performance-optimized
-- Investor-grade polish
+See `env.example` for required environment variables.
 
-## 🛠️ Quick Start
+Required:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `STRIPE_SECRET_KEY` (for subscriptions)
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+
+## 📦 Install & Run
 
 ```bash
-# Install dependencies
 npm install
-
-# Run development server
 npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Optimize assets
-npm run optimize-assets
 ```
 
-## 📦 Tech Stack
+Open [http://localhost:3000](http://localhost:3000)
 
-- **Framework**: Next.js 16 (App Router)
-- **Auth**: NextAuth.js v5
-- **Database**: Supabase (PostgreSQL)
-- **Styling**: TailwindCSS + Custom Design Tokens
-- **Animations**: Framer Motion
-- **Payments**: Stripe, GoPay
-- **TypeScript**: Full type safety
+## 🧪 Testing
 
-## 🎯 Core Features Status
+After setup, test these features:
+- ✅ Authentication (`/auth`)
+- ✅ Feed loads posts (`/feed`)
+- ✅ Like posts
+- ✅ Comment on posts
+- ✅ Follow users
+- ✅ Notifications (bell icon)
+- ✅ Groups (`/groups`)
+- ✅ Admin dashboard (`/admin` - admin only)
 
-| Feature | Status | Completion |
-|---------|--------|------------|
-| Authentication | ✅ | 100% |
-| Payment Gateway | ✅ | 90% (GoPay skeleton) |
-| Groups/Communities | ✅ | 100% |
-| Paywall System | ✅ | 100% |
-| Leaderboard | ✅ | 100% |
-| Feed/Notifications | ✅ | 85% |
-| Admin Tools | ✅ | 70% |
+## 🐛 Troubleshooting
 
-## 🚢 Deployment
+See [SETUP.md](./SETUP.md#-troubleshooting) for common issues and solutions.
 
-### Vercel (Recommended)
+## 📄 License
 
-1. **Connect Repository** to Vercel
-2. **Set Environment Variables**:
-   - `PLACEHOLDER_MODE=true`
-   - `NEXTAUTH_URL=https://parlay-demo.vercel.app`
-   - `NEXTAUTH_SECRET=your-secret`
-   - `NEXT_PUBLIC_SUPABASE_URL=your-url`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key`
-3. **Deploy** - Auto-deploys on push to main
-
-### Manual Deploy
-
-```bash
-npx vercel --prod --yes
-```
-
-## 📖 Documentation
-
-- **Design Guide**: `docs/DESIGN_GUIDE.md`
-- **Development Guide**: `docs/DEVELOPMENT_GUIDE.md`
-- **Feature Audit**: `docs/FEATURE_AUDIT.md`
-- **Changelog**: `docs/CHANGELOG.md`
-
-## 🎬 Alpha Release Notes
-
-**v0.3.2-alpha-final** — Production-ready alpha release
-
-- ✅ Fully responsive cinematic UI
-- ✅ Optimized assets and motion system
-- ✅ Placeholder data for safe demos
-- ✅ Investor Pitch Mode available in `/admin/pitch-dashboard`
-- ✅ All TOP PRIORITY features implemented
-- ✅ WebP image optimization
-- ✅ Accessibility compliance (WCAG 2.1 AA)
-- ✅ Performance optimized (LCP < 1.5s target)
-
-## 📸 Screenshots
-
-_Add screenshots of Hero, Feed, Dashboard here_
-
-## 🔐 Environment Variables
-
-See `.env.local.example` for required variables.
-
-## 📝 License
-
-Private — All rights reserved
-
----
-
-**Built with ❤️ for sports minds**
+Private - All rights reserved.
