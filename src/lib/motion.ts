@@ -6,8 +6,8 @@
 export const motionConfig = {
   duration: {
     short: 0.2,
-    medium: 0.4,
-    long: 0.8,
+    medium: 0.25,
+    long: 0.5,
   },
   easing: {
     smooth: [0.25, 0.1, 0.25, 1] as const,
@@ -110,7 +110,7 @@ export const pageTransition = {
 };
 
 export const cardHover = {
-  whileHover: { y: -4, transition: transitions.quick },
+  whileHover: { y: -3, transition: transitions.quick },
   whileTap: interactions.tap,
 };
 

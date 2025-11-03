@@ -30,12 +30,11 @@ export default function PostCard({ post }: { post: any }) {
 
   return (
     <motion.article
-      className="card card-hover p-4 md:p-6"
+      className="max-w-[680px] w-full mx-auto rounded-2xl shadow-ember bg-card p-4 md:p-6 card-hover"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ 
-        scale: 1.01, 
-        y: -2,
+        scale: 1.01,
         transition: { duration: 0.3 }
       }}
       whileTap={{ scale: 0.98 }}
@@ -78,13 +77,13 @@ export default function PostCard({ post }: { post: any }) {
       {/* Content */}
       <div className="mb-4">
         {canViewContent ? (
-          <p className="text-slatex-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">{post.content}</p>
+          <p className="text-slatex-300 leading-[1.4] text-[clamp(0.9rem,1vw,1.1rem)] whitespace-pre-wrap">{post.content}</p>
         ) : (
           <div>
             {/* Content Preview/Teaser */}
             {post.content && post.content.length > 0 && (
               <div className="relative mb-4">
-                <p className="text-slatex-300 leading-relaxed line-clamp-3 text-sm">
+                <p className="text-slatex-300 leading-[1.4] line-clamp-3 text-[clamp(0.9rem,1vw,1.1rem)]">
                   {post.content.substring(0, 150)}
                   {post.content.length > 150 && '...'}
                 </p>

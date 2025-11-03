@@ -9,7 +9,7 @@ export default function NotFound() {
       <div className="text-center">
         {/* Parlay Logo */}
         <div className="mb-8">
-          <Logo size={120} variant="transparent" className="mx-auto" />
+          <Logo variant="hero" className="mx-auto" />
         </div>
 
         <h1 className="text-6xl font-heading font-bold text-white mb-4">404</h1>

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Home, Compass, BarChart2, User, Users, Shield, TrendingUp, Palette } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import Logo from '@/components/ui/Logo';
 
 const baseLinks = [
   { href: '/feed', label: 'Feed', icon: Home },
@@ -24,14 +25,19 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden lg:flex fixed left-0 top-[56px] bottom-0 w-[260px] border-r border-slate-800 bg-navy-100/60 backdrop-blur-md z-30">
-      <div className="p-5 lg:p-6 flex flex-col gap-2 w-full">
+    <aside className="hidden md:flex md:w-[72px] lg:w-[260px] fixed left-0 top-[72px] bottom-0 border-r border-slate-800 bg-navy/60 backdrop-blur-md z-30 transition-all duration-300">
+      <div className="p-4 lg:p-5 flex flex-col gap-4 w-full">
+        <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
+          <Logo variant="sidebar" />
+          <span className="font-heading font-bold text-lg text-white hidden lg:inline">Parlay</span>
+        </div>
         {links.map(({ href, label, icon: Icon }) => (
           <motion.div 
             key={href} 
             whileTap={{ scale: 0.97 }} 
             whileHover={{ x: 4 }}
             transition={{ duration: 0.15 }}
+            className="group"
           >
             <Link
               href={href}
@@ -40,6 +46,7 @@ export default function Sidebar() {
                   ? 'text-amber bg-white/5 shadow-ember-sm'
                   : 'text-slatex-300 hover:text-amber hover:bg-white/5'
               }`}
+              aria-label={label}
             >
               {pathname === href && (
                 <motion.div
@@ -48,8 +55,12 @@ export default function Sidebar() {
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}
-              <Icon size={18} strokeWidth={pathname === href ? 2.5 : 2} />
-              <span className="font-medium">{label}</span>
+              <Icon size={18} strokeWidth={pathname === href ? 2.5 : 2} aria-hidden="true" />
+              <span className="font-medium hidden lg:inline">{label}</span>
+              {/* Tooltip for tablet view */}
+              <span className="absolute left-full ml-2 px-2 py-1 bg-card border border-slate-800 rounded-lg text-xs text-textSecondary opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap md:block lg:hidden z-50">
+                {label}
+              </span>
             </Link>
           </motion.div>
         ))}

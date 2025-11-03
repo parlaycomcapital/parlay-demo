@@ -67,7 +67,7 @@ export default function Login() {
           transition={{ duration: 0.3 }}
         >
           <div className="text-center mb-8">
-            <Logo size={64} variant="transparent" className="mx-auto mb-4" />
+            <Logo variant="hero" className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
             <p className="text-slatex-400">Sign in to your Parlay account</p>
           </div>

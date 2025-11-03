@@ -165,7 +165,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-navy-100 flex items-center justify-center">
         <div className="text-center">
-          <Logo size={80} variant="transparent" className="mx-auto mb-6" />
+          <Logo variant="hero" className="mx-auto mb-6" />
           <p className="text-white text-xl">Loading...</p>
         </div>
       </div>
@@ -176,7 +176,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-navy-100 flex items-center justify-center">
         <div className="text-center">
-          <Logo size={80} variant="transparent" className="mx-auto mb-6" />
+          <Logo variant="hero" className="mx-auto mb-6" />
           <p className="text-white text-xl mb-4">Access restricted</p>
           <p className="text-slatex-400 mb-6">Only creators can access this dashboard.</p>
           <Link href="/feed" className="btn-grad">

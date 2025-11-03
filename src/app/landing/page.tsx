@@ -90,8 +90,8 @@ export default function LandingPage() {
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="inline-block mb-8"
             >
-              <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-6">
-                <Logo size={120} variant="transparent" className="mx-auto" />
+              <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-2">
+                <Logo variant="hero" className="mx-auto" />
               </div>
             </motion.div>
           </motion.div>

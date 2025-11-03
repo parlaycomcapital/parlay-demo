@@ -18,7 +18,7 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
       return (
         <div className="min-h-screen bg-navy flex items-center justify-center">
           <div className="text-center">
-            <Logo size={80} variant="transparent" className="mb-6 animate-pulse" />
+            <Logo variant="hero" className="mb-6 animate-pulse" />
             <p className="text-white text-xl">Loading...</p>
           </div>
         </div>
@@ -29,7 +29,7 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
       return (
         <div className="min-h-screen bg-navy flex items-center justify-center">
           <div className="text-center">
-            <Logo size={80} variant="transparent" className="mb-6" />
+            <Logo variant="hero" className="mb-6" />
             <p className="text-white text-xl mb-4">Please sign in</p>
             <Link
               href="/login"
@@ -46,7 +46,7 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
       return (
         <div className="min-h-screen bg-navy flex items-center justify-center">
           <div className="text-center">
-            <Logo size={80} variant="transparent" className="mb-6" />
+            <Logo variant="hero" className="mb-6" />
             <p className="text-white text-xl mb-4">Access denied</p>
             <p className="text-slate-300 mb-6">
               You need {allowedRoles.join(' or ')} role to access this page.

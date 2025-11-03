@@ -12,7 +12,7 @@ export default function ConditionalAppShell({ children }: { children: React.Reac
 
   if (!shouldUseAppShell) {
     return (
-      <div className="min-h-screen bg-navy-100">
+      <div className="min-h-screen bg-navy">
         <Topbar />
         {children}
       </div>

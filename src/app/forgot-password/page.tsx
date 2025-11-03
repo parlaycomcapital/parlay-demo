@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
           </Link>
 
           <div className="text-center mb-8">
-            <Logo size={64} variant="transparent" className="mx-auto mb-4" />
+            <Logo variant="hero" className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
             <p className="text-slatex-400">Enter your email to receive a password reset link</p>
           </div>

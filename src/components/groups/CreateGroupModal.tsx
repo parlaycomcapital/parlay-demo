@@ -143,7 +143,7 @@ export default function CreateGroupModal({ open, onClose, onSuccess }: CreateGro
                     id="is_public"
                     checked={formData.is_public}
                     onChange={(e) => setFormData({ ...formData, is_public: e.target.checked })}
-                    className="w-4 h-4 text-amber bg-navy-300 border-slate-600 rounded focus:ring-amber focus:ring-2"
+                    className="w-4 h-4 text-amber bg-card border-slate-600 rounded focus:ring-amber focus:ring-2"
                   />
                   <label htmlFor="is_public" className="text-sm text-slatex-300">
                     Make this community public

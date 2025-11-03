@@ -51,8 +51,9 @@ export default function ShareTooltip({ postId, title }: ShareTooltipProps) {
         className="icon-btn"
         whileTap={{ scale: 0.85 }}
         transition={{ duration: 0.1 }}
+        aria-label="Share this post"
       >
-        <Share2 size={18} />
+        <Share2 size={18} aria-hidden="true" />
       </motion.button>
 
       <AnimatePresence>
@@ -62,7 +63,7 @@ export default function ShareTooltip({ postId, title }: ShareTooltipProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-navy-300 border border-slate-800 rounded-xl p-2 shadow-card z-50"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-card border border-slate-800 rounded-xl p-2 shadow-card z-50"
           >
             <div className="flex items-center gap-2 whitespace-nowrap">
               <button
@@ -82,7 +83,7 @@ export default function ShareTooltip({ postId, title }: ShareTooltipProps) {
                 )}
               </button>
             </div>
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-navy-300 border-r border-b border-slate-800 rotate-45" />
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-card border-r border-b border-slate-800 rotate-45" />
           </motion.div>
         )}
       </AnimatePresence>

@@ -26,26 +26,28 @@ export default function BottomNav() {
     <motion.nav
       initial={{ y: 100 }}
       animate={{ y: 0 }}
-      className="fixed lg:hidden bottom-0 inset-x-0 h-16 border-t border-slate-800 bg-navy-100/95 backdrop-blur-md z-40 shadow-lg"
+      className="fixed lg:hidden bottom-0 inset-x-0 h-16 border-t border-slate-800 bg-navy/95 backdrop-blur-md z-40 shadow-lg pb-safe"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className={`grid ${gridCols} h-full text-slatex-400`}>
         {links.map(({ href, icon: Icon, label }) => (
           <Link
             key={href}
             href={href}
-            className="flex flex-col items-center justify-center transition-colors"
+            className="flex flex-col items-center justify-center transition-colors px-2 py-1"
+            aria-label={label}
           >
             <motion.div
-              whileTap={{ scale: 0.85, y: -2 }}
+              whileTap={{ scale: 0.85 }}
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.2 }}
-              className={`p-2 rounded-full transition-colors ${
+              className={`rounded-full transition-colors ${
                 pathname === href ? 'bg-amber/10 text-amber' : 'hover:text-amber'
               }`}
             >
-              <Icon size={22} strokeWidth={pathname === href ? 2.5 : 2} />
+              <Icon size={28} strokeWidth={pathname === href ? 2.5 : 2} aria-hidden="true" />
             </motion.div>
-            <span className={`text-[10px] mt-0.5 ${pathname === href ? 'text-amber font-medium' : ''}`}>
+            <span className={`text-[10px] mt-1 ${pathname === href ? 'text-amber font-medium' : ''}`}>
               {label}
             </span>
           </Link>

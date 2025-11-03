@@ -22,18 +22,17 @@ export default function Topbar() {
 
   return (
     <motion.header
-      className="sticky top-0 z-40 w-full border-b border-slate-800 bg-navy-100/80 backdrop-blur-md"
+      className="sticky top-0 z-40 w-full h-18 border-b border-slate-800 bg-navy/80 backdrop-blur-md"
       initial={false}
       animate={{
-        height: scrolled ? '3.5rem' : '3.5rem',
         boxShadow: scrolled ? '0 4px 20px rgba(0, 0, 0, 0.3)' : 'none',
       }}
       transition={{ duration: 0.3 }}
     >
-      <div className="h-full flex items-center justify-between px-4 md:px-5 lg:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Link href="/">
-            <Logo size={28} variant="solid" />
+      <div className="h-full flex items-center justify-between px-5 lg:px-6 py-3">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center">
+            <Logo variant="navbar" />
           </Link>
           <AnimatePresence mode="wait">
             {!scrolled && (
@@ -42,14 +41,14 @@ export default function Topbar() {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.3 }}
-                className="hidden sm:block text-slatex-400 text-sm overflow-hidden"
+                className="hidden sm:block text-textSecondary text-sm overflow-hidden"
               >
                 Smart Sports. Smarter Minds.
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-slatex-400">
+        <nav className="hidden md:flex items-center gap-4 text-textSecondary">
           <Link href="/feed" className="hover:text-amber transition-colors">
             Feed
           </Link>

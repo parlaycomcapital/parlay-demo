@@ -31,7 +31,7 @@ export default function HomePage() {
       />
       
       {/* Hero Content */}
-      <section className="relative container-narrow text-center pt-16 md:pt-24 pb-16 md:pb-20 z-10">
+      <section className="relative container-narrow text-center flex flex-col justify-center items-center min-h-[60vh] z-10">
         <ScrollReveal>
           {/* Logo with subtle glass effect */}
           <motion.div
@@ -41,24 +41,20 @@ export default function HomePage() {
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             className="inline-block"
           >
-            <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-4">
-              <Logo 
-                size={84} 
-                variant="transparent" 
-                className="mx-auto" 
-              />
+            <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-2">
+              <Logo variant="hero" className="mx-auto" />
             </div>
           </motion.div>
         </ScrollReveal>
         
         <ScrollReveal delay={0.1}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 text-white">
+          <h1 className="text-3xl font-poppins font-semibold mb-4 text-white leading-[1.4]">
             Analytics Meets <span className="gradient-text">Adrenaline</span>
           </h1>
         </ScrollReveal>
         
         <ScrollReveal delay={0.2}>
-          <p className="text-lg md:text-xl text-slatex-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="font-poppins font-medium text-amber/80 text-[clamp(1rem,1.5vw,1.25rem)] max-w-2xl mx-auto mb-10 leading-[1.4]">
             The first social platform for sports analysis. Follow trusted analysts, track transparent ROI, 
             and join communities of data-driven minds.
           </p>

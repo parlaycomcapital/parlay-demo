@@ -5,13 +5,13 @@ import Logo from './ui/Logo';
 
 const Footer = () => {
   return (
-    <footer className="bg-navy-100 border-t border-slate-800">
+    <footer className="bg-navy border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <Logo size={36} variant="transparent" />
+              <Logo variant="sidebar" className="w-9 h-9" />
               <span className="text-white font-heading font-bold text-xl">Parlay</span>
             </div>
             <p className="text-white/70 mb-4 max-w-md font-body">
@@ -102,7 +102,7 @@ const Footer = () => {
         <div className="border-t border-slate-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4">
-              <Logo size={36} variant="transparent" />
+              <Logo variant="sidebar" className="w-9 h-9" />
               <div className="flex flex-col">
                 <span className="font-bold text-white text-lg">Parlay</span>
                 <span className="text-slate-400 text-sm">Parlay ™ {new Date().getFullYear()}</span>

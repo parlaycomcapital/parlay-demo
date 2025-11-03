@@ -17,7 +17,7 @@ export default function Paywall({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative backdrop-blur-lg bg-navy-300/30 border border-amber/30 rounded-2xl p-8 text-center"
+      className="relative backdrop-blur-lg bg-card/30 border border-amber/30 rounded-2xl p-8 text-center"
       style={{
         background: 'linear-gradient(135deg, rgba(17, 28, 59, 0.4) 0%, rgba(230, 62, 48, 0.1) 100%)',
         backdropFilter: 'blur(10px)',

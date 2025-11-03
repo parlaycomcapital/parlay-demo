@@ -30,12 +30,7 @@ const NavBar = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-4 group">
-            <div className="hidden sm:block">
-              <Logo size={48} variant="solid" />
-            </div>
-            <div className="block sm:hidden">
-              <Logo size={40} variant="solid" />
-            </div>
+            <Logo variant="navbar" />
             <span className="text-xl font-bold tracking-tight text-white group-hover:text-amber transition-colors duration-200">
               Parlay
             </span>

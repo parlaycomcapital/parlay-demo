@@ -47,7 +47,7 @@ function SuccessContent() {
         transition={{ duration: 0.3 }}
         className="card p-8 lg:p-12 max-w-md w-full text-center"
       >
-                <Logo size={64} variant="transparent" className="mx-auto mb-6" />
+                <Logo variant="hero" className="mx-auto mb-6" />
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}

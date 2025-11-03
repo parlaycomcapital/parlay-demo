@@ -10,7 +10,7 @@ export default function Loading() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        <Logo size={100} variant="solid" />
+        <Logo variant="hero" />
       </motion.div>
       <motion.p
         initial={{ opacity: 0 }}
