@@ -29,39 +29,28 @@ export default function Logo({
         minHeight: responsive ? '28px' : `${size}px`,
       }}
       animate={{
-        filter: [
-          'drop-shadow(0 0 8px rgba(230,62,48,0.3))',
-          'drop-shadow(0 0 16px rgba(245,166,35,0.4))',
-          'drop-shadow(0 0 8px rgba(230,62,48,0.3))',
-        ],
+        opacity: [1, 1, 1],
       }}
+      initial={{ opacity: 0 }}
       transition={{
-        duration: 4,
-        repeat: Infinity,
-        ease: 'easeInOut',
+        duration: 0.6,
+        ease: 'easeOut',
+      }}
+      whileHover={{
+        scale: 1.05,
+        transition: { duration: 0.2 },
       }}
     >
-      {/* Animated gradient stroke glow */}
-      <div 
-        className="absolute inset-0 rounded-full opacity-60 blur-lg animate-pulse-glow"
-        style={{
-          background: 'radial-gradient(circle, rgba(230,62,48,0.3), rgba(245,166,35,0.3), transparent)',
-        }}
-      />
-      
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"
-        style={{
-          background: 'radial-gradient(circle, rgba(245, 166, 35, 0.6), transparent)',
-        }}
-      />
-      
       <Image
         src={src}
         alt="Parlay logo"
         fill
         sizes={`${size}px`}
-        style={{ objectFit: 'contain', padding: '4px' }}
+        style={{ 
+          objectFit: 'contain', 
+          padding: '4px',
+          filter: 'brightness(1.05) contrast(1.05)',
+        }}
         priority
         className="select-none relative z-10"
       />

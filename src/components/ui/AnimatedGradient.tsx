@@ -19,12 +19,12 @@ export default function AnimatedGradient({
       to: 'linear-gradient(270deg, #E63E30, #F5A623, #FFB800)',
     },
     radial: {
-      from: 'radial-gradient(ellipse at center, rgba(230,62,48,0.15), transparent)',
-      to: 'radial-gradient(ellipse at 80% 20%, rgba(230,62,48,0.15), transparent)',
+      from: 'radial-gradient(ellipse at center, rgba(255,255,255,0.04), transparent)',
+      to: 'radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04), transparent)',
     },
     ambient: {
-      from: 'radial-gradient(circle at 20% 50%, rgba(230,62,48,0.02), transparent)',
-      to: 'radial-gradient(circle at 80% 50%, rgba(245,166,35,0.02), transparent)',
+      from: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.02), transparent)',
+      to: 'radial-gradient(circle at 80% 50%, rgba(255,255,255,0.02), transparent)',
     },
   };
 

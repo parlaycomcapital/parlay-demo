@@ -74,7 +74,7 @@ export default function LandingPage() {
       <div 
         className="fixed inset-0 pointer-events-none z-[1]"
         style={{
-          background: `radial-gradient(circle 1000px at ${x} ${y}, rgba(245,166,35,0.1), transparent)`,
+          background: `radial-gradient(circle 1000px at ${x} ${y}, rgba(255,255,255,0.04), transparent)`,
           transition: 'background 0.1s ease-out',
         }}
       />
@@ -85,16 +85,14 @@ export default function LandingPage() {
           <motion.div style={{ y: logoY }}>
             <motion.div
               animate={{
-                filter: [
-                  'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
-                  'drop-shadow(0 0 32px rgba(230,62,48,0.45))',
-                  'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
-                ],
+                y: [0, -4, 0],
               }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="inline-block mb-8"
             >
-              <Logo size={120} variant="transparent" className="mx-auto" />
+              <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-6">
+                <Logo size={120} variant="transparent" className="mx-auto" />
+              </div>
             </motion.div>
           </motion.div>
           

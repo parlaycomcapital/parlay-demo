@@ -25,7 +25,7 @@ export default function HomePage() {
       <div 
         className="fixed inset-0 pointer-events-none z-[1]"
         style={{
-          background: `radial-gradient(circle 800px at ${x} ${y}, rgba(245,166,35,0.08), transparent)`,
+          background: `radial-gradient(circle 800px at ${x} ${y}, rgba(255,255,255,0.04), transparent)`,
           transition: 'background 0.1s ease-out',
         }}
       />
@@ -33,24 +33,21 @@ export default function HomePage() {
       {/* Hero Content */}
       <section className="relative container-narrow text-center pt-16 md:pt-24 pb-16 md:pb-20 z-10">
         <ScrollReveal>
-          {/* Logo with enhanced glow */}
+          {/* Logo with subtle glass effect */}
           <motion.div
             animate={{
-              y: [0, -8, 0],
-              filter: [
-                'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
-                'drop-shadow(0 0 32px rgba(230,62,48,0.45))',
-                'drop-shadow(0 0 24px rgba(230,62,48,0.35))',
-              ],
+              y: [0, -4, 0],
             }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             className="inline-block"
           >
-            <Logo 
-              size={84} 
-              variant="transparent" 
-              className="mx-auto mb-6" 
-            />
+            <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-4">
+              <Logo 
+                size={84} 
+                variant="transparent" 
+                className="mx-auto" 
+              />
+            </div>
           </motion.div>
         </ScrollReveal>
         
