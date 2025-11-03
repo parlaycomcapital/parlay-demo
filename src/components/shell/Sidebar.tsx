@@ -24,8 +24,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden lg:flex fixed left-0 top-14 bottom-0 w-[260px] border-r border-slate-800 bg-navy-100/60 backdrop-blur-md z-30">
-      <div className="p-5 lg:p-6 flex flex-col gap-3 w-full">
+    <aside className="hidden lg:flex fixed left-0 top-[56px] bottom-0 w-[260px] border-r border-slate-800 bg-navy-100/60 backdrop-blur-md z-30">
+      <div className="p-5 lg:p-6 flex flex-col gap-2 w-full">
         {links.map(({ href, label, icon: Icon }) => (
           <motion.div 
             key={href} 

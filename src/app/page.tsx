@@ -31,7 +31,7 @@ export default function HomePage() {
       />
       
       {/* Hero Content */}
-      <section className="relative container-narrow text-center pt-24 pb-20 z-10">
+      <section className="relative container-narrow text-center pt-16 md:pt-24 pb-16 md:pb-20 z-10">
         <ScrollReveal>
           {/* Logo with enhanced glow */}
           <motion.div

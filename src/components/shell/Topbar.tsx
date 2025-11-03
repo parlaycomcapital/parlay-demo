@@ -30,8 +30,8 @@ export default function Topbar() {
       }}
       transition={{ duration: 0.3 }}
     >
-      <div className="h-full flex items-center justify-between px-5 lg:px-6">
-        <div className="flex items-center gap-3">
+      <div className="h-full flex items-center justify-between px-4 md:px-5 lg:px-6">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/">
             <Logo size={28} variant="solid" />
           </Link>
@@ -49,7 +49,7 @@ export default function Topbar() {
             )}
           </AnimatePresence>
         </div>
-        <nav className="hidden md:flex items-center gap-6 text-slatex-400">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-slatex-400">
           <Link href="/feed" className="hover:text-amber transition-colors">
             Feed
           </Link>

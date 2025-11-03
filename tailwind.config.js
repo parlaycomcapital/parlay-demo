@@ -34,16 +34,16 @@ module.exports = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        // Extended scale for better hierarchy
+        // Extended scale with responsive clamp
         'xs': ['12px', { lineHeight: '16px', letterSpacing: '0.01em' }],
         'sm': ['14px', { lineHeight: '20px', letterSpacing: '0.01em' }],
-        'base': ['16px', { lineHeight: '24px', letterSpacing: '0em' }],
-        'lg': ['18px', { lineHeight: '28px', letterSpacing: '-0.01em' }],
-        'xl': ['20px', { lineHeight: '28px', letterSpacing: '-0.01em' }],
-        '2xl': ['24px', { lineHeight: '32px', letterSpacing: '-0.02em' }],
-        '3xl': ['30px', { lineHeight: '38px', letterSpacing: '-0.02em' }],
-        '4xl': ['36px', { lineHeight: '44px', letterSpacing: '-0.02em' }],
-        '5xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.03em' }],
+        'base': ['clamp(0.9rem, 1vw, 1.1rem)', { lineHeight: '1.5', letterSpacing: '0em' }],
+        'lg': ['clamp(1rem, 1.25vw, 1.25rem)', { lineHeight: '1.5', letterSpacing: '-0.01em' }],
+        'xl': ['clamp(1.125rem, 1.5vw, 1.5rem)', { lineHeight: '1.4', letterSpacing: '-0.01em' }],
+        '2xl': ['clamp(1.5rem, 1.6vw, 2rem)', { lineHeight: '1.4', letterSpacing: '-0.02em' }],
+        '3xl': ['clamp(1.75rem, 2vw, 2.5rem)', { lineHeight: '1.4', letterSpacing: '-0.02em' }],
+        '4xl': ['clamp(2rem, 2.5vw, 3rem)', { lineHeight: '1.3', letterSpacing: '-0.02em' }],
+        '5xl': ['clamp(2.5rem, 3vw, 4rem)', { lineHeight: '1.3', letterSpacing: '-0.03em' }],
       },
       boxShadow: {
         // Refined shadow system

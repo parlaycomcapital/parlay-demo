@@ -11,21 +11,21 @@ export default function FeedPage() {
 
   return (
     <div>
-      <div className="mb-5 lg:mb-6">
-        <h1 className="text-2xl font-bold mb-2">Feed</h1>
+      <div className="mb-4 md:mb-5 lg:mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold mb-2">Feed</h1>
         <p className="text-slatex-400 text-sm">Follow analysts, explore insights, and support your favorites.</p>
       </div>
 
       <Composer />
 
       {loading ? (
-        <div className="space-y-5 lg:space-y-6">
+        <div className="space-y-4 md:space-y-5 lg:space-y-6">
           {[1, 2, 3].map((i) => (
             <PostCardSkeleton key={i} />
           ))}
         </div>
       ) : (
-        <div className="space-y-5 lg:space-y-6">
+        <div className="space-y-4 md:space-y-5 lg:space-y-6">
           {posts.map((p: any, i: number) => (
             <ScrollReveal key={p.id} delay={i * 0.06}>
               <PostCard post={p} />

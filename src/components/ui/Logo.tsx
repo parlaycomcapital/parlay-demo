@@ -7,12 +7,14 @@ interface LogoProps {
   size?: number;
   variant?: 'solid' | 'transparent';
   className?: string;
+  responsive?: boolean;
 }
 
 export default function Logo({ 
   size = 48, 
   variant = 'solid', 
   className = '',
+  responsive = false,
 }: LogoProps) {
   const src = variant === 'solid' ? '/assets/brand/logo-solid.png' : '/assets/brand/logo-transparent.png';
 
@@ -20,11 +22,11 @@ export default function Logo({
     <motion.div
       className={twMerge('relative flex items-center justify-center group', className)}
       style={{
-        width: `${size}px`,
-        height: `${size}px`,
+        width: responsive ? 'clamp(28px, 5vw, 84px)' : `${size}px`,
+        height: responsive ? 'clamp(28px, 5vw, 84px)' : `${size}px`,
         aspectRatio: '1 / 1',
-        minWidth: `${size}px`,
-        minHeight: `${size}px`,
+        minWidth: responsive ? '28px' : `${size}px`,
+        minHeight: responsive ? '28px' : `${size}px`,
       }}
       animate={{
         filter: [
