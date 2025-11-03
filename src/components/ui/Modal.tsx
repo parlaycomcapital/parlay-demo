@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { modalVariants, backdropVariants } from '@/lib/motion';
 
 interface ModalProps {
   open: boolean;
@@ -14,21 +15,23 @@ export default function Modal({ open, onClose, children, title }: ModalProps) {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-        >
+        <>
           <motion.div
-            onClick={(e) => e.stopPropagation()}
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="card w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar relative"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-4"
+            variants={backdropVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            onClick={onClose}
           >
+            <motion.div
+              onClick={(e) => e.stopPropagation()}
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="card w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar relative"
+            >
             {title && (
               <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-800">
                 <h2 className="text-lg font-semibold text-white">{title}</h2>
@@ -52,9 +55,10 @@ export default function Modal({ open, onClose, children, title }: ModalProps) {
               </button>
             )}
 
-            <div className={title ? '' : 'pt-2'}>{children}</div>
+              <div className={title ? '' : 'pt-2'}>{children}</div>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

@@ -19,8 +19,10 @@ export default function Composer() {
         <button className="icon-btn">📎</button>
         <motion.button
           className="btn-grad"
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.1 }}
+          whileHover={{ scale: 1.05, boxShadow: '0 0 8px rgba(224, 161, 76, 0.3)' }}
+          whileTap={{ scale: 0.95, boxShadow: 'none' }}
+          transition={{ duration: 0.2 }}
+          aria-label="Post"
         >
           Post
         </motion.button>

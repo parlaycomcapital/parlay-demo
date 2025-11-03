@@ -2,21 +2,21 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Home, TrendingUp, Users, BarChart2, User, Shield } from 'lucide-react';
+import { Home, Compass, BarChart2, User, Plus } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { fadeUp } from '@/lib/motion';
 
 export default function BottomNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
   const links = [
-    { href: '/feed', icon: Home, label: 'Feed' },
-    { href: '/leaderboard', icon: TrendingUp, label: 'Leaderboard' },
-    { href: '/groups', icon: Users, label: 'Communities' },
-    ...(session?.user?.role === 'creator' ? [{ href: '/dashboard', icon: BarChart2, label: 'Dashboard' }] : []),
-    ...(session?.user?.role === 'admin' ? [{ href: '/admin', icon: Shield, label: 'Admin' }] : []),
-    { href: '/profile', icon: User, label: 'Profile' },
+    { href: '/feed', label: 'Feed', icon: Home },
+    { href: '/leaderboard', label: 'Leaderboard', icon: Compass },
+    { href: '/create', label: 'Create', icon: Plus },
+    { href: '/groups', label: 'Communities', icon: BarChart2 },
+    { href: '/profile', label: 'Profile', icon: User },
   ];
 
   // Adjust grid columns based on number of links
@@ -26,33 +26,50 @@ export default function BottomNav() {
     <motion.nav
       initial={{ y: 100 }}
       animate={{ y: 0 }}
+      transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
       className="fixed lg:hidden bottom-0 inset-x-0 h-16 border-t border-slate-800 bg-navy/95 backdrop-blur-md z-40 shadow-lg pb-safe"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <div className={`grid ${gridCols} h-full text-slatex-400`}>
+      <motion.div
+        className={`grid ${gridCols} h-full text-slatex-400`}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.05,
+              delayChildren: 0.1,
+            },
+          },
+        }}
+      >
         {links.map(({ href, icon: Icon, label }) => (
-          <Link
+          <motion.div
             key={href}
-            href={href}
-            className="flex flex-col items-center justify-center transition-colors px-2 py-1"
-            aria-label={label}
+            variants={fadeUp}
           >
-            <motion.div
-              whileTap={{ scale: 0.85 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.2 }}
-              className={`rounded-full transition-colors ${
-                pathname === href ? 'bg-amber/10 text-amber' : 'hover:text-amber'
-              }`}
+            <Link
+              href={href}
+              className="flex flex-col items-center justify-center transition-colors px-2 py-1"
+              aria-label={label}
             >
-              <Icon size={28} strokeWidth={pathname === href ? 2.5 : 2} aria-hidden="true" />
-            </motion.div>
-            <span className={`text-[10px] mt-1 ${pathname === href ? 'text-amber font-medium' : ''}`}>
-              {label}
-            </span>
-          </Link>
+              <motion.div
+                whileTap={{ scale: 0.85 }}
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+                className={`rounded-full transition-colors ${
+                  pathname === href ? 'bg-amber/10 text-amber' : 'hover:text-amber'
+                }`}
+              >
+                <Icon size={28} strokeWidth={pathname === href ? 2.5 : 2} aria-hidden="true" />
+              </motion.div>
+              <span className={`text-[10px] mt-1 ${pathname === href ? 'text-amber font-medium' : ''}`}>
+                {label}
+              </span>
+            </Link>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </motion.nav>
   );
 }

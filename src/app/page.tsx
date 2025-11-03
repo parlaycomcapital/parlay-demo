@@ -38,7 +38,7 @@ export default function HomePage() {
             animate={{
               y: [0, -4, 0],
             }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
             className="inline-block"
           >
             <div className="relative inline-block backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-2">

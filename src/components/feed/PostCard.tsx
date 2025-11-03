@@ -30,15 +30,17 @@ export default function PostCard({ post }: { post: any }) {
 
   return (
     <motion.article
-      className="max-w-[680px] w-full mx-auto rounded-2xl shadow-ember bg-card p-4 md:p-6 card-hover"
+      className="max-w-[680px] w-full mx-auto rounded-2xl shadow-ember bg-card p-4 md:p-6"
+      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ 
         scale: 1.01,
-        transition: { duration: 0.3 }
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(198, 74, 56, 0.15)',
+        transition: { duration: 0.25, ease: 'easeOut' }
       }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      transition={{ duration: 0.3, ease: 'easeOut', layout: { duration: 0.3, ease: 'easeInOut' } }}
     >
       {/* Header */}
       <header className="flex items-start gap-3 mb-4">

@@ -277,8 +277,14 @@ a:focus-visible {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition: none !important;
     scroll-behavior: auto !important;
+  }
+  
+  /* Disable Framer Motion animations when motion is reduced */
+  [data-framer-motion] {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
