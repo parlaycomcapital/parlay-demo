@@ -245,3 +245,62 @@ body {
     display: none !important;
   }
 }
+
+/* Cinematic Ambient Effects */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245, 166, 35, 0.1),
+    transparent
+  );
+  background-size: 2000px 100%;
+}
+
+/* 3D Perspective for depth */
+.perspective-container {
+  perspective: 1000px;
+}
+
+.tilt-3d {
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
