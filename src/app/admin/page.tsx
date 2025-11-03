@@ -82,7 +82,7 @@ export default function AdminPage() {
       <div className="min-h-screen bg-navy-100 flex items-center justify-center">
         <div className="text-center">
           <Logo variant="hero" className="mx-auto mb-6" />
-          <p className="text-white text-xl">Loading...</p>
+          <p className="text-white text-xl">Crunching data…</p>
         </div>
       </div>
     );

@@ -95,7 +95,7 @@ export default function Sidebar() {
                   <motion.div
                     layoutId="activeSidebarLink"
                     className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-ember to-amber rounded-r-full"
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    transition={{ type: 'spring', stiffness: 250, damping: 22 }}
                   />
                 )}
                 <Icon size={18} strokeWidth={pathname === href ? 2.5 : 2} aria-hidden="true" />

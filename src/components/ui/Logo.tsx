@@ -31,7 +31,7 @@ export default function Logo({
 
   // Hero variant uses larger sizing
   const heroSizing = variant === 'hero' 
-    ? { min: 84, max: 128 }
+    ? { min: 96, max: 140 }
     : sizes;
 
   const finalSizes = variant === 'hero' ? heroSizing : sizes;
@@ -45,8 +45,8 @@ export default function Logo({
         borderRadius: variant === 'hero' ? '12px' : '8px',
         aspectRatio: '1 / 1',
       }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{
         duration: 0.6,
         ease: 'easeOut',

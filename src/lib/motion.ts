@@ -6,7 +6,7 @@
 export const motionConfig = {
   duration: {
     short: 0.2,
-    medium: 0.25,
+    medium: 0.35,
     long: 0.4,
   },
   easing: {
@@ -20,6 +20,7 @@ export const motionConfig = {
     gentle: { type: 'spring', stiffness: 150, damping: 25 } as const,
     snappy: { type: 'spring', stiffness: 300, damping: 30 } as const,
     bouncy: { type: 'spring', stiffness: 400, damping: 20 } as const,
+    sidebar: { type: 'spring', stiffness: 250, damping: 22 } as const,
   },
 };
 

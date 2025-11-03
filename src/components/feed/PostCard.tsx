@@ -36,7 +36,7 @@ export default function PostCard({ post }: { post: any }) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ 
         scale: 1.01,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(198, 74, 56, 0.15)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(230, 62, 48, 0.1)',
         transition: { duration: 0.25, ease: 'easeOut' }
       }}
       whileTap={{ scale: 0.98 }}

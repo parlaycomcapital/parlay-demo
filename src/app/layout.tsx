@@ -8,17 +8,17 @@ import SkipToContent from '@/components/ui/SkipToContent';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://parlay-demo.vercel.app'),
   title: 'Parlay — Smart Sports. Smarter Minds.',
-  description: 'Join the Parlay community where insight meets adrenaline.',
+  description: 'Parlay — The Social Network for Smart Sports Insights.',
   openGraph: {
     title: 'Parlay — Smart Sports. Smarter Minds.',
-    description: 'Join the Parlay community where insight meets adrenaline.',
+    description: 'Parlay — The Social Network for Smart Sports Insights.',
     images: ['/assets/brand/optimized/logo-solid@2x.webp'],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Parlay — Smart Sports. Smarter Minds.',
-    description: 'Join the Parlay community where insight meets adrenaline.',
+    description: 'Parlay — The Social Network for Smart Sports Insights.',
     images: ['/assets/brand/optimized/logo-solid@2x.webp'],
   },
   themeColor: '#0B132B',
@@ -59,6 +59,9 @@ export default function RootLayout({
           type="image/webp"
           imageSizes="(max-width: 768px) 32px, 56px"
         />
+        <meta name="description" content="Parlay — The Social Network for Smart Sports Insights." />
+        <meta property="og:image" content="/assets/brand/optimized/logo-solid@2x.webp" />
+        <meta name="theme-color" content="#0B132B" />
       </head>
       <body className="font-sans">
         <SkipToContent />

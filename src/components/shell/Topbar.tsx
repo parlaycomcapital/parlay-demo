@@ -55,7 +55,7 @@ export default function Topbar() {
             Feed
           </Link>
           {status === 'loading' ? (
-            <div className="text-slatex-400">Loading...</div>
+            <div className="text-slatex-400">Fetching smart insights…</div>
           ) : session ? (
             <>
               {session.user?.role === 'creator' && (

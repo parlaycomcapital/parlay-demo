@@ -9,10 +9,10 @@ module.exports = {
         // Base Navy
         navy: '#0B132B',
         card: '#101A2E',
-        // Primary Accents
-        ember: '#C64A38',
-        amber: '#E0A14C',
-        accent: '#F5A623',
+                // Primary Accents (10% reduced saturation)
+                ember: '#B24230',
+                amber: '#C89144',
+                accent: '#E0961F',
         // Text Colors
         textPrimary: '#F5F5F5',
         textSecondary: '#9CA3AF',

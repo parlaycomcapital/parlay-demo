@@ -18,16 +18,16 @@ body {
   /* Brand Colors */
   --color-bg: #0B132B;
   --color-card: #101A2E;
-  --color-ember: #C64A38;
-  --color-amber: #E0A14C;
-  --color-accent: #F5A623;
-  --color-text-primary: #FFFFFF;
+  --color-ember: #B24230; /* 10% reduced saturation */
+  --color-amber: #C89144; /* 10% reduced saturation */
+  --color-accent: #E0961F; /* 10% reduced saturation */
+  --color-text-primary: #E2E8F0; /* Softer than pure white */
   --color-text-secondary: #9CA3AF;
   
   /* Shadows */
-  --shadow-ember: 0 0 20px rgba(198, 74, 56, 0.15);
-  --shadow-ember-sm: 0 0 10px rgba(198, 74, 56, 0.1);
-  --shadow-ember-lg: 0 0 30px rgba(198, 74, 56, 0.2);
+  --shadow-ember: 0 0 20px rgba(230, 62, 48, 0.1);
+  --shadow-ember-sm: 0 0 10px rgba(230, 62, 48, 0.08);
+  --shadow-ember-lg: 0 0 30px rgba(230, 62, 48, 0.15);
   
   /* Borders */
   --radius: 1.25rem;
@@ -89,18 +89,18 @@ a:focus-visible {
     box-shadow: 0 0 10px rgba(198, 74, 56, 0.1);
   }
 
-  /* Button Components */
-  .btn-grad {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium text-white transition-all duration-fast;
-    background: linear-gradient(135deg, #C64A38, #E0A14C);
-    box-shadow: 0 4px 12px rgba(198, 74, 56, 0.2);
-  }
+          /* Button Components */
+          .btn-grad {
+            @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium text-white transition-all duration-fast;
+            background: linear-gradient(135deg, #B24230, #C89144);
+            box-shadow: 0 4px 12px rgba(230, 62, 48, 0.15);
+          }
 
-  .btn-grad:hover {
-    opacity: 0.9;
-    box-shadow: 0 6px 16px rgba(198, 74, 56, 0.25);
-    transform: translateY(-1px);
-  }
+          .btn-grad:hover {
+            opacity: 0.92;
+            box-shadow: 0 6px 16px rgba(230, 62, 48, 0.2);
+            transform: translateY(-1px);
+          }
 
   .btn-grad:active {
     transform: translateY(0);

@@ -26,8 +26,8 @@ export default function HomePage() {
       <div
         className="fixed inset-0 z-0"
         style={{
-          background: `radial-gradient(ellipse at 50% 20%, rgba(198,74,56,0.25), transparent 70%),
-                       linear-gradient(180deg, #0B132B 0%, #101A2E 100%)`,
+          background: `radial-gradient(ellipse at 50% 20%, rgba(178,66,48,0.225), transparent 70%),
+                       linear-gradient(135deg, #0A1027 0%, #101A2E 100%)`,
         }}
       />
 
@@ -59,12 +59,12 @@ export default function HomePage() {
               willChange: 'transform',
             }}
           >
-            <Logo variant="hero" className="mx-auto w-[clamp(84px,12vw,128px)] h-auto" />
+            <Logo variant="hero" className="mx-auto" />
           </motion.div>
         </ScrollReveal>
 
         <ScrollReveal delay={0.1}>
-          <h1 className="mt-6 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold font-poppins text-white leading-tight">
+          <h1 className="mt-6 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold font-poppins text-[#E2E8F0] leading-tight">
             Smart Sports.
             <br className="hidden sm:block" />{' '}
             <span className="gradient-text">Smarter Minds.</span>
@@ -93,7 +93,7 @@ export default function HomePage() {
           >
             <motion.div variants={fadeUp}>
               <motion.button
-                whileHover={{ scale: 1.05, boxShadow: '0 0 8px rgba(224, 161, 76, 0.3)' }}
+                whileHover={{ scale: 1.04, boxShadow: '0 0 8px rgba(224, 161, 76, 0.25)' }}
                 whileTap={{ scale: 0.97, boxShadow: 'none' }}
                 transition={{ duration: 0.2 }}
                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-ember to-amber text-white font-medium shadow-lg hover:opacity-90 transition w-full sm:w-auto"
@@ -105,7 +105,7 @@ export default function HomePage() {
 
             <motion.div variants={fadeUp}>
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.2 }}
                 className="px-6 py-3 rounded-xl border border-white/20 text-slate-200 hover:bg-white/10 transition w-full sm:w-auto"

@@ -19,7 +19,7 @@ export function withRole(Component: React.ComponentType<any>, allowedRoles: stri
         <div className="min-h-screen bg-navy flex items-center justify-center">
           <div className="text-center">
             <Logo variant="hero" className="mb-6 animate-pulse" />
-            <p className="text-white text-xl">Loading...</p>
+            <p className="text-white text-xl">Analyzing latest picks…</p>
           </div>
         </div>
       );

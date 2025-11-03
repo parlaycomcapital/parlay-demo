@@ -27,8 +27,8 @@ export default function BottomNav() {
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
-      className="fixed lg:hidden bottom-0 inset-x-0 h-16 border-t border-slate-800 bg-navy/95 backdrop-blur-md z-40 shadow-lg pb-safe"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed lg:hidden bottom-0 inset-x-0 h-20 border-t border-slate-800 bg-navy/95 backdrop-blur-md z-40 shadow-lg pb-safe"
+      style={{ paddingBottom: `calc(env(safe-area-inset-bottom) + 8px)` }}
     >
       <motion.div
         className={`grid ${gridCols} h-full text-slatex-400`}
