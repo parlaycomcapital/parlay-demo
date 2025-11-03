@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import AppShell from './AppShell';
 import Topbar from './Topbar';
 
-const NO_SHELL_PAGES = ['/login', '/register', '/forgot-password', '/terms', '/privacy', '/responsible-use'];
+const NO_SHELL_PAGES = ['/', '/login', '/register', '/forgot-password', '/terms', '/privacy', '/responsible-use', '/landing'];
 
 export default function ConditionalAppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
