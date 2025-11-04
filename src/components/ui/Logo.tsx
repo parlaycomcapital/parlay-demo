@@ -9,10 +9,10 @@ interface LogoProps {
 }
 
 const variantSizes = {
-  hero: { min: 64, max: 120, sizes: '(max-width: 768px) 96px, (max-width: 1280px) 112px, 120px' },
-  sidebar: { min: 40, max: 72, sizes: '(max-width: 1024px) 48px, 72px' },
-  navbar: { min: 32, max: 56, sizes: '(max-width: 768px) 32px, 56px' },
-  mobile: { min: 40, max: 64, sizes: '(max-width: 640px) 40px, 64px' },
+  hero: { min: 80, max: 100, sizes: '(max-width: 768px) 80px, (max-width: 1280px) 90px, 100px' },
+  sidebar: { min: 36, max: 44, sizes: '(max-width: 1024px) 36px, 44px' },
+  navbar: { min: 36, max: 44, sizes: '(max-width: 768px) 36px, 44px' },
+  mobile: { min: 36, max: 44, sizes: '(max-width: 640px) 36px, 44px' },
 };
 
 export default function Logo({ 
@@ -23,18 +23,13 @@ export default function Logo({
   
   // Use WebP optimized versions if available, fallback to PNG
   const basePath = variant === 'hero' || variant === 'sidebar'
-    ? '/assets/brand/optimized/logo-transparent'
-    : '/assets/brand/optimized/logo-solid';
+    ? '/assets/brand/logo-transparent'
+    : '/assets/brand/logo-solid';
 
-  // Use @2x as default, Next.js will auto-select based on device pixel ratio
-  const src = `${basePath}@2x.webp`;
+  // Try optimized first, fallback to regular
+  const src = `${basePath}.png`;
 
-  // Hero variant uses larger sizing
-  const heroSizing = variant === 'hero' 
-    ? { min: 96, max: 140 }
-    : sizes;
-
-  const finalSizes = variant === 'hero' ? heroSizing : sizes;
+  const finalSizes = sizes;
 
   return (
     <motion.div
@@ -68,13 +63,8 @@ export default function Logo({
         priority={variant === 'hero'}
         className="select-none"
         quality={90}
-        // Fallback to PNG if WebP is not available
         onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          const fallbackSrc = variant === 'hero' || variant === 'sidebar'
-            ? '/assets/brand/logo-transparent.png'
-            : '/assets/brand/logo-solid.png';
-          target.src = fallbackSrc;
+          console.error('Logo failed to load:', src);
         }}
       />
     </motion.div>
