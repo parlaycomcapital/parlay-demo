@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from './Logo';
-import CountdownTimer from './CountdownTimer';
-import { Lock, Mail, ArrowRight } from 'lucide-react';
 
 interface PasswordGateProps {
   children: React.ReactNode;
@@ -14,13 +12,11 @@ const CORRECT_PASSWORD = 'Moneymachine69';
 
 export default function PasswordGate({ children }: PasswordGateProps) {
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
-  const [error, setError] = useState('');
-  const [showWaitlist, setShowWaitlist] = useState(false);
+  const [error, setError] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
-    // Check if already unlocked
     const unlocked = sessionStorage.getItem('parlay_unlocked') === 'true';
     if (unlocked) {
       setIsUnlocked(true);
@@ -31,263 +27,242 @@ export default function PasswordGate({ children }: PasswordGateProps) {
     e.preventDefault();
     
     if (password === CORRECT_PASSWORD) {
-      setError('');
+      setError(false);
       setIsUnlocked(true);
       sessionStorage.setItem('parlay_unlocked', 'true');
     } else {
-      setError('Invalid password');
+      setError(true);
       setPassword('');
+      setTimeout(() => setError(false), 2000);
     }
   };
 
-  const handleWaitlistSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // TODO: Save email to database
-    console.log('Waitlist email:', email);
-    
-    // Show success
-    alert(`✅ You're on the list! We'll notify ${email} when we launch.`);
-    setEmail('');
-    setShowWaitlist(false);
-  };
-
   if (isUnlocked) {
-    return <>{children}</>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+      >
+        {children}
+      </motion.div>
+    );
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.5, 0.2],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
+  // Calculate countdown
+  const launchDate = new Date();
+  launchDate.setDate(launchDate.getDate() + 69);
+  const days = Math.floor((launchDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
 
-      <div className="relative z-10 w-full max-w-2xl">
-        {/* Logo */}
+  return (
+    <div className="min-h-screen bg-navy relative flex items-center justify-center overflow-hidden">
+      {/* Ultra-subtle animated gradient - BARELY visible */}
+      <motion.div 
+        className="absolute inset-0"
+        animate={{
+          background: [
+            'radial-gradient(circle at 50% 50%, rgba(230,62,48,0.04), transparent 60%)',
+            'radial-gradient(circle at 60% 40%, rgba(230,62,48,0.04), transparent 60%)',
+            'radial-gradient(circle at 40% 60%, rgba(230,62,48,0.04), transparent 60%)',
+            'radial-gradient(circle at 50% 50%, rgba(230,62,48,0.04), transparent 60%)',
+          ],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      />
+
+      {/* Noise texture overlay for depth */}
+      <div 
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+        }}
+      />
+
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-md px-6">
+        {/* Logo with premium glow */}
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-12"
-          style={{
-            filter: 'drop-shadow(0 0 40px rgba(255,255,255,0.3))',
-          }}
+          initial={{ opacity: 0, scale: 0.9, y: -10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
+          className="flex justify-center mb-16"
         >
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8">
+          <div className="relative">
             <Logo variant="hero" />
+            {/* Ember glow - subtle */}
+            <motion.div
+              animate={{
+                opacity: [0.08, 0.15, 0.08],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="absolute -inset-8 bg-ember/20 blur-[60px] -z-10"
+            />
           </div>
         </motion.div>
 
-        {/* Main Content */}
+        {/* Countdown - Minimal & Premium */}
         <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
-            Something Big
-            <br />
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
-              Is Coming
-            </span>
-          </h1>
-          <p className="text-xl lg:text-2xl text-white/90 mb-8 max-w-xl mx-auto leading-relaxed">
-            The future of sports intelligence. Get ready for the platform that will change how you analyze sports forever.
-          </p>
-        </motion.div>
-
-        {/* Countdown Timer */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="mb-12"
-        >
-          <div className="text-center mb-8">
-            <span className="text-white/80 text-sm uppercase tracking-wider font-semibold">
-              Launching in
-            </span>
+          <div className="text-white/30 text-[10px] uppercase tracking-[0.3em] mb-4 font-medium">
+            Public Launch
           </div>
-          <CountdownTimer />
+          <div className="inline-flex items-baseline gap-3">
+            <motion.div
+              key={days}
+              initial={{ opacity: 0.6, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="text-6xl font-poppins font-bold tracking-tight"
+              style={{
+                background: 'linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              {days}
+            </motion.div>
+            <span className="text-white/40 text-sm font-medium tracking-wide">days</span>
+          </div>
         </motion.div>
 
-        {/* Waitlist Form */}
-        <AnimatePresence mode="wait">
-          {!showWaitlist ? (
+        {/* Password Input - Ultra Premium */}
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="space-y-6"
+        >
+          {/* Input Field */}
+          <div className="relative">
             <motion.div
-              key="buttons"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ delay: 0.9 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
+              animate={{
+                boxShadow: focused 
+                  ? ['0 0 0 0 rgba(230,62,48,0)', '0 0 0 1px rgba(230,62,48,0.3)', '0 0 20px 0 rgba(230,62,48,0.15)']
+                  : '0 0 0 0 rgba(230,62,48,0)',
+              }}
+              transition={{ duration: 0.4 }}
+              className="relative"
             >
-              <motion.button
-                onClick={() => setShowWaitlist(true)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-2xl flex items-center justify-center gap-2"
-              >
-                <Mail className="w-5 h-5" />
-                Join Waitlist
-              </motion.button>
-              <motion.button
-                onClick={() => {
-                  const modal = document.getElementById('password-modal');
-                  if (modal) modal.style.display = 'block';
+              <motion.input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                placeholder="•  •  •  •  •  •  •  •"
+                autoFocus
+                animate={error ? { 
+                  x: [-8, 8, -8, 8, -4, 4, 0],
+                  borderColor: ['rgba(230,62,48,0.5)', 'rgba(230,62,48,0.8)', 'rgba(230,62,48,0.5)'],
+                } : {}}
+                transition={{ duration: 0.5 }}
+                className="w-full px-8 py-5 bg-card/30 backdrop-blur-xl border border-white/[0.08] rounded-2xl text-white text-center font-medium tracking-[0.3em] text-lg focus:outline-none transition-all placeholder-white/20"
+                style={{
+                  boxShadow: error 
+                    ? '0 0 30px rgba(230,62,48,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
+                    : focused
+                    ? '0 0 30px rgba(230,62,48,0.1), inset 0 1px 0 rgba(255,255,255,0.05)'
+                    : 'inset 0 1px 0 rgba(255,255,255,0.03)',
                 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white/10 backdrop-blur-md text-white border-2 border-white/30 rounded-xl font-bold text-lg hover:bg-white/20 transition-colors flex items-center justify-center gap-2"
-              >
-                <Lock className="w-5 h-5" />
-                Enter Password
-              </motion.button>
-            </motion.div>
-          ) : (
-            <motion.form
-              key="waitlist"
-              onSubmit={handleWaitlistSubmit}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-md mx-auto"
-            >
-              <div className="flex gap-3">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email..."
-                  required
-                  className="flex-1 px-6 py-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50"
-                />
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-4 bg-white text-blue-600 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-xl"
-                >
-                  <ArrowRight className="w-6 h-6" />
-                </motion.button>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowWaitlist(false)}
-                className="mt-4 text-white/70 hover:text-white text-sm underline"
-              >
-                Cancel
-              </button>
-            </motion.form>
-          )}
-        </AnimatePresence>
+              />
 
-        {/* Social Proof */}
+              {/* Subtle top highlight */}
+              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+            </motion.div>
+
+            {/* Error State */}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className="absolute -bottom-6 left-0 right-0 text-center"
+                >
+                  <span className="text-ember/80 text-xs font-medium tracking-wide">
+                    Access Denied
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Submit - Invisible until hover */}
+          <motion.button
+            type="submit"
+            whileHover={{ 
+              scale: 1.02,
+              boxShadow: '0 0 40px rgba(230,62,48,0.25)',
+            }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full px-8 py-5 rounded-2xl font-semibold tracking-wide transition-all relative overflow-hidden group"
+            style={{
+              background: 'linear-gradient(135deg, rgba(230,62,48,0.15) 0%, rgba(245,166,35,0.15) 100%)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+            }}
+          >
+            {/* Gradient overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-ember to-amber opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* Text */}
+            <span className="relative z-10 text-white/90 group-hover:text-white transition-colors">
+              Enter
+            </span>
+
+            {/* Shine effect */}
+            <motion.div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100"
+              style={{
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+              }}
+              animate={{
+                x: ['-100%', '200%'],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatDelay: 1,
+              }}
+            />
+          </motion.button>
+        </motion.form>
+
+        {/* Subtle hint - barely visible */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="text-center"
+          transition={{ delay: 1.5, duration: 1 }}
+          className="text-center mt-16"
         >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="flex -space-x-2">
-              {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-red-500 border-2 border-white shadow-md"
-                />
-              ))}
-            </div>
-            <span className="text-white/90 text-sm font-medium">
-              <strong>347 people</strong> on the waitlist
-            </span>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Password Modal */}
-      <div
-        id="password-modal"
-        style={{ display: 'none' }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            (e.target as HTMLElement).style.display = 'none';
-          }
-        }}
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
-        >
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Private Preview
-            </h3>
-            <p className="text-gray-600">
-              Enter the password to access Parlay
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password..."
-              className="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none text-gray-900 placeholder-gray-400"
-              autoFocus
-            />
-            
-            {error && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-sm text-center"
-              >
-                {error}
-              </motion.p>
-            )}
-
-            <button
-              type="submit"
-              className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
-            >
-              Unlock Preview
-            </button>
-          </form>
-
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Don't have access? <button onClick={() => { setShowWaitlist(true); (document.getElementById('password-modal') as HTMLElement).style.display = 'none'; }} className="text-blue-600 hover:underline">Join waitlist</button>
+          <p className="text-white/[0.12] text-[10px] uppercase tracking-[0.3em] font-medium">
+            Invitation Required
           </p>
         </motion.div>
       </div>
+
+      {/* Vignette - dark edges */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 50% 40%, transparent 0%, rgba(11,19,43,0.4) 70%, rgba(11,19,43,0.8) 100%)',
+        }}
+      />
     </div>
   );
 }
-

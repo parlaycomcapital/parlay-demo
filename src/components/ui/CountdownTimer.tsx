@@ -14,7 +14,6 @@ export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 69, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    // Set launch date to 69 days from now
     const launchDate = new Date();
     launchDate.setDate(launchDate.getDate() + 69);
     
@@ -24,7 +23,6 @@ export default function CountdownTimer() {
 
       if (distance < 0) {
         clearInterval(timer);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
 
@@ -39,39 +37,27 @@ export default function CountdownTimer() {
     return () => clearInterval(timer);
   }, []);
 
-  const timeUnits = [
-    { label: 'Days', value: timeLeft.days },
-    { label: 'Hours', value: timeLeft.hours },
-    { label: 'Minutes', value: timeLeft.minutes },
-    { label: 'Seconds', value: timeLeft.seconds },
-  ];
-
   return (
-    <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
-      {timeUnits.map((unit, index) => (
-        <motion.div
-          key={unit.label}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: index * 0.1, type: 'spring' }}
-          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-center"
-        >
+    <div className="flex justify-center gap-3">
+      {[
+        { value: timeLeft.days, label: 'Days' },
+        { value: timeLeft.hours, label: 'Hours' },
+      ].map((unit, i) => (
+        <div key={i} className="text-center">
           <motion.div
             key={unit.value}
-            initial={{ scale: 1.2, opacity: 0.5 }}
+            initial={{ scale: 1.1, opacity: 0.5 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="text-5xl lg:text-6xl font-bold text-white mb-2"
+            className="text-3xl font-bold text-white/90 font-poppins tracking-tight"
           >
             {String(unit.value).padStart(2, '0')}
           </motion.div>
-          <div className="text-sm text-white/70 uppercase tracking-wider font-medium">
+          <div className="text-[10px] text-white/30 uppercase tracking-wider mt-1">
             {unit.label}
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   );
 }
-
-
