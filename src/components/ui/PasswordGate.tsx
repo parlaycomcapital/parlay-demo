@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Logo from './Logo';
+import GradientMotion from './GradientMotion';
+import { fadeUp } from '@/lib/motion';
 
 interface PasswordGateProps {
   children: React.ReactNode;
@@ -14,7 +16,6 @@ export default function PasswordGate({ children }: PasswordGateProps) {
   const [password, setPassword] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [error, setError] = useState(false);
-  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     const unlocked = sessionStorage.getItem('parlay_unlocked') === 'true';
@@ -38,231 +39,158 @@ export default function PasswordGate({ children }: PasswordGateProps) {
   };
 
   if (isUnlocked) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-      >
-        {children}
-      </motion.div>
-    );
+    return <>{children}</>;
   }
 
-  // Calculate countdown
+  // Calculate days until launch
   const launchDate = new Date();
   launchDate.setDate(launchDate.getDate() + 69);
   const days = Math.floor((launchDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
 
   return (
     <div className="min-h-screen bg-navy relative flex items-center justify-center overflow-hidden">
-      {/* Ultra-subtle animated gradient - BARELY visible */}
-      <motion.div 
-        className="absolute inset-0"
-        animate={{
-          background: [
-            'radial-gradient(circle at 50% 50%, rgba(230,62,48,0.04), transparent 60%)',
-            'radial-gradient(circle at 60% 40%, rgba(230,62,48,0.04), transparent 60%)',
-            'radial-gradient(circle at 40% 60%, rgba(230,62,48,0.04), transparent 60%)',
-            'radial-gradient(circle at 50% 50%, rgba(230,62,48,0.04), transparent 60%)',
-          ],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      />
+      {/* Parlay's signature gradient background */}
+      <GradientMotion />
 
-      {/* Noise texture overlay for depth */}
-      <div 
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-        }}
-      />
+      {/* Subtle particles - matching Parlay style */}
+      <div className="absolute inset-0 overflow-hidden opacity-10">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-ember rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 8 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: 'linear',
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 w-full max-w-md px-6">
-        {/* Logo with premium glow */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: -10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
-          className="flex justify-center mb-16"
+      {/* Main Content Card - Parlay style */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        className="relative z-10 w-full max-w-md mx-4"
+      >
+        {/* Glass card matching Parlay design */}
+        <div 
+          className="rounded-2xl border p-8 md:p-12 backdrop-blur-md"
+          style={{
+            background: 'rgba(16, 26, 46, 0.5)',
+            borderColor: 'rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+          }}
         >
-          <div className="relative">
-            <Logo variant="hero" />
-            {/* Ember glow - subtle */}
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
             <motion.div
-              animate={{
-                opacity: [0.08, 0.15, 0.08],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="absolute -inset-8 bg-ember/20 blur-[60px] -z-10"
-            />
-          </div>
-        </motion.div>
-
-        {/* Countdown - Minimal & Premium */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-center mb-12"
-        >
-          <div className="text-white/30 text-[10px] uppercase tracking-[0.3em] mb-4 font-medium">
-            Public Launch
-          </div>
-          <div className="inline-flex items-baseline gap-3">
-            <motion.div
-              key={days}
-              initial={{ opacity: 0.6, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              className="text-6xl font-poppins font-bold tracking-tight"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
               style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 20px rgba(230,62,48,0.2))',
               }}
             >
-              {days}
+              <Logo variant="hero" />
             </motion.div>
-            <span className="text-white/40 text-sm font-medium tracking-wide">days</span>
           </div>
-        </motion.div>
 
-        {/* Password Input - Ultra Premium */}
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="space-y-6"
-        >
-          {/* Input Field */}
-          <div className="relative">
-            <motion.div
-              animate={{
-                boxShadow: focused 
-                  ? ['0 0 0 0 rgba(230,62,48,0)', '0 0 0 1px rgba(230,62,48,0.3)', '0 0 20px 0 rgba(230,62,48,0.15)']
-                  : '0 0 0 0 rgba(230,62,48,0)',
-              }}
-              transition={{ duration: 0.4 }}
-              className="relative"
-            >
+          {/* Countdown */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-center mb-8"
+          >
+            <p className="text-textSecondary text-xs uppercase tracking-[0.2em] mb-3 font-medium">
+              Public Launch In
+            </p>
+            <div className="flex items-baseline justify-center gap-2">
+              <span className="text-5xl font-poppins font-bold text-white">
+                {days}
+              </span>
+              <span className="text-textSecondary text-lg font-medium">days</span>
+            </div>
+          </motion.div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8" />
+
+          {/* Password Form */}
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="space-y-4"
+          >
+            <div>
+              <label className="block text-textSecondary text-sm font-medium mb-2">
+                Access Code
+              </label>
               <motion.input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-                placeholder="•  •  •  •  •  •  •  •"
+                placeholder="Enter password"
                 autoFocus
-                animate={error ? { 
-                  x: [-8, 8, -8, 8, -4, 4, 0],
-                  borderColor: ['rgba(230,62,48,0.5)', 'rgba(230,62,48,0.8)', 'rgba(230,62,48,0.5)'],
-                } : {}}
-                transition={{ duration: 0.5 }}
-                className="w-full px-8 py-5 bg-card/30 backdrop-blur-xl border border-white/[0.08] rounded-2xl text-white text-center font-medium tracking-[0.3em] text-lg focus:outline-none transition-all placeholder-white/20"
+                animate={error ? { x: [-6, 6, -6, 6, -3, 3, 0] } : {}}
+                transition={{ duration: 0.4 }}
+                className="w-full px-4 py-3 bg-card/50 border rounded-xl text-white placeholder-textSecondary/50 focus:outline-none focus:border-ember/50 transition-all"
                 style={{
+                  borderColor: error ? 'rgba(230,62,48,0.5)' : 'rgba(255,255,255,0.1)',
                   boxShadow: error 
-                    ? '0 0 30px rgba(230,62,48,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
-                    : focused
-                    ? '0 0 30px rgba(230,62,48,0.1), inset 0 1px 0 rgba(255,255,255,0.05)'
+                    ? '0 0 20px rgba(230,62,48,0.3)' 
                     : 'inset 0 1px 0 rgba(255,255,255,0.03)',
                 }}
               />
-
-              {/* Subtle top highlight */}
-              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-            </motion.div>
-
-            {/* Error State */}
-            <AnimatePresence>
               {error && (
-                <motion.div
+                <motion.p
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  className="absolute -bottom-6 left-0 right-0 text-center"
+                  className="text-ember text-xs mt-2"
                 >
-                  <span className="text-ember/80 text-xs font-medium tracking-wide">
-                    Access Denied
-                  </span>
-                </motion.div>
+                  Incorrect password
+                </motion.p>
               )}
-            </AnimatePresence>
-          </div>
+            </div>
 
-          {/* Submit - Invisible until hover */}
-          <motion.button
-            type="submit"
-            whileHover={{ 
-              scale: 1.02,
-              boxShadow: '0 0 40px rgba(230,62,48,0.25)',
-            }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full px-8 py-5 rounded-2xl font-semibold tracking-wide transition-all relative overflow-hidden group"
-            style={{
-              background: 'linear-gradient(135deg, rgba(230,62,48,0.15) 0%, rgba(245,166,35,0.15) 100%)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
-            }}
-          >
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-r from-ember to-amber opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Text */}
-            <span className="relative z-10 text-white/90 group-hover:text-white transition-colors">
-              Enter
-            </span>
-
-            {/* Shine effect */}
-            <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100"
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.02, boxShadow: '0 0 24px rgba(230,62,48,0.3)' }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full px-4 py-3 rounded-xl font-semibold text-white transition-all"
               style={{
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                background: 'linear-gradient(135deg, #E63E30 0%, #F5A623 100%)',
+                boxShadow: '0 4px 12px rgba(230,62,48,0.2)',
               }}
-              animate={{
-                x: ['-100%', '200%'],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatDelay: 1,
-              }}
-            />
-          </motion.button>
-        </motion.form>
+            >
+              Unlock
+            </motion.button>
+          </motion.form>
 
-        {/* Subtle hint - barely visible */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="text-center mt-16"
-        >
-          <p className="text-white/[0.12] text-[10px] uppercase tracking-[0.3em] font-medium">
-            Invitation Required
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Vignette - dark edges */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 50% 40%, transparent 0%, rgba(11,19,43,0.4) 70%, rgba(11,19,43,0.8) 100%)',
-        }}
-      />
+          {/* Bottom hint */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-textSecondary/40 text-xs text-center mt-6"
+          >
+            Invitation required
+          </motion.p>
+        </div>
+      </motion.div>
     </div>
   );
 }
