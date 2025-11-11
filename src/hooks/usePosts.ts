@@ -78,12 +78,24 @@ export function usePosts() {
 
   const createPost = async (postData: any) => {
     if (isPlaceholderMode()) {
-      console.log('Placeholder mode: Post creation logged', postData);
-      return { id: `mock-${Date.now()}`, ...postData };
+      const newPost = { id: `mock-${Date.now()}`, ...postData, created_at: new Date().toISOString() };
+      setPosts([newPost, ...posts]);
+      return newPost;
     }
-    // TODO: Implement post creation
-    console.warn('createPost not implemented');
-    return null;
+
+    try {
+      const { data, error } = await supabase.from('posts').insert([postData]).select().single();
+      if (error) throw error;
+      
+      // Add to local state immediately
+      if (data) {
+        setPosts([data, ...posts]);
+      }
+      return data;
+    } catch (err) {
+      console.error('Error creating post:', err);
+      throw err;
+    }
   };
 
   const getPostById = (id: string) => {

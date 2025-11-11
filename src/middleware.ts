@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected routes - check for session cookie
-  const protectedRoutes = ['/feed', '/groups', '/settings', '/dashboard', '/create', '/profile'];
+  const protectedRoutes = ['/feed', '/groups', '/settings', '/create', '/profile'];
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtectedRoute) {
